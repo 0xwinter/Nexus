@@ -1,2768 +1,4372 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Nexus — Personal Productivity OS</title>
+<meta name="theme-color" content="#6366f1">
+<meta name="description" content="Nexus — a free productivity workspace for every student.">
+<title>Nexus — Student Workspace</title>
 
 <style>
-
-:root{
-  --bg:#080b14;
-  --panel:#101522;
-  --panel2:#151b2b;
-  --border:#252d42;
-  --text:#f4f7ff;
-  --muted:#8994ad;
-  --accent:#756cff;
-  --accent2:#918aff;
-  --danger:#ef5b70;
-  --success:#35d39a;
-  --warning:#ffbd59;
-  --shadow:0 15px 40px rgba(0,0,0,.25);
+:root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --surface-2: #f1f3f8;
+    --text: #171923;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --shadow: 0 10px 30px rgba(0,0,0,.07);
+    --radius: 18px;
 }
 
-.light{
-  --bg:#f4f6fb;
-  --panel:#ffffff;
-  --panel2:#eef1f8;
-  --border:#dce1ec;
-  --text:#151a27;
-  --muted:#687187;
-  --shadow:0 15px 40px rgba(40,50,80,.12);
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+html {
+    scroll-behavior: smooth;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Inter,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  transition:.25s;
+body {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
 }
 
 button,
 input,
-textarea,
-select{
-  font:inherit;
+select,
+textarea {
+    font: inherit;
 }
 
-button{
-  cursor:pointer;
+button {
+    cursor: pointer;
 }
 
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
+.hidden {
+    display: none !important;
 }
 
+/* ---------------- SETUP ---------------- */
 
-/* =========================
-   APP
-========================= */
+#setupScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+        radial-gradient(circle at top left, rgba(99,102,241,.15), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(16,185,129,.12), transparent 35%),
+        var(--bg);
+}
+
+.setup-card {
+    width: min(700px, 100%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    padding: 36px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.logo-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: var(--primary);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
 
-.app{
-  display:flex;
-  min-height:100vh;
+.setup-card h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    margin: 28px 0 10px;
+    letter-spacing: -1.5px;
 }
 
+.setup-card > p {
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
 
-/* =========================
-   SIDEBAR
-========================= */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
 
-.sidebar{
-  width:240px;
-  position:fixed;
-  top:0;
-  bottom:0;
-  left:0;
-  padding:25px 18px;
-  background:var(--panel);
-  border-right:1px solid var(--border);
-  z-index:50;
+.form-group.full {
+    grid-column: 1 / -1;
 }
 
-.logo{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:2px;
-  margin:0 10px 35px;
+.form-group label {
+    font-size: 13px;
+    font-weight: 700;
 }
 
-.logo span{
-  color:var(--accent);
+.form-group small {
+    color: var(--muted);
 }
 
-.nav{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
+input,
+select,
+textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 12px 14px;
+    outline: none;
+    transition: .2s;
 }
 
-.nav button{
-  background:none;
-  color:var(--muted);
-  border:0;
-  text-align:left;
-  padding:13px;
-  border-radius:11px;
-  transition:.2s;
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
 }
 
-.nav button:hover,
-.nav button.active{
-  background:var(--panel2);
-  color:var(--text);
+textarea {
+    min-height: 150px;
+    resize: vertical;
 }
 
-.sidebar-bottom{
-  position:absolute;
-  bottom:25px;
-  left:18px;
-  right:18px;
+.subject-builder {
+    margin-top: 22px;
 }
 
+.subject-input-row {
+    display: flex;
+    gap: 8px;
+}
 
-/* =========================
-   MAIN
-========================= */
+.subject-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
 
-.main{
-  margin-left:240px;
-  width:calc(100% - 240px);
-  padding:28px 4%;
+.subject-tag {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:28px;
+.subject-tag button {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    font-weight: 800;
 }
 
-.topbar h1{
-  font-size:28px;
+.primary-btn,
+.secondary-btn,
+.danger-btn,
+.icon-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 11px 15px;
+    font-weight: 700;
+    transition: transform .15s, opacity .15s, background .15s;
 }
 
-.topbar p{
-  color:var(--muted);
-  margin-top:4px;
+.primary-btn:hover,
+.secondary-btn:hover,
+.danger-btn:hover,
+.icon-btn:hover {
+    transform: translateY(-1px);
 }
 
-.icon-btn{
-  background:var(--panel);
-  border:1px solid var(--border);
-  color:var(--text);
-  padding:10px 13px;
-  border-radius:10px;
+.primary-btn {
+    background: var(--primary);
+    color: white;
 }
 
+.primary-btn:hover {
+    background: var(--primary-dark);
+}
 
-/* =========================
-   PAGES
-========================= */
+.secondary-btn {
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
 
-.page{
-  display:none;
+.danger-btn {
+    background: rgba(239,68,68,.1);
+    color: var(--danger);
 }
 
-.page.active{
-  display:block;
+.setup-submit {
+    width: 100%;
+    margin-top: 26px;
+    padding: 15px;
+    font-size: 16px;
 }
 
+/* ---------------- APP LAYOUT ---------------- */
 
-/* =========================
-   CARDS
-========================= */
+#app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 100;
+    padding: 22px 14px;
+    display: flex;
+    flex-direction: column;
+}
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
+.sidebar-logo {
+    padding: 4px 10px 26px;
 }
 
-.card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:20px;
-  box-shadow:var(--shadow);
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.stat-card{
-  min-height:125px;
+.nav button {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    text-align: left;
+    padding: 12px 13px;
+    border-radius: 12px;
+    font-weight: 650;
+    display: flex;
+    align-items: center;
+    gap: 11px;
 }
 
-.stat-card .icon{
-  font-size:22px;
+.nav button:hover {
+    background: var(--surface-2);
+    color: var(--text);
 }
 
-.stat-card h3{
-  font-size:28px;
-  margin-top:13px;
+.nav button.active {
+    background: rgba(99,102,241,.1);
+    color: var(--primary);
 }
 
-.stat-card p{
-  color:var(--muted);
-  font-size:13px;
+.sidebar-bottom {
+    margin-top: auto;
+    padding: 10px;
 }
 
+.workspace-badge {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    color: var(--muted);
+}
 
-/* =========================
-   DASHBOARD
-========================= */
+.workspace-badge strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 3px;
+}
 
-.welcome{
-  background:linear-gradient(
-    135deg,
-    var(--panel),
-    var(--panel2)
-  );
-  margin-bottom:18px;
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
 }
 
-.welcome h2{
-  font-size:31px;
-  margin-bottom:8px;
+.topbar {
+    height: 72px;
+    padding: 0 30px;
+    background: rgba(255,255,255,.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
 }
 
-.welcome p{
-  color:var(--muted);
-  line-height:1.6;
+body.dark .topbar {
+    background: rgba(24,25,35,.85);
 }
 
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:25px 0 12px;
+.mobile-menu {
+    display: none;
 }
 
-.section-title h2{
-  font-size:19px;
+.page {
+    display: none;
+    padding: 30px;
+    max-width: 1400px;
+    margin: auto;
 }
 
+.page.active {
+    display: block;
+}
 
-/* =========================
-   BUTTONS
-========================= */
+.page-header {
+    margin-bottom: 25px;
+}
 
-.primary{
-  border:0;
-  background:var(--accent);
-  color:white;
-  padding:10px 15px;
-  border-radius:9px;
-  font-weight:700;
+.page-header h1 {
+    font-size: 30px;
+    letter-spacing: -.8px;
 }
 
-.secondary{
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--text);
-  padding:9px 13px;
-  border-radius:9px;
+.page-header p {
+    color: var(--muted);
+    margin-top: 5px;
 }
+
+/* ---------------- CARDS ---------------- */
 
-.danger{
-  background:var(--danger);
-  color:white;
-  border:0;
-  padding:8px 11px;
-  border-radius:8px;
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 18px rgba(0,0,0,.035);
+    padding: 20px;
 }
 
+.grid {
+    display: grid;
+    gap: 18px;
+}
 
-/* =========================
-   INPUTS
-========================= */
+.stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
 
-.input{
-  width:100%;
-  padding:12px;
-  background:var(--bg);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:9px;
-  outline:none;
-  margin-bottom:10px;
+.two-grid {
+    grid-template-columns: repeat(2, 1fr);
 }
 
-.input:focus{
-  border-color:var(--accent);
+.three-grid {
+    grid-template-columns: repeat(3, 1fr);
 }
 
-textarea.input{
-  min-height:130px;
-  resize:vertical;
+.stat-card {
+    min-height: 130px;
 }
 
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
 
-/* =========================
-   SUBJECTS
-========================= */
+.stat-value {
+    font-size: 31px;
+    font-weight: 850;
+    letter-spacing: -1px;
+}
 
-.subject-grid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(230px,1fr));
-  gap:15px;
+.stat-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 6px;
 }
 
-.subject-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:18px;
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
-.subject-head{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:14px;
+.section-title h2 {
+    font-size: 17px;
 }
 
-.progress{
-  height:9px;
-  background:var(--panel2);
-  border-radius:20px;
-  overflow:hidden;
-  margin:12px 0;
+/* ---------------- PROGRESS ---------------- */
+
+.progress {
+    width: 100%;
+    height: 9px;
+    border-radius: 99px;
+    background: var(--surface-2);
+    overflow: hidden;
 }
 
-.progress-bar{
-  height:100%;
-  background:var(--accent);
-  width:0;
-  transition:width .3s;
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: inherit;
+    transition: width .3s ease;
 }
+
+/* ---------------- TASKS ---------------- */
 
-.small{
-  color:var(--muted);
-  font-size:13px;
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 12px;
+}
 
-/* =========================
-   TASKS
-========================= */
+.task-check {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+    flex-shrink: 0;
+}
 
-.task{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px;
-  border-bottom:1px solid var(--border);
+.task-content {
+    flex: 1;
+    min-width: 0;
 }
 
-.task:last-child{
-  border-bottom:0;
+.task-title {
+    font-weight: 700;
+    word-break: break-word;
 }
 
-.task input[type="checkbox"]{
-  width:18px;
-  height:18px;
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--muted);
 }
 
-.task-text{
-  flex:1;
+.task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--muted);
 }
 
-.task.done .task-text{
-  text-decoration:line-through;
-  opacity:.45;
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
 }
 
+.priority-high {
+    color: var(--danger);
+}
 
-/* =========================
-   GOALS
-========================= */
+.priority-medium {
+    color: var(--warning);
+}
 
-.goal{
-  padding:17px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  margin-bottom:10px;
-  background:var(--panel);
+.priority-low {
+    color: var(--success);
 }
 
-.goal-head{
-  display:flex;
-  justify-content:space-between;
+.item-actions {
+    display: flex;
+    gap: 5px;
 }
 
-.goal-progress{
-  height:8px;
-  background:var(--panel2);
-  border-radius:10px;
-  margin-top:10px;
+.small-btn {
+    border: none;
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: 9px;
+    padding: 7px 9px;
 }
+
+/* ---------------- FORMS / TOOLBARS ---------------- */
 
-.goal-fill{
-  height:100%;
-  background:var(--success);
-  border-radius:10px;
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
 }
 
+.toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-/* =========================
-   FOCUS TIMER
-========================= */
+.form-card {
+    margin-bottom: 18px;
+}
 
-.timer-box{
-  text-align:center;
-  padding:35px 20px;
-  max-width:750px;
-  margin:auto;
+.form-card h3 {
+    margin-bottom: 15px;
 }
 
-.timer-box h2{
-  font-size:25px;
+.form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
 }
 
-.timer-description{
-  color:var(--muted);
-  margin-top:7px;
+/* ---------------- SUBJECTS ---------------- */
+
+.subject-card {
+    position: relative;
 }
 
-.duration-area{
-  margin:28px auto 5px;
-  max-width:500px;
+.subject-card h3 {
+    margin-bottom: 7px;
 }
 
-.duration-area label{
-  display:block;
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:8px;
+.subject-card p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 15px;
 }
 
-.duration-row{
-  display:flex;
-  gap:8px;
+.subject-progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 7px;
 }
+
+/* ---------------- TIMER ---------------- */
 
-.duration-row select,
-.duration-row input{
-  flex:1;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:var(--bg);
-  color:var(--text);
-  outline:none;
+.timer-card {
+    text-align: center;
+    padding: 35px 20px;
 }
 
-.duration-row input{
-  min-width:0;
+.timer-display {
+    font-size: clamp(55px, 10vw, 105px);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -5px;
+    margin: 20px 0 25px;
+    font-variant-numeric: tabular-nums;
 }
 
-.quick-times{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:7px;
-  margin-top:12px;
+.timer-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 20px;
 }
 
-.quick-times button{
-  padding:7px 11px;
-  border-radius:8px;
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:var(--text);
+.timer-options button {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 700;
 }
 
-.quick-times button:hover{
-  border-color:var(--accent);
+.timer-options button.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
 }
 
-.timer{
-  font-size:78px;
-  font-weight:800;
-  letter-spacing:3px;
-  margin:25px 0;
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
-.timer-status{
-  color:var(--muted);
-  min-height:20px;
-  margin-bottom:18px;
+.timer-controls button {
+    min-width: 125px;
+    padding: 13px 20px;
 }
 
-.timer-controls{
-  display:flex;
-  justify-content:center;
-  gap:10px;
+.timer-status {
+    color: var(--muted);
+    margin-top: 14px;
+    font-size: 13px;
 }
 
-.timer-controls button{
-  min-width:135px;
-  padding:12px 20px;
-  border-radius:10px;
+/* ---------------- EXAMS ---------------- */
+
+.exam-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.timer-stat-row{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  max-width:500px;
-  margin:28px auto 0;
+.exam-date {
+    min-width: 65px;
+    text-align: center;
+    background: var(--surface-2);
+    border-radius: 12px;
+    padding: 10px;
 }
 
-.timer-stat{
-  background:var(--panel2);
-  border-radius:12px;
-  padding:15px;
+.exam-date strong {
+    display: block;
+    font-size: 20px;
 }
 
-.timer-stat strong{
-  display:block;
-  font-size:22px;
+.exam-info {
+    flex: 1;
 }
 
-.timer-stat span{
-  color:var(--muted);
-  font-size:12px;
+.exam-info h3 {
+    margin-bottom: 5px;
 }
 
+.exam-info p {
+    color: var(--muted);
+    font-size: 13px;
+}
 
-/* =========================
-   NOTES
-========================= */
+/* ---------------- ANALYTICS ---------------- */
 
-.note-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+.chart {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+    height: 230px;
+    padding-top: 20px;
 }
 
+.chart-column {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    gap: 7px;
+}
 
-/* =========================
-   EMPTY
-========================= */
+.chart-value {
+    font-size: 10px;
+    color: var(--muted);
+}
 
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:30px;
+.chart-bar {
+    width: min(42px, 70%);
+    min-height: 3px;
+    background: var(--primary);
+    border-radius: 8px 8px 3px 3px;
 }
 
+.chart-label {
+    font-size: 11px;
+    color: var(--muted);
+}
 
-/* =========================
-   MOBILE
-========================= */
+/* ---------------- NOTES ---------------- */
 
-.mobile-nav{
-  display:none;
+.notes-area {
+    min-height: 420px;
 }
+
+/* ---------------- EMPTY ---------------- */
 
-@media(max-width:950px){
+.empty {
+    padding: 35px 15px;
+    text-align: center;
+    color: var(--muted);
+}
 
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+.empty-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
 
-  .sidebar{
-    width:190px;
-  }
+/* ---------------- TOAST ---------------- */
 
-  .main{
-    margin-left:190px;
-    width:calc(100% - 190px);
-  }
+#toastContainer {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-@media(max-width:650px){
+.toast {
+    background: var(--text);
+    color: var(--surface);
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    animation: toastIn .2s ease;
+    max-width: 320px;
+}
 
-  .sidebar{
-    display:none;
-  }
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-  .main{
-    margin-left:0;
-    width:100%;
-    padding:20px 15px 85px;
-  }
+/* ---------------- DARK MODE ---------------- */
 
-  .grid{
-    grid-template-columns:1fr 1fr;
-  }
+body.dark {
+    --bg: #0e1017;
+    --surface: #181923;
+    --surface-2: #222431;
+    --text: #f4f5f7;
+    --muted: #9ca3af;
+    --border: #2c2f3c;
+    --shadow: 0 10px 30px rgba(0,0,0,.25);
+}
 
-  .mobile-nav{
-    display:flex;
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:var(--panel);
-    border-top:1px solid var(--border);
-    z-index:100;
-    justify-content:space-around;
-    padding:8px;
-  }
+body.dark .sidebar {
+    background: var(--surface);
+}
 
-  .mobile-nav button{
-    background:none;
-    border:0;
-    color:var(--muted);
-    font-size:11px;
-  }
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: var(--surface);
+}
 
-  .timer{
-    font-size:55px;
-  }
+/* ---------------- RESPONSIVE ---------------- */
 
-  .duration-row{
-    flex-direction:column;
-  }
+@media (max-width: 1000px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-  .timer-stat-row{
-    grid-template-columns:1fr;
-  }
+    .three-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
+
+@media (max-width: 760px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+    }
 
-@media(max-width:420px){
+    .mobile-menu {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 10px;
+        font-size: 20px;
+    }
 
-  .grid{
-    grid-template-columns:1fr;
-  }
+    .topbar {
+        padding: 0 16px;
+    }
 
-  .welcome h2{
-    font-size:25px;
-  }
+    .page {
+        padding: 20px 15px;
+    }
 
-  .timer-controls{
-    flex-direction:column;
-    align-items:center;
-  }
+    .form-grid,
+    .two-grid,
+    .three-grid {
+        grid-template-columns: 1fr;
+    }
 
-  .timer-controls button{
-    width:100%;
-  }
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
+
+@media (max-width: 480px) {
+    .setup-card {
+        padding: 24px 18px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
 
+    .timer-display {
+        font-size: 58px;
+    }
+
+    .timer-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .timer-controls button {
+        width: 100%;
+    }
+
+    .exam-card {
+        align-items: flex-start;
+    }
+}
 </style>
 </head>
 
-
 <body>
 
-<div class="app">
-
-
-<!-- =========================
-     SIDEBAR
-========================= -->
-
-<aside class="sidebar">
-
-  <div class="logo">
-    NEX<span>U</span>S
-  </div>
-
-  <nav class="nav">
-
-    <button
-      class="active"
-      onclick="showPage('dashboard',this)">
-      🏠 Dashboard
-    </button>
-
-    <button
-      onclick="showPage('subjects',this)">
-      📚 Subjects
-    </button>
-
-    <button
-      onclick="showPage('tasks',this)">
-      ✅ Tasks
-    </button>
-
-    <button
-      onclick="showPage('goals',this)">
-      🎯 Goals
-    </button>
-
-    <button
-      onclick="showPage('focus',this)">
-      ⏱️ Focus
-    </button>
-
-    <button
-      onclick="showPage('notes',this)">
-      📝 Notes
-    </button>
-
-  </nav>
-
-  <div class="sidebar-bottom">
-
-    <button
-      class="secondary"
-      style="width:100%"
-      onclick="toggleTheme()">
-      🌓 Theme
-    </button>
-
-  </div>
-
-</aside>
-
-
-<!-- =========================
-     MAIN
-========================= -->
-
-<main class="main">
-
-
-<header class="topbar">
-
-  <div>
-
-    <h1 id="pageTitle">
-      Dashboard
-    </h1>
-
-    <p id="dateText"></p>
-
-  </div>
-
-  <button
-    class="icon-btn"
-    onclick="toggleTheme()">
-    🌓
-  </button>
-
-</header>
-
-
-<!-- =========================
-     DASHBOARD
-========================= -->
-
-<section
-  id="dashboard"
-  class="page active">
-
-  <div class="card welcome">
-
-    <h2>
-      Welcome to Nexus.
-    </h2>
-
-    <p>
-      Your personal productivity workspace.
-      Start by adding subjects, tasks or goals.
-      Every new user starts with an empty workspace.
-    </p>
-
-  </div>
-
-
-  <div class="grid">
-
-    <div class="card stat-card">
-
-      <div class="icon">
-        📚
-      </div>
-
-      <h3 id="dashSubjects">
-        0
-      </h3>
-
-      <p>
-        Subjects
-      </p>
-
-    </div>
-
-
-    <div class="card stat-card">
-
-      <div class="icon">
-        ✅
-      </div>
-
-      <h3 id="dashTasks">
-        0
-      </h3>
-
-      <p>
-        Completed Tasks
-      </p>
-
-    </div>
-
-
-    <div class="card stat-card">
-
-      <div class="icon">
-        🎯
-      </div>
-
-      <h3 id="dashGoals">
-        0
-      </h3>
-
-      <p>
-        Goals
-      </p>
-
-    </div>
-
-
-    <div class="card stat-card">
-
-      <div class="icon">
-        🔥
-      </div>
-
-      <h3 id="dashStreak">
-        0
-      </h3>
-
-      <p>
-        Focus Sessions
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <div class="section-title">
-
-    <h2>
-      Today's Tasks
-    </h2>
-
-    <button
-      class="primary"
-      onclick="showPage('tasks')">
-      Manage
-    </button>
-
-  </div>
-
-
-  <div
-    class="card"
-    id="dashboardTasks">
-  </div>
-
-
-  <div class="section-title">
-
-    <h2>
-      Motivation
-    </h2>
-
-  </div>
-
-
-  <div class="card">
-
-    <p
-      id="quote"
-      style="font-size:20px;line-height:1.6;">
-    </p>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     SUBJECTS
-========================= -->
-
-<section
-  id="subjects"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Add Subject
-    </h2>
-
-    <br>
-
-    <input
-      id="subjectName"
-      class="input"
-      placeholder="Subject name">
-
-    <input
-      id="subjectTarget"
-      class="input"
-      type="number"
-      min="0"
-      max="100"
-      placeholder="Starting progress %">
-
-    <button
-      class="primary"
-      onclick="addSubject()">
-      Add Subject
-    </button>
-
-  </div>
-
-
-  <div class="section-title">
-
-    <h2>
-      Your Subjects
-    </h2>
-
-  </div>
-
-
-  <div
-    id="subjectGrid"
-    class="subject-grid">
-  </div>
-
-</section>
-
-
-<!-- =========================
-     TASKS
-========================= -->
-
-<section
-  id="tasks"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Add Task
-    </h2>
-
-    <br>
-
-    <input
-      id="taskInput"
-      class="input"
-      placeholder="What needs to be done?">
-
-    <button
-      class="primary"
-      onclick="addTask()">
-      Add Task
-    </button>
-
-  </div>
-
-
-  <div class="section-title">
-
-    <h2>
-      Task List
-    </h2>
-
-  </div>
-
-
-  <div
-    class="card"
-    id="taskList">
-  </div>
-
-</section>
-
-
-<!-- =========================
-     GOALS
-========================= -->
-
-<section
-  id="goals"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Create Goal
-    </h2>
-
-    <br>
-
-    <input
-      id="goalName"
-      class="input"
-      placeholder="Goal name">
-
-    <input
-      id="goalTarget"
-      class="input"
-      type="number"
-      min="1"
-      placeholder="Target">
-
-    <button
-      class="primary"
-      onclick="addGoal()">
-      Create Goal
-    </button>
-
-  </div>
-
-
-  <div class="section-title">
-
-    <h2>
-      Your Goals
-    </h2>
-
-  </div>
-
-
-  <div id="goalList"></div>
-
-</section>
-
-
-<!-- =========================
-     FOCUS
-========================= -->
-
-<section
-  id="focus"
-  class="page">
-
-  <div class="card timer-box">
-
-    <h2>
-      Focus Mode
-    </h2>
-
-    <p class="timer-description">
-      Choose your duration and focus deeply.
-    </p>
-
-
-    <!-- DURATION -->
-
-    <div class="duration-area">
-
-      <label>
-        Focus duration
-      </label>
-
-      <div class="duration-row">
-
-        <select
-          id="durationSelect"
-          onchange="selectDuration()">
-
-          <option value="5">
-            5 minutes
-          </option>
-
-          <option value="10">
-            10 minutes
-          </option>
-
-          <option value="25">
-            25 minutes
-          </option>
-
-          <option value="30">
-            30 minutes
-          </option>
-
-          <option value="45">
-            45 minutes
-          </option>
-
-          <option value="50">
-            50 minutes
-          </option>
-
-          <option value="60">
-            60 minutes
-          </option>
-
-          <option value="90">
-            90 minutes
-          </option>
-
-          <option value="custom">
-            Custom
-          </option>
-
-        </select>
-
-
-        <input
-          id="customDuration"
-          type="number"
-          min="1"
-          max="999"
-          placeholder="Custom minutes"
-          disabled>
-
-      </div>
-
-
-      <div class="quick-times">
-
-        <button onclick="quickDuration(25)">
-          25m
-        </button>
-
-        <button onclick="quickDuration(50)">
-          50m
-        </button>
-
-        <button onclick="quickDuration(60)">
-          60m
-        </button>
-
-        <button onclick="quickDuration(90)">
-          90m
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- TIMER -->
-
-    <div
-      class="timer"
-      id="timer">
-      25:00
-    </div>
-
-
-    <div
-      class="timer-status"
-      id="timerStatus">
-      Ready to focus.
-    </div>
-
-
-    <!-- ONLY TWO BUTTONS -->
-
-    <div class="timer-controls">
-
-      <button
-        id="startPauseButton"
-        class="primary"
-        onclick="toggleTimer()">
-        ▶ Start
-      </button>
-
-      <button
-        class="secondary"
-        onclick="resetTimer()">
-        ↻ Reset
-      </button>
-
-    </div>
-
-
-    <!-- TIMER STATS -->
-
-    <div class="timer-stat-row">
-
-      <div class="timer-stat">
-
-        <strong id="focusSessions">
-          0
-        </strong>
-
-        <span>
-          Completed Sessions
-        </span>
-
-      </div>
-
-
-      <div class="timer-stat">
-
-        <strong id="focusMinutes">
-          0
-        </strong>
-
-        <span>
-          Focus Minutes
-        </span>
-
-      </div>
-
-
-      <div class="timer-stat">
-
-        <strong id="focusStreak">
-          0
-        </strong>
-
-        <span>
-          Focus Streak
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     NOTES
-========================= -->
-
-<section
-  id="notes"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Quick Notes
-    </h2>
-
-    <br>
-
-    <textarea
-      id="notesArea"
-      class="input"
-      placeholder="Write anything you want to remember..."></textarea>
-
-    <div class="note-actions">
-
-      <button
-        class="primary"
-        onclick="saveNotes()">
-        Save Notes
-      </button>
-
-      <button
-        class="secondary"
-        onclick="clearNotes()">
-        Clear
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-</main>
-
-</div>
-
-
-<!-- =========================
-     MOBILE NAV
-========================= -->
-
-<nav class="mobile-nav">
-
-  <button onclick="showPage('dashboard')">
-    🏠<br>Home
-  </button>
-
-  <button onclick="showPage('subjects')">
-    📚<br>Subjects
-  </button>
-
-  <button onclick="showPage('tasks')">
-    ✅<br>Tasks
-  </button>
-
-  <button onclick="showPage('focus')">
-    ⏱️<br>Focus
-  </button>
-
-  <button onclick="showPage('notes')">
-    📝<br>Notes
-  </button>
-
-</nav>
-
-
-<script>
-
-/* =====================================================
-   NEXUS DATA
-=====================================================
-
-There is NO personal data in this code.
-
-Every user starts with:
-
-Subjects = 0
-Tasks = 0
-Goals = 0
-Focus sessions = 0
-Focus minutes = 0
-Notes = empty
-
-Data is stored only in the user's browser.
-===================================================== */
-
-
-let subjects =
-JSON.parse(
-  localStorage.getItem("nexus_subjects") || "[]"
-);
-
-
-let tasks =
-JSON.parse(
-  localStorage.getItem("nexus_tasks") || "[]"
-);
-
-
-let goals =
-JSON.parse(
-  localStorage.getItem("nexus_goals") || "[]"
-);
-
-
-let focusSessions =
-Number(
-  localStorage.getItem("nexus_focus_sessions") || 0
-);
-
-
-let focusMinutes =
-Number(
-  localStorage.getItem("nexus_focus_minutes") || 0
-);
-
-
-let focusStreak =
-Number(
-  localStorage.getItem("nexus_focus_streak") || 0
-);
-
-
-let notes =
-localStorage.getItem("nexus_notes") || "";
-
-
-/* =====================================================
-   TIMER STATE
-===================================================== */
-
-let timerInterval = null;
-
-let timerRunning = false;
-
-let selectedDurationMinutes = 25;
-
-let timerSeconds = selectedDurationMinutes * 60;
-
-
-/* =====================================================
-   PAGE NAVIGATION
-===================================================== */
-
-function showPage(page, button){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(p =>
-      p.classList.remove("active")
-    );
-
-
-  const target =
-    document.getElementById(page);
-
-  if(target){
-    target.classList.add("active");
-  }
-
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(b =>
-      b.classList.remove("active")
-    );
-
-
-  if(button){
-    button.classList.add("active");
-  }
-
-
-  const titles = {
-
-    dashboard:"Dashboard",
-
-    subjects:"Subjects",
-
-    tasks:"Tasks",
-
-    goals:"Goals",
-
-    focus:"Focus",
-
-    notes:"Notes"
-
-  };
-
-
-  document.getElementById("pageTitle")
-    .textContent =
-    titles[page] || "Nexus";
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-
-/* =====================================================
-   SAVE DATA
-===================================================== */
-
-function save(){
-
-  localStorage.setItem(
-    "nexus_subjects",
-    JSON.stringify(subjects)
-  );
-
-
-  localStorage.setItem(
-    "nexus_tasks",
-    JSON.stringify(tasks)
-  );
-
-
-  localStorage.setItem(
-    "nexus_goals",
-    JSON.stringify(goals)
-  );
-
-
-  localStorage.setItem(
-    "nexus_focus_sessions",
-    focusSessions
-  );
-
-
-  localStorage.setItem(
-    "nexus_focus_minutes",
-    focusMinutes
-  );
-
-
-  localStorage.setItem(
-    "nexus_focus_streak",
-    focusStreak
-  );
-
-
-  localStorage.setItem(
-    "nexus_notes",
-    notes
-  );
-}
-
-
-/* =====================================================
-   SUBJECTS
-===================================================== */
-
-function addSubject(){
-
-  const name =
-    document
-      .getElementById("subjectName")
-      .value
-      .trim();
-
-
-  const target =
-    Number(
-      document
-        .getElementById("subjectTarget")
-        .value || 0
-    );
-
-
-  if(!name){
-    alert("Please enter a subject name.");
-    return;
-  }
-
-
-  subjects.push({
-
-    name:name,
-
-    progress:
-      Math.max(
-        0,
-        Math.min(100,target)
-      )
-
-  });
-
-
-  document
-    .getElementById("subjectName")
-    .value="";
-
-
-  document
-    .getElementById("subjectTarget")
-    .value="";
-
-
-  save();
-
-  render();
-}
-
-
-function changeSubject(index){
-
-  const value =
-    prompt(
-      "Enter progress from 0 to 100:",
-      subjects[index].progress
-    );
-
-
-  if(value===null)return;
-
-
-  const number =
-    Number(value);
-
-
-  if(
-    !Number.isFinite(number)
-  ){
-    alert("Please enter a valid number.");
-    return;
-  }
-
-
-  subjects[index].progress =
-    Math.max(
-      0,
-      Math.min(100,number)
-    );
-
-
-  save();
-
-  render();
-}
-
-
-function deleteSubject(index){
-
-  if(
-    !confirm(
-      "Delete this subject?"
-    )
-  ){
-    return;
-  }
-
-
-  subjects.splice(index,1);
-
-  save();
-
-  render();
-}
-
-
-/* =====================================================
-   TASKS
-===================================================== */
-
-function addTask(){
-
-  const input =
-    document.getElementById("taskInput");
-
-
-  const text =
-    input.value.trim();
-
-
-  if(!text){
-
-    alert("Please enter a task.");
-
-    return;
-  }
-
-
-  tasks.push({
-
-    text:text,
-
-    done:false
-
-  });
-
-
-  input.value="";
-
-
-  save();
-
-  render();
-}
-
-
-function toggleTask(index){
-
-  if(
-    !tasks[index]
-  ){
-    return;
-  }
-
-
-  tasks[index].done =
-    !tasks[index].done;
-
-
-  save();
-
-  render();
-}
-
-
-function deleteTask(index){
-
-  tasks.splice(index,1);
-
-  save();
-
-  render();
-}
-
-
-/* =====================================================
-   GOALS
-===================================================== */
-
-function addGoal(){
-
-  const name =
-    document
-      .getElementById("goalName")
-      .value
-      .trim();
-
-
-  const target =
-    Number(
-      document
-        .getElementById("goalTarget")
-        .value
-    );
-
-
-  if(
-    !name ||
-    !Number.isFinite(target) ||
-    target <= 0
-  ){
-
-    alert(
-      "Enter a goal name and a valid target."
-    );
-
-    return;
-  }
-
-
-  goals.push({
-
-    name:name,
-
-    target:target,
-
-    progress:0
-
-  });
-
-
-  document
-    .getElementById("goalName")
-    .value="";
-
-
-  document
-    .getElementById("goalTarget")
-    .value="";
-
-
-  save();
-
-  render();
-}
-
-
-function updateGoal(index){
-
-  const value =
-    prompt(
-      "Enter current progress:",
-      goals[index].progress
-    );
-
-
-  if(value===null)return;
-
-
-  const number =
-    Number(value);
-
-
-  if(
-    !Number.isFinite(number)
-  ){
-
-    alert(
-      "Please enter a valid number."
-    );
-
-    return;
-  }
-
-
-  goals[index].progress =
-    Math.max(
-      0,
-      Math.min(
-        goals[index].target,
-        number
-      )
-    );
-
-
-  save();
-
-  render();
-}
-
-
-function deleteGoal(index){
-
-  goals.splice(index,1);
-
-  save();
-
-  render();
-}
-
-
-/* =====================================================
-   TIMER — DURATION
-===================================================== */
-
-function selectDuration(){
-
-  const select =
-    document.getElementById(
-      "durationSelect"
-    );
-
-
-  const custom =
-    document.getElementById(
-      "customDuration"
-    );
-
-
-  if(select.value === "custom"){
-
-    custom.disabled=false;
-
-    custom.focus();
-
-    return;
-
-  }
-
-
-  custom.disabled=true;
-
-  const minutes =
-    Number(select.value);
-
-
-  if(
-    Number.isFinite(minutes) &&
-    minutes > 0
-  ){
-
-    setTimerDuration(minutes);
-
-  }
-}
-
-
-function quickDuration(minutes){
-
-  const select =
-    document.getElementById(
-      "durationSelect"
-    );
-
-
-  const custom =
-    document.getElementById(
-      "customDuration"
-    );
-
-
-  const allowed =
-    Array.from(
-      select.options
-    )
-    .map(option => option.value);
-
-
-  if(
-    allowed.includes(String(minutes))
-  ){
-
-    select.value=String(minutes);
-
-    custom.disabled=true;
-
-  }else{
-
-    select.value="custom";
-
-    custom.disabled=false;
-
-    custom.value=minutes;
-
-  }
-
-
-  setTimerDuration(minutes);
-}
-
-
-function getSelectedDuration(){
-
-  const select =
-    document.getElementById(
-      "durationSelect"
-    );
-
-
-  if(select.value==="custom"){
-
-    const custom =
-      Number(
-        document
-          .getElementById(
-            "customDuration"
-          )
-          .value
-      );
-
-
-    if(
-      !Number.isFinite(custom) ||
-      custom < 1
-    ){
-
-      alert(
-        "Enter a custom duration of at least 1 minute."
-      );
-
-      return null;
-    }
-
-
-    return Math.floor(custom);
-  }
-
-
-  const minutes =
-    Number(select.value);
-
-
-  if(
-    !Number.isFinite(minutes) ||
-    minutes < 1
-  ){
-
-    return null;
-  }
-
-
-  return Math.floor(minutes);
-}
-
-
-function setTimerDuration(minutes){
-
-  if(timerRunning){
-
-    alert(
-      "Pause or reset the timer before changing its duration."
-    );
-
-    return;
-  }
-
-
-  selectedDurationMinutes =
-    Math.floor(minutes);
-
-
-  timerSeconds =
-    selectedDurationMinutes * 60;
-
-
-  updateTimerDisplay();
-
-
-  document.getElementById(
-    "timerStatus"
-  ).textContent =
-    "Ready to focus.";
-}
-
-
-/* =====================================================
-   TIMER — START / PAUSE
-===================================================== */
-
-function toggleTimer(){
-
-  if(timerRunning){
-
-    pauseTimer();
-
-  }else{
-
-    startTimer();
-
-  }
-}
-
-
-function startTimer(){
-
-  if(timerRunning){
-    return;
-  }
-
-
-  /*
-    If timer has reached zero,
-    create a fresh session first.
-  */
-
-  if(timerSeconds <= 0){
-
-    timerSeconds =
-      selectedDurationMinutes * 60;
-
-  }
-
-
-  timerRunning=true;
-
-
-  document.getElementById(
-    "startPauseButton"
-  ).textContent =
-    "⏸ Pause";
-
-
-  document.getElementById(
-    "timerStatus"
-  ).textContent =
-    "Focus mode is running...";
-
-
-  /*
-    Only ONE interval can exist because
-    timerRunning prevents duplicate starts.
-  */
-
-  timerInterval =
-    setInterval(
-      timerTick,
-      1000
-    );
-}
-
-
-function pauseTimer(){
-
-  if(!timerRunning){
-    return;
-  }
-
-
-  clearInterval(
-    timerInterval
-  );
-
-
-  timerInterval=null;
-
-  timerRunning=false;
-
-
-  document.getElementById(
-    "startPauseButton"
-  ).textContent =
-    "▶ Start";
-
-
-  document.getElementById(
-    "timerStatus"
-  ).textContent =
-    "Timer paused.";
-}
-
-
-/* =====================================================
-   TIMER — RESET
-===================================================== */
-
-function resetTimer(){
-
-  clearInterval(
-    timerInterval
-  );
-
-
-  timerInterval=null;
-
-  timerRunning=false;
-
-
-  timerSeconds =
-    selectedDurationMinutes * 60;
-
-
-  document.getElementById(
-    "startPauseButton"
-  ).textContent =
-    "▶ Start";
-
-
-  document.getElementById(
-    "timerStatus"
-  ).textContent =
-    "Ready to focus.";
-
-
-  updateTimerDisplay();
-}
-
-
-/* =====================================================
-   TIMER — TICK
-===================================================== */
-
-function timerTick(){
-
-  if(timerSeconds > 0){
-
-    timerSeconds--;
-
-    updateTimerDisplay();
-
-    return;
-  }
-
-
-  /*
-    Timer finished.
-  */
-
-  clearInterval(
-    timerInterval
-  );
-
-
-  timerInterval=null;
-
-  timerRunning=false;
-
-
-  focusSessions++;
-
-  focusMinutes +=
-    selectedDurationMinutes;
-
-  focusStreak++;
-
-
-  save();
-
-
-  document.getElementById(
-    "startPauseButton"
-  ).textContent =
-    "▶ Start";
-
-
-  document.getElementById(
-    "timerStatus"
-  ).textContent =
-    "Focus session complete! 🎉";
-
-
-  timerSeconds=0;
-
-  updateTimerDisplay();
-
-  render();
-
-
-  /*
-    Browser notification if permission
-    has already been granted.
-  */
-
-  notifyCompletion();
-
-
-  /*
-    Also show a normal alert so the
-    completion is never silently missed.
-  */
-
-  setTimeout(
-    () => {
-      alert(
-        "Focus session complete! 🎉"
-      );
-    },
-    50
-  );
-}
-
-
-/* =====================================================
-   TIMER DISPLAY
-===================================================== */
-
-function updateTimerDisplay(){
-
-  const minutes =
-    Math.floor(
-      timerSeconds / 60
-    )
-    .toString()
-    .padStart(2,"0");
-
-
-  const seconds =
-    (timerSeconds % 60)
-    .toString()
-    .padStart(2,"0");
-
-
-  document.getElementById(
-    "timer"
-  ).textContent =
-    `${minutes}:${seconds}`;
-}
-
-
-/* =====================================================
-   NOTIFICATION
-===================================================== */
-
-function notifyCompletion(){
-
-  if(
-    "Notification" in window &&
-    Notification.permission === "granted"
-  ){
-
-    new Notification(
-      "Nexus — Focus Complete",
-      {
-        body:
-          `${selectedDurationMinutes} minute focus session completed. Great work!`
-      }
-    );
-
-  }
-}
-
-
-/* =====================================================
-   THEME
-===================================================== */
-
-function toggleTheme(){
-
-  document.body.classList.toggle(
-    "light"
-  );
-
-
-  localStorage.setItem(
-    "nexus_theme",
-    document.body.classList.contains(
-      "light"
-    )
-      ? "light"
-      : "dark"
-  );
-}
-
-
-/* =====================================================
-   NOTES
-===================================================== */
-
-function saveNotes(){
-
-  notes =
-    document
-      .getElementById("notesArea")
-      .value;
-
-
-  save();
-
-
-  alert(
-    "Notes saved."
-  );
-}
-
-
-function clearNotes(){
-
-  if(
-    !confirm(
-      "Clear your notes?"
-    )
-  ){
-    return;
-  }
-
-
-  notes="";
-
-
-  document
-    .getElementById("notesArea")
-    .value="";
-
-
-  save();
-}
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-function renderDashboard(){
-
-  const completed =
-    tasks.filter(
-      task => task.done
-    ).length;
-
-
-  document.getElementById(
-    "dashSubjects"
-  ).textContent =
-    subjects.length;
-
-
-  document.getElementById(
-    "dashTasks"
-  ).textContent =
-    completed;
-
-
-  document.getElementById(
-    "dashGoals"
-  ).textContent =
-    goals.length;
-
-
-  document.getElementById(
-    "dashStreak"
-  ).textContent =
-    focusSessions;
-
-
-  const box =
-    document.getElementById(
-      "dashboardTasks"
-    );
-
-
-  const pending =
-    tasks.filter(
-      task => !task.done
-    );
-
-
-  if(!pending.length){
-
-    box.innerHTML =
-      `<div class="empty">
-        No pending tasks. Add one from Tasks.
-      </div>`;
-
-    return;
-  }
-
-
-  box.innerHTML =
-    pending
-      .slice(0,5)
-      .map(
-        task =>
-        `<div class="task">
-          <span class="task-text">
-            ${escapeHTML(task.text)}
-          </span>
-        </div>`
-      )
-      .join("");
-}
-
-
-/* =====================================================
-   SUBJECT RENDER
-===================================================== */
-
-function renderSubjects(){
-
-  const box =
-    document.getElementById(
-      "subjectGrid"
-    );
-
-
-  if(!subjects.length){
-
-    box.innerHTML =
-      `<div class="card empty">
-        No subjects yet.<br>
-        Add your first subject above.
-      </div>`;
-
-    return;
-  }
-
-
-  box.innerHTML =
-    subjects
-      .map(
-        (subject,index) => `
-
-        <div class="subject-card">
-
-          <div class="subject-head">
-
-            <strong>
-              ${escapeHTML(subject.name)}
-            </strong>
-
-            <span class="small">
-              ${subject.progress}%
-            </span>
-
-          </div>
-
-
-          <div class="progress">
-
-            <div
-              class="progress-bar"
-              style="width:${subject.progress}%">
+<!-- =========================================================
+     SETUP SCREEN
+========================================================= -->
+
+<section id="setupScreen">
+    <div class="setup-card">
+
+        <div class="logo">
+            <div class="logo-mark">N</div>
+            Nexus
+        </div>
+
+        <h1>Your student workspace.</h1>
+
+        <p>
+            Set up Nexus once, then use it your way.
+            Your workspace stays in this browser and is not uploaded
+            to a Nexus server.
+        </p>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="setupName">Name <span style="color:var(--muted)">(optional)</span></label>
+                <input id="setupName" type="text" maxlength="60" placeholder="Your name">
             </div>
 
-          </div>
+            <div class="form-group">
+                <label for="setupGrade">Grade / Level <span style="color:var(--muted)">(optional)</span></label>
+                <input id="setupGrade" type="text" maxlength="40" placeholder="e.g. Grade 10">
+            </div>
 
+            <div class="form-group">
+                <label for="setupGoal">Daily study goal</label>
+                <input id="setupGoal" type="number" min="1" max="1440" value="120">
+                <small>Minutes per day</small>
+            </div>
 
-          <div style="display:flex;gap:7px">
-
-            <button
-              class="secondary"
-              onclick="changeSubject(${index})">
-              Update
-            </button>
-
-            <button
-              class="danger"
-              onclick="deleteSubject(${index})">
-              Delete
-            </button>
-
-          </div>
-
-        </div>
-
-      `
-      )
-      .join("");
-}
-
-
-/* =====================================================
-   TASK RENDER
-===================================================== */
-
-function renderTasks(){
-
-  const box =
-    document.getElementById(
-      "taskList"
-    );
-
-
-  if(!tasks.length){
-
-    box.innerHTML =
-      `<div class="empty">
-        No tasks yet. Your workspace is ready.
-      </div>`;
-
-    return;
-  }
-
-
-  box.innerHTML =
-    tasks
-      .map(
-        (task,index) => `
-
-        <div
-          class="task
-          ${task.done ? "done" : ""}">
-
-          <input
-            type="checkbox"
-            ${task.done ? "checked" : ""}
-            onchange="toggleTask(${index})">
-
-          <span class="task-text">
-            ${escapeHTML(task.text)}
-          </span>
-
-          <button
-            class="danger"
-            onclick="deleteTask(${index})">
-            Delete
-          </button>
+            <div class="form-group">
+                <label for="setupFocus">Preferred focus duration</label>
+                <select id="setupFocus">
+                    <option value="25">25 minutes</option>
+                    <option value="50">50 minutes</option>
+                    <option value="60" selected>60 minutes</option>
+                    <option value="90">90 minutes</option>
+                </select>
+            </div>
 
         </div>
 
-      `
-      )
-      .join("");
-}
+        <div class="subject-builder">
+
+            <div class="form-group">
+                <label>Add your subjects</label>
+
+                <div class="subject-input-row">
+                    <input
+                        id="setupSubjectInput"
+                        type="text"
+                        maxlength="50"
+                        placeholder="e.g. Mathematics"
+                    >
+                    <button class="secondary-btn" onclick="addSetupSubject()">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <div id="setupSubjectTags" class="subject-tags"></div>
+
+            <small style="display:block;margin-top:10px;color:var(--muted)">
+                You can also add subjects later.
+            </small>
+        </div>
+
+        <button class="primary-btn setup-submit" onclick="finishSetup()">
+            Enter Nexus →
+        </button>
+
+    </div>
+</section>
 
 
-/* =====================================================
-   GOAL RENDER
-===================================================== */
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
 
-function renderGoals(){
+<div id="app" class="hidden">
 
-  const box =
-    document.getElementById(
-      "goalList"
-    );
+    <aside id="sidebar" class="sidebar">
+
+        <div class="sidebar-logo">
+            <div class="logo">
+                <div class="logo-mark">N</div>
+                Nexus
+            </div>
+        </div>
+
+        <nav class="nav">
+
+            <button data-page="dashboard" class="active">
+                📊 <span>Dashboard</span>
+            </button>
+
+            <button data-page="subjects">
+                📚 <span>Subjects</span>
+            </button>
+
+            <button data-page="tasks">
+                ✅ <span>Tasks</span>
+            </button>
+
+            <button data-page="goals">
+                🎯 <span>Goals</span>
+            </button>
+
+            <button data-page="focus">
+                ⏱️ <span>Focus</span>
+            </button>
+
+            <button data-page="exams">
+                📅 <span>Exams</span>
+            </button>
+
+            <button data-page="analytics">
+                📈 <span>Analytics</span>
+            </button>
+
+            <button data-page="notes">
+                📝 <span>Notes</span>
+            </button>
+
+            <button data-page="settings">
+                ⚙️ <span>Settings</span>
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="workspace-badge">
+                <strong>Free student workspace</strong>
+                Data stays in this browser.
+            </div>
+        </div>
+
+    </aside>
 
 
-  if(!goals.length){
+    <main class="main">
 
-    box.innerHTML =
-      `<div class="card empty">
-        No goals yet.
-        Create your first goal above.
-      </div>`;
+        <header class="topbar">
 
-    return;
-  }
+            <button id="mobileMenu" class="mobile-menu">
+                ☰
+            </button>
 
+            <div>
+                <strong id="topbarTitle">Dashboard</strong>
+            </div>
 
-  box.innerHTML =
-    goals
-      .map(
-        (goal,index) => {
+            <button
+                id="themeToggle"
+                class="icon-btn secondary-btn"
+                title="Toggle theme"
+                onclick="toggleTheme()"
+            >
+                🌙
+            </button>
 
-          const percentage =
-            Math.round(
-              (
-                goal.progress /
-                goal.target
-              ) * 100
-            );
+        </header>
 
 
-          return `
+        <!-- =================================================
+             DASHBOARD
+        ================================================== -->
 
-          <div class="goal">
+        <section id="page-dashboard" class="page active">
 
-            <div class="goal-head">
+            <div class="page-header">
+                <h1 id="welcomeTitle">Welcome to Nexus 👋</h1>
+                <p id="dashboardDate"></p>
+            </div>
 
-              <strong>
-                ${escapeHTML(goal.name)}
-              </strong>
+            <div class="grid stats-grid">
 
-              <span class="small">
-                ${goal.progress}/${goal.target}
-              </span>
+                <div class="card stat-card">
+                    <div class="stat-label">TODAY'S STUDY</div>
+                    <div class="stat-value" id="todayStudy">0m</div>
+                    <div class="stat-sub" id="todayGoalText">of 120m goal</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">STREAK</div>
+                    <div class="stat-value" id="streakValue">0</div>
+                    <div class="stat-sub">consecutive study days</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">TASKS TODAY</div>
+                    <div class="stat-value" id="todayTasks">0</div>
+                    <div class="stat-sub" id="taskProgressText">0 completed</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">UPCOMING EXAMS</div>
+                    <div class="stat-value" id="upcomingExams">0</div>
+                    <div class="stat-sub">future exams</div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="grid two-grid">
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Daily goal</h2>
+                        <span id="goalPercent">0%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div
+                            id="dailyGoalProgress"
+                            class="progress-bar"
+                            style="width:0%"
+                        ></div>
+                    </div>
+
+                    <p
+                        id="dailyGoalMessage"
+                        style="margin-top:12px;color:var(--muted);font-size:13px"
+                    >
+                        Start your first focus session.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        style="margin-top:14px"
+                        onclick="navigate('focus')"
+                    >
+                        Start Focus →
+                    </button>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Upcoming exams</h2>
+                        <button
+                            class="secondary-btn"
+                            onclick="navigate('exams')"
+                        >
+                            View all
+                        </button>
+                    </div>
+
+                    <div id="dashboardExams"></div>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="card">
+
+                <div class="section-title">
+                    <h2>Today's tasks</h2>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="navigate('tasks')"
+                    >
+                        Manage tasks
+                    </button>
+                </div>
+
+                <div id="dashboardTasks"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SUBJECTS
+        ================================================== -->
+
+        <section id="page-subjects" class="page">
+
+            <div class="page-header">
+                <h1>Subjects</h1>
+                <p>Create the subjects that matter to you.</p>
+            </div>
+
+            <div class="card form-card">
+
+                <h3>Add subject</h3>
+
+                <div class="subject-input-row">
+                    <input
+                        id="newSubjectName"
+                        type="text"
+                        maxlength="50"
+                        placeholder="Subject name"
+                    >
+
+                    <button
+                        class="primary-btn"
+                        onclick="addSubject()"
+                    >
+                        Add
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="subjectsGrid" class="grid three-grid"></div>
+
+        </section>
+
+
+        <!-- =================================================
+             TASKS
+        ================================================== -->
+
+        <section id="page-tasks" class="page">
+
+            <div class="page-header">
+                <h1>Tasks</h1>
+                <p>Turn your plans into clear actions.</p>
+            </div>
+
+            <div class="card form-card">
+
+                <h3>New task</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+                        <label>Task</label>
+                        <input
+                            id="taskTitle"
+                            maxlength="120"
+                            placeholder="What do you need to do?"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select id="taskSubject"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="taskPriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Due date</label>
+                        <input id="taskDue" type="date">
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button class="primary-btn" onclick="createTask()">
+                        Add task
+                    </button>
+                </div>
 
             </div>
 
 
-            <div class="goal-progress">
+            <div class="toolbar">
 
-              <div
-                class="goal-fill"
-                style="width:${Math.min(
-                  percentage,
-                  100
-                )}%">
-              </div>
+                <div class="toolbar-actions">
+
+                    <button
+                        class="secondary-btn"
+                        onclick="setTaskFilter('all')"
+                    >
+                        All
+                    </button>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="setTaskFilter('active')"
+                    >
+                        Active
+                    </button>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="setTaskFilter('completed')"
+                    >
+                        Completed
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="taskList" class="task-list"></div>
+
+        </section>
+
+
+        <!-- =================================================
+             GOALS
+        ================================================== -->
+
+        <section id="page-goals" class="page">
+
+            <div class="page-header">
+                <h1>Goals</h1>
+                <p>Define what you want to accomplish.</p>
+            </div>
+
+            <div class="card form-card">
+
+                <h3>New goal</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+                        <label>Goal</label>
+                        <input
+                            id="goalTitle"
+                            maxlength="120"
+                            placeholder="e.g. Finish algebra revision"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target</label>
+                        <input
+                            id="goalTarget"
+                            type="number"
+                            min="1"
+                            value="10"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <input
+                            id="goalUnit"
+                            maxlength="20"
+                            value="tasks"
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <button
+                        class="primary-btn"
+                        onclick="createGoal()"
+                    >
+                        Add goal
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="goalsGrid" class="grid two-grid"></div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOCUS
+        ================================================== -->
+
+        <section id="page-focus" class="page">
+
+            <div class="page-header">
+                <h1>Focus</h1>
+                <p>One session. One target. Full attention.</p>
+            </div>
+
+            <div class="card timer-card">
+
+                <div class="stat-label">FOCUS TIMER</div>
+
+                <div id="timerDisplay" class="timer-display">
+                    60:00
+                </div>
+
+                <div class="timer-options">
+
+                    <button data-duration="25" onclick="selectDuration(25)">
+                        25m
+                    </button>
+
+                    <button data-duration="50" onclick="selectDuration(50)">
+                        50m
+                    </button>
+
+                    <button data-duration="60" onclick="selectDuration(60)">
+                        60m
+                    </button>
+
+                    <button data-duration="90" onclick="selectDuration(90)">
+                        90m
+                    </button>
+
+                    <button onclick="customDuration()">
+                        Custom
+                    </button>
+
+                </div>
+
+                <div class="timer-controls">
+
+                    <button
+                        id="timerStartButton"
+                        class="primary-btn"
+                        onclick="toggleTimer()"
+                    >
+                        Start
+                    </button>
+
+                    <button
+                        class="secondary-btn"
+                        onclick="resetTimer()"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+                <div
+                    id="timerStatus"
+                    class="timer-status"
+                >
+                    Ready when you are.
+                </div>
 
             </div>
 
 
             <br>
 
+            <div class="grid three-grid">
 
-            <button
-              class="secondary"
-              onclick="updateGoal(${index})">
-              Update Progress
-            </button>
+                <div class="card stat-card">
+                    <div class="stat-label">TOTAL FOCUS TIME</div>
+                    <div
+                        id="totalFocus"
+                        class="stat-value"
+                    >
+                        0m
+                    </div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">FOCUS SESSIONS</div>
+                    <div
+                        id="focusSessions"
+                        class="stat-value"
+                    >
+                        0
+                    </div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">TODAY</div>
+                    <div
+                        id="focusToday"
+                        class="stat-value"
+                    >
+                        0m
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
 
 
-            <button
-              class="danger"
-              onclick="deleteGoal(${index})">
-              Delete
-            </button>
+        <!-- =================================================
+             EXAMS
+        ================================================== -->
 
-          </div>
+        <section id="page-exams" class="page">
 
-          `;
+            <div class="page-header">
+                <h1>Exams</h1>
+                <p>Keep important dates visible.</p>
+            </div>
+
+            <div class="card form-card">
+
+                <h3>Add exam</h3>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Exam name</label>
+                        <input
+                            id="examName"
+                            maxlength="100"
+                            placeholder="Exam / test name"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select id="examSubject"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input id="examDate" type="date">
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <button
+                        class="primary-btn"
+                        onclick="createExam()"
+                    >
+                        Add exam
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="examList" class="grid two-grid"></div>
+
+        </section>
+
+
+        <!-- =================================================
+             ANALYTICS
+        ================================================== -->
+
+        <section id="page-analytics" class="page">
+
+            <div class="page-header">
+                <h1>Analytics</h1>
+                <p>See your study activity over time.</p>
+            </div>
+
+            <div class="grid stats-grid">
+
+                <div class="card stat-card">
+                    <div class="stat-label">TODAY</div>
+                    <div id="analyticsToday" class="stat-value">0m</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">THIS WEEK</div>
+                    <div id="analyticsWeek" class="stat-value">0m</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">THIS MONTH</div>
+                    <div id="analyticsMonth" class="stat-value">0m</div>
+                </div>
+
+                <div class="card stat-card">
+                    <div class="stat-label">ALL TIME</div>
+                    <div id="analyticsAll" class="stat-value">0m</div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="grid two-grid">
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Last 7 days</h2>
+                        <span style="font-size:12px;color:var(--muted)">
+                            Focus minutes
+                        </span>
+                    </div>
+
+                    <div id="weeklyChart" class="chart"></div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Subject task progress</h2>
+                    </div>
+
+                    <div
+                        id="subjectAnalytics"
+                        class="task-list"
+                    ></div>
+
+                    <p
+                        style="font-size:12px;color:var(--muted);margin-top:12px"
+                    >
+                        This section measures completed tasks by subject,
+                        not study minutes.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             NOTES
+        ================================================== -->
+
+        <section id="page-notes" class="page">
+
+            <div class="page-header">
+                <h1>Notes</h1>
+                <p>A simple space for ideas, reminders, and planning.</p>
+            </div>
+
+            <div class="card">
+
+                <textarea
+                    id="notesArea"
+                    class="notes-area"
+                    maxlength="20000"
+                    placeholder="Write anything you want to remember..."
+                    oninput="saveNotes()"
+                ></textarea>
+
+                <div
+                    style="display:flex;justify-content:space-between;gap:10px;margin-top:10px"
+                >
+                    <small style="color:var(--muted)">
+                        Saved automatically in this browser.
+                    </small>
+
+                    <small
+                        id="notesCount"
+                        style="color:var(--muted)"
+                    >
+                        0 / 20000
+                    </small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SETTINGS
+        ================================================== -->
+
+        <section id="page-settings" class="page">
+
+            <div class="page-header">
+                <h1>Settings</h1>
+                <p>Manage your Nexus workspace.</p>
+            </div>
+
+            <div class="grid two-grid">
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Profile</h2>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input
+                                id="settingsName"
+                                maxlength="60"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Grade / Level</label>
+                            <input
+                                id="settingsGrade"
+                                maxlength="40"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Daily study goal</label>
+                            <input
+                                id="settingsGoal"
+                                type="number"
+                                min="1"
+                                max="1440"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            class="primary-btn"
+                            onclick="saveSettings()"
+                        >
+                            Save changes
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="section-title">
+                        <h2>Workspace</h2>
+                    </div>
+
+                    <p
+                        style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:15px"
+                    >
+                        Nexus stores your workspace locally in your browser.
+                        Export a backup before clearing it.
+                    </p>
+
+                    <div class="toolbar-actions">
+
+                        <button
+                            class="secondary-btn"
+                            onclick="exportData()"
+                        >
+                            ⬇ Export workspace
+                        </button>
+
+                        <button
+                            class="danger-btn"
+                            onclick="resetWorkspace()"
+                        >
+                            Reset workspace
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="card">
+
+                <div class="section-title">
+                    <h2>About Nexus</h2>
+                </div>
+
+                <p
+                    style="color:var(--muted);line-height:1.7;font-size:14px"
+                >
+                    Nexus is a free student productivity workspace.
+                    It does not require an account, payment, or server
+                    connection for the current version.
+                </p>
+
+                <br>
+
+                <p
+                    style="color:var(--muted);line-height:1.7;font-size:14px"
+                >
+                    Your tasks, goals, exams, notes, and study records are
+                    stored locally in the browser you are using.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<div id="toastContainer"></div>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   NEXUS V2.1
+========================================================= */
+
+const STORAGE_KEY = "nexus_v21_workspace";
+
+const defaultData = {
+    setupComplete: false,
+
+    profile: {
+        name: "",
+        grade: ""
+    },
+
+    dailyGoal: 120,
+
+    preferredFocus: 60,
+
+    subjects: [],
+
+    tasks: [],
+
+    goals: [],
+
+    exams: [],
+
+    notes: "",
+
+    studyLog: {},
+
+    subjectStudyLog: {},
+
+    focusSessions: 0,
+
+    totalFocusMinutes: 0,
+
+    theme: "light"
+};
+
+
+let data = loadData();
+
+let setupSubjects = [];
+
+let currentTaskFilter = "all";
+
+let timer = {
+    duration: data.preferredFocus || 60,
+    remaining: (data.preferredFocus || 60) * 60,
+    running: false,
+    interval: null,
+    subjectId: null,
+    sessionRecorded: false
+};
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function deepClone(object) {
+    return JSON.parse(JSON.stringify(object));
+}
+
+
+function loadData() {
+
+    try {
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (!saved) {
+            return deepClone(defaultData);
         }
-      )
-      .join("");
+
+        const parsed = JSON.parse(saved);
+
+        return mergeData(defaultData, parsed);
+
+    } catch (error) {
+
+        console.warn("Could not load Nexus data.", error);
+
+        return deepClone(defaultData);
+    }
 }
 
 
-/* =====================================================
-   TIMER STAT RENDER
-===================================================== */
+function mergeData(defaults, saved) {
 
-function renderTimerStats(){
+    const result = deepClone(defaults);
 
-  document.getElementById(
-    "focusSessions"
-  ).textContent =
-    focusSessions;
+    if (!saved || typeof saved !== "object") {
+        return result;
+    }
 
+    result.setupComplete =
+        typeof saved.setupComplete === "boolean"
+            ? saved.setupComplete
+            : result.setupComplete;
 
-  document.getElementById(
-    "focusMinutes"
-  ).textContent =
-    focusMinutes;
+    result.dailyGoal =
+        Number.isFinite(Number(saved.dailyGoal))
+            ? Number(saved.dailyGoal)
+            : result.dailyGoal;
 
+    result.preferredFocus =
+        Number.isFinite(Number(saved.preferredFocus))
+            ? Number(saved.preferredFocus)
+            : result.preferredFocus;
 
-  document.getElementById(
-    "focusStreak"
-  ).textContent =
-    focusStreak;
+    result.profile = {
+        ...result.profile,
+        ...(saved.profile || {})
+    };
+
+    if (Array.isArray(saved.subjects)) {
+        result.subjects = saved.subjects;
+    }
+
+    if (Array.isArray(saved.tasks)) {
+        result.tasks = saved.tasks;
+    }
+
+    if (Array.isArray(saved.goals)) {
+        result.goals = saved.goals;
+    }
+
+    if (Array.isArray(saved.exams)) {
+        result.exams = saved.exams;
+    }
+
+    if (typeof saved.notes === "string") {
+        result.notes = saved.notes;
+    }
+
+    if (saved.studyLog && typeof saved.studyLog === "object") {
+        result.studyLog = saved.studyLog;
+    }
+
+    if (
+        saved.subjectStudyLog &&
+        typeof saved.subjectStudyLog === "object"
+    ) {
+        result.subjectStudyLog = saved.subjectStudyLog;
+    }
+
+    result.focusSessions =
+        Number(saved.focusSessions) || 0;
+
+    result.totalFocusMinutes =
+        Number(saved.totalFocusMinutes) || 0;
+
+    result.theme =
+        saved.theme === "dark" ? "dark" : "light";
+
+    return result;
 }
 
 
-/* =====================================================
-   SECURITY / HTML ESCAPING
-===================================================== */
+function saveData() {
 
-function escapeHTML(text){
+    try {
 
-  const div =
-    document.createElement(
-      "div"
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(data)
+        );
+
+    } catch (error) {
+
+        showToast(
+            "Your browser could not save the workspace."
+        );
+    }
+}
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function createId(prefix = "id") {
+
+    return (
+        prefix +
+        "_" +
+        Date.now().toString(36) +
+        "_" +
+        Math.random().toString(36).slice(2, 8)
+    );
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function todayKey() {
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+
+    const month =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+    const day =
+        String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+function dateFromKey(key) {
+
+    const [year, month, day] =
+        key.split("-").map(Number);
+
+    return new Date(year, month - 1, day);
+}
+
+
+function formatMinutes(minutes) {
+
+    minutes = Math.max(0, Math.round(Number(minutes) || 0));
+
+    const hours = Math.floor(minutes / 60);
+
+    const mins = minutes % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${mins}m`;
+    }
+
+    return `${mins}m`;
+}
+
+
+function formatDate(dateString) {
+
+    if (!dateString) {
+        return "No date";
+    }
+
+    const date = dateFromKey(dateString);
+
+    return date.toLocaleDateString(undefined, {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+
+function daysBetween(a, b) {
+
+    const ms = 24 * 60 * 60 * 1000;
+
+    return Math.round(
+        (dateFromKey(b) - dateFromKey(a)) / ms
+    );
+}
+
+
+function getSubjectName(subjectId) {
+
+    const subject =
+        data.subjects.find(
+            s => s.id === subjectId
+        );
+
+    return subject ? subject.name : "No subject";
+}
+
+
+function showToast(message) {
+
+    const container =
+        document.getElementById("toastContainer");
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = "toast";
+
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2800);
+}
+
+
+/* =========================================================
+   SETUP
+========================================================= */
+
+function addSetupSubject() {
+
+    const input =
+        document.getElementById("setupSubjectInput");
+
+    const name = input.value.trim();
+
+    if (!name) {
+        return;
+    }
+
+    if (
+        setupSubjects.some(
+            s => s.toLowerCase() === name.toLowerCase()
+        )
+    ) {
+        showToast("That subject is already added.");
+        return;
+    }
+
+    setupSubjects.push(name);
+
+    input.value = "";
+
+    renderSetupSubjects();
+}
+
+
+function removeSetupSubject(index) {
+
+    setupSubjects.splice(index, 1);
+
+    renderSetupSubjects();
+}
+
+
+function renderSetupSubjects() {
+
+    const container =
+        document.getElementById("setupSubjectTags");
+
+    container.innerHTML =
+        setupSubjects.map(
+            (subject, index) => `
+                <span class="subject-tag">
+                    ${escapeHTML(subject)}
+                    <button
+                        onclick="removeSetupSubject(${index})"
+                        aria-label="Remove subject"
+                    >
+                        ×
+                    </button>
+                </span>
+            `
+        ).join("");
+}
+
+
+function finishSetup() {
+
+    const name =
+        document.getElementById("setupName").value.trim();
+
+    const grade =
+        document.getElementById("setupGrade").value.trim();
+
+    let goal =
+        Number(
+            document.getElementById("setupGoal").value
+        );
+
+    const focus =
+        Number(
+            document.getElementById("setupFocus").value
+        );
+
+    if (!Number.isFinite(goal) || goal < 1) {
+        goal = 120;
+    }
+
+    data.profile.name = name;
+    data.profile.grade = grade;
+
+    data.dailyGoal =
+        Math.min(1440, Math.round(goal));
+
+    data.preferredFocus =
+        [25, 50, 60, 90].includes(focus)
+            ? focus
+            : 60;
+
+    data.subjects =
+        setupSubjects.map(name => ({
+            id: createId("sub"),
+            name
+        }));
+
+    /*
+      Everything else remains empty.
+      This is intentional: Nexus does not ship with
+      personal/sample student data.
+    */
+
+    data.tasks = [];
+    data.goals = [];
+    data.exams = [];
+    data.notes = "";
+    data.studyLog = {};
+    data.subjectStudyLog = {};
+    data.focusSessions = 0;
+    data.totalFocusMinutes = 0;
+
+    data.setupComplete = true;
+
+    saveData();
+
+    startApp();
+
+    showToast("Welcome to Nexus 🚀");
+}
+
+
+/* =========================================================
+   APP START
+========================================================= */
+
+function startApp() {
+
+    document
+        .getElementById("setupScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+    applyTheme();
+
+    initializeTimer();
+
+    refreshAll();
+
+    navigate("dashboard");
+}
+
+
+function applyTheme() {
+
+    document.body.classList.toggle(
+        "dark",
+        data.theme === "dark"
+    );
+
+    const button =
+        document.getElementById("themeToggle");
+
+    if (button) {
+        button.textContent =
+            data.theme === "dark"
+                ? "☀️"
+                : "🌙";
+    }
+}
+
+
+function toggleTheme() {
+
+    data.theme =
+        data.theme === "dark"
+            ? "light"
+            : "dark";
+
+    saveData();
+
+    applyTheme();
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function navigate(page) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(section => {
+            section.classList.remove("active");
+        });
+
+    const target =
+        document.getElementById(`page-${page}`);
+
+    if (!target) {
+        return;
+    }
+
+    target.classList.add("active");
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.page === page
+            );
+        });
+
+    const activeButton =
+        document.querySelector(
+            `.nav button[data-page="${page}"]`
+        );
+
+    if (activeButton) {
+        document.getElementById("topbarTitle").textContent =
+            activeButton.textContent.trim();
+    }
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+    refreshPage(page);
+}
+
+
+function refreshPage(page) {
+
+    if (page === "dashboard") {
+        renderDashboard();
+    }
+
+    if (page === "subjects") {
+        renderSubjects();
+    }
+
+    if (page === "tasks") {
+        renderTasks();
+    }
+
+    if (page === "goals") {
+        renderGoals();
+    }
+
+    if (page === "focus") {
+        renderFocusStats();
+    }
+
+    if (page === "exams") {
+        renderExams();
+    }
+
+    if (page === "analytics") {
+        renderAnalytics();
+    }
+
+    if (page === "notes") {
+        renderNotes();
+    }
+
+    if (page === "settings") {
+        renderSettings();
+    }
+}
+
+
+/* =========================================================
+   REFRESH ALL
+========================================================= */
+
+function refreshAll() {
+
+    renderDashboard();
+    renderSubjects();
+    renderTaskSubjectOptions();
+    renderTasks();
+    renderGoals();
+    renderFocusStats();
+    renderExamSubjectOptions();
+    renderExams();
+    renderAnalytics();
+    renderNotes();
+    renderSettings();
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function getTodayStudy() {
+
+    return Number(
+        data.studyLog[todayKey()] || 0
+    );
+}
+
+
+function calculateStreak() {
+
+    const dates =
+        Object.keys(data.studyLog)
+            .filter(
+                date =>
+                    Number(data.studyLog[date]) > 0
+            )
+            .sort();
+
+    if (dates.length === 0) {
+        return 0;
+    }
+
+    let streak = 1;
+
+    for (let i = dates.length - 1; i > 0; i--) {
+
+        const difference =
+            daysBetween(
+                dates[i - 1],
+                dates[i]
+            );
+
+        if (difference === 1) {
+            streak++;
+        } else {
+            break;
+        }
+    }
+
+    /*
+      A streak is only current if the latest study day
+      is today or yesterday.
+    */
+
+    const latest =
+        dates[dates.length - 1];
+
+    const gap =
+        daysBetween(latest, todayKey());
+
+    if (gap > 1) {
+        return 0;
+    }
+
+    return streak;
+}
+
+
+function renderDashboard() {
+
+    const name =
+        data.profile.name.trim();
+
+    document.getElementById("welcomeTitle").textContent =
+        name
+            ? `Welcome back, ${name} 👋`
+            : "Welcome to Nexus 👋";
+
+    document.getElementById("dashboardDate").textContent =
+        new Date().toLocaleDateString(undefined, {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+
+    const today =
+        getTodayStudy();
+
+    const goal =
+        Math.max(1, Number(data.dailyGoal) || 120);
+
+    const percent =
+        Math.min(100, Math.round((today / goal) * 100));
+
+    document.getElementById("todayStudy").textContent =
+        formatMinutes(today);
+
+    document.getElementById("todayGoalText").textContent =
+        `of ${goal}m goal`;
+
+    document.getElementById("streakValue").textContent =
+        calculateStreak();
+
+    const activeToday =
+        data.tasks.filter(
+            task =>
+                !task.completed &&
+                (
+                    !task.due ||
+                    task.due <= todayKey()
+                )
+        );
+
+    const completedToday =
+        data.tasks.filter(
+            task =>
+                task.completed &&
+                task.completedDate === todayKey()
+        );
+
+    document.getElementById("todayTasks").textContent =
+        activeToday.length;
+
+    document.getElementById("taskProgressText").textContent =
+        `${completedToday.length} completed today`;
+
+    const futureExams =
+        data.exams.filter(
+            exam =>
+                exam.date >= todayKey()
+        );
+
+    document.getElementById("upcomingExams").textContent =
+        futureExams.length;
+
+    document.getElementById("goalPercent").textContent =
+        `${percent}%`;
+
+    document.getElementById("dailyGoalProgress").style.width =
+        `${percent}%`;
+
+    document.getElementById("dailyGoalMessage").textContent =
+        today >= goal
+            ? "Daily goal complete. Great work! 🎉"
+            : `${formatMinutes(goal - today)} remaining today.`;
+
+
+    renderDashboardTasks();
+
+    renderDashboardExams();
+}
+
+
+function renderDashboardTasks() {
+
+    const container =
+        document.getElementById("dashboardTasks");
+
+    const tasks =
+        data.tasks
+            .filter(
+                task =>
+                    !task.completed &&
+                    (
+                        !task.due ||
+                        task.due <= todayKey()
+                    )
+            )
+            .slice(0, 8);
+
+    if (tasks.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">✨</div>
+                No tasks due today.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        tasks.map(taskHTML).join("");
+}
+
+
+function renderDashboardExams() {
+
+    const container =
+        document.getElementById("dashboardExams");
+
+    const exams =
+        data.exams
+            .filter(
+                exam =>
+                    exam.date >= todayKey()
+            )
+            .sort(
+                (a, b) =>
+                    a.date.localeCompare(b.date)
+            )
+            .slice(0, 4);
+
+    if (exams.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">📅</div>
+                No upcoming exams.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        exams.map(exam => {
+
+            const days =
+                daysBetween(
+                    todayKey(),
+                    exam.date
+                );
+
+            let countdown = "Today";
+
+            if (days > 0) {
+                countdown =
+                    days === 1
+                        ? "1 day left"
+                        : `${days} days left`;
+            }
+
+            return `
+                <div class="task-item">
+                    <div class="task-content">
+                        <div class="task-title">
+                            ${escapeHTML(exam.name)}
+                        </div>
+
+                        <div class="task-meta">
+                            <span class="badge">
+                                ${escapeHTML(
+                                    getSubjectName(exam.subjectId)
+                                )}
+                            </span>
+
+                            <span class="badge">
+                                ${escapeHTML(countdown)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+}
+
+
+/* =========================================================
+   SUBJECTS
+========================================================= */
+
+function addSubject() {
+
+    const input =
+        document.getElementById("newSubjectName");
+
+    const name =
+        input.value.trim();
+
+    if (!name) {
+        showToast("Enter a subject name.");
+        return;
+    }
+
+    if (
+        data.subjects.some(
+            subject =>
+                subject.name.toLowerCase() ===
+                name.toLowerCase()
+        )
+    ) {
+        showToast("That subject already exists.");
+        return;
+    }
+
+    data.subjects.push({
+        id: createId("sub"),
+        name
+    });
+
+    input.value = "";
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Subject added.");
+}
+
+
+function deleteSubject(id) {
+
+    const subject =
+        data.subjects.find(
+            s => s.id === id
+        );
+
+    if (!subject) {
+        return;
+    }
+
+    const linkedTasks =
+        data.tasks.some(
+            task =>
+                task.subjectId === id
+        );
+
+    const linkedExams =
+        data.exams.some(
+            exam =>
+                exam.subjectId === id
+        );
+
+    let message =
+        `Delete "${subject.name}"?`;
+
+    if (linkedTasks || linkedExams) {
+
+        message +=
+            "\n\nTasks or exams using this subject will remain, but will show as 'No subject'.";
+    }
+
+    if (!confirm(message)) {
+        return;
+    }
+
+    data.subjects =
+        data.subjects.filter(
+            s => s.id !== id
+        );
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Subject deleted.");
+}
+
+
+function renderSubjects() {
+
+    const container =
+        document.getElementById("subjectsGrid");
+
+    if (data.subjects.length === 0) {
+
+        container.innerHTML = `
+            <div class="card empty" style="grid-column:1/-1">
+                <div class="empty-icon">📚</div>
+                <p>No subjects yet.</p>
+                <p style="font-size:12px;margin-top:5px">
+                    Add your first subject above.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        data.subjects.map(subject => {
+
+            const tasks =
+                data.tasks.filter(
+                    task =>
+                        task.subjectId === subject.id
+                );
+
+            const completed =
+                tasks.filter(
+                    task =>
+                        task.completed
+                ).length;
+
+            const percent =
+                tasks.length
+                    ? Math.round(
+                        completed / tasks.length * 100
+                    )
+                    : 0;
+
+            return `
+                <div class="card subject-card">
+
+                    <div class="section-title">
+                        <h3>
+                            ${escapeHTML(subject.name)}
+                        </h3>
+
+                        <button
+                            class="small-btn"
+                            onclick="deleteSubject('${subject.id}')"
+                            title="Delete subject"
+                        >
+                            🗑️
+                        </button>
+                    </div>
+
+                    <p>
+                        ${completed} of ${tasks.length}
+                        tasks completed
+                    </p>
+
+                    <div class="subject-progress-text">
+                        <span>Task progress</span>
+                        <span>${percent}%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div
+                            class="progress-bar"
+                            style="width:${percent}%"
+                        ></div>
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+function renderTaskSubjectOptions() {
+
+    const select =
+        document.getElementById("taskSubject");
+
+    if (!select) {
+        return;
+    }
+
+    const current =
+        select.value;
+
+    select.innerHTML =
+        `<option value="">No subject</option>` +
+        data.subjects
+            .map(
+                subject =>
+                    `<option value="${subject.id}">
+                        ${escapeHTML(subject.name)}
+                    </option>`
+            )
+            .join("");
+
+    if (
+        data.subjects.some(
+            s => s.id === current
+        )
+    ) {
+        select.value = current;
+    }
+}
+
+
+function createTask() {
+
+    const title =
+        document
+            .getElementById("taskTitle")
+            .value
+            .trim();
+
+    const subjectId =
+        document.getElementById("taskSubject").value;
+
+    const priority =
+        document.getElementById("taskPriority").value;
+
+    const due =
+        document.getElementById("taskDue").value;
+
+    if (!title) {
+        showToast("Enter a task.");
+        return;
+    }
+
+    data.tasks.push({
+        id: createId("task"),
+        title,
+        subjectId,
+        priority,
+        due,
+        completed: false,
+        completedDate: ""
+    });
+
+    document.getElementById("taskTitle").value = "";
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Task added.");
+}
+
+
+function toggleTask(id) {
+
+    const task =
+        data.tasks.find(
+            t => t.id === id
+        );
+
+    if (!task) {
+        return;
+    }
+
+    task.completed =
+        !task.completed;
+
+    task.completedDate =
+        task.completed
+            ? todayKey()
+            : "";
+
+    saveData();
+
+    refreshAll();
+}
+
+
+function deleteTask(id) {
+
+    if (!confirm("Delete this task?")) {
+        return;
+    }
+
+    data.tasks =
+        data.tasks.filter(
+            task =>
+                task.id !== id
+        );
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Task deleted.");
+}
+
+
+function setTaskFilter(filter) {
+
+    currentTaskFilter = filter;
+
+    renderTasks();
+}
+
+
+function taskHTML(task) {
+
+    const priorityLabel =
+        task.priority.charAt(0).toUpperCase() +
+        task.priority.slice(1);
+
+    const dueText =
+        task.due
+            ? formatDate(task.due)
+            : "No due date";
+
+    return `
+        <div class="task-item ${task.completed ? "completed" : ""}">
+
+            <input
+                class="task-check"
+                type="checkbox"
+                ${task.completed ? "checked" : ""}
+                onchange="toggleTask('${task.id}')"
+            >
+
+            <div class="task-content">
+
+                <div class="task-title">
+                    ${escapeHTML(task.title)}
+                </div>
+
+                <div class="task-meta">
+
+                    <span class="badge">
+                        ${escapeHTML(
+                            getSubjectName(task.subjectId)
+                        )}
+                    </span>
+
+                    <span class="badge priority-${escapeHTML(task.priority)}">
+                        ${escapeHTML(priorityLabel)}
+                    </span>
+
+                    <span class="badge">
+                        ${escapeHTML(dueText)}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="item-actions">
+
+                <button
+                    class="small-btn"
+                    onclick="deleteTask('${task.id}')"
+                    title="Delete task"
+                >
+                    🗑️
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+function renderTasks() {
+
+    const container =
+        document.getElementById("taskList");
+
+    let tasks =
+        [...data.tasks];
+
+    if (currentTaskFilter === "active") {
+
+        tasks =
+            tasks.filter(
+                task =>
+                    !task.completed
+            );
+    }
+
+    if (currentTaskFilter === "completed") {
+
+        tasks =
+            tasks.filter(
+                task =>
+                    task.completed
+            );
+    }
+
+    tasks.sort((a, b) => {
+
+        if (
+            a.completed !==
+            b.completed
+        ) {
+            return a.completed ? 1 : -1;
+        }
+
+        if (a.due && b.due) {
+            return a.due.localeCompare(b.due);
+        }
+
+        if (a.due) {
+            return -1;
+        }
+
+        if (b.due) {
+            return 1;
+        }
+
+        return 0;
+    });
+
+    if (tasks.length === 0) {
+
+        container.innerHTML = `
+            <div class="card empty">
+                <div class="empty-icon">✅</div>
+                No tasks here.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        tasks.map(taskHTML).join("");
+}
+
+
+/* =========================================================
+   GOALS
+========================================================= */
+
+function createGoal() {
+
+    const title =
+        document
+            .getElementById("goalTitle")
+            .value
+            .trim();
+
+    const target =
+        Number(
+            document.getElementById("goalTarget").value
+        );
+
+    const unit =
+        document
+            .getElementById("goalUnit")
+            .value
+            .trim();
+
+    if (!title) {
+        showToast("Enter a goal.");
+        return;
+    }
+
+    if (
+        !Number.isFinite(target) ||
+        target < 1
+    ) {
+        showToast("Enter a valid target.");
+        return;
+    }
+
+    data.goals.push({
+        id: createId("goal"),
+        title,
+        target: Math.round(target),
+        progress: 0,
+        unit: unit || "tasks"
+    });
+
+    document.getElementById("goalTitle").value = "";
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Goal created.");
+}
+
+
+function updateGoal(id, amount) {
+
+    const goal =
+        data.goals.find(
+            g => g.id === id
+        );
+
+    if (!goal) {
+        return;
+    }
+
+    goal.progress =
+        Math.max(
+            0,
+            Math.min(
+                goal.target,
+                Number(goal.progress || 0) + amount
+            )
+        );
+
+    saveData();
+
+    renderGoals();
+}
+
+
+function deleteGoal(id) {
+
+    if (!confirm("Delete this goal?")) {
+        return;
+    }
+
+    data.goals =
+        data.goals.filter(
+            goal =>
+                goal.id !== id
+        );
+
+    saveData();
+
+    renderGoals();
+
+    showToast("Goal deleted.");
+}
+
+
+function renderGoals() {
+
+    const container =
+        document.getElementById("goalsGrid");
+
+    if (data.goals.length === 0) {
+
+        container.innerHTML = `
+            <div class="card empty" style="grid-column:1/-1">
+                <div class="empty-icon">🎯</div>
+                No goals yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        data.goals.map(goal => {
+
+            const target =
+                Math.max(1, Number(goal.target));
+
+            const progress =
+                Math.max(
+                    0,
+                    Math.min(
+                        target,
+                        Number(goal.progress) || 0
+                    )
+                );
+
+            const percent =
+                Math.round(
+                    progress / target * 100
+                );
+
+            return `
+                <div class="card">
+
+                    <div class="section-title">
+
+                        <h3>
+                            ${escapeHTML(goal.title)}
+                        </h3>
+
+                        <button
+                            class="small-btn"
+                            onclick="deleteGoal('${goal.id}')"
+                        >
+                            🗑️
+                        </button>
+
+                    </div>
+
+                    <div class="subject-progress-text">
+                        <span>
+                            ${progress}
+                            /
+                            ${target}
+                            ${escapeHTML(goal.unit)}
+                        </span>
+
+                        <span>${percent}%</span>
+                    </div>
+
+                    <div class="progress">
+                        <div
+                            class="progress-bar"
+                            style="width:${percent}%"
+                        ></div>
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            class="secondary-btn"
+                            onclick="updateGoal('${goal.id}', -1)"
+                        >
+                            −1
+                        </button>
+
+                        <button
+                            class="primary-btn"
+                            onclick="updateGoal('${goal.id}', 1)"
+                        >
+                            +1
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function initializeTimer() {
+
+    timer.duration =
+        data.preferredFocus || 60;
+
+    timer.remaining =
+        timer.duration * 60;
+
+    timer.running = false;
+
+    timer.interval = null;
+
+    timer.subjectId = null;
+
+    timer.sessionRecorded = false;
+
+    updateTimerDisplay();
+
+    highlightDuration(timer.duration);
+}
+
+
+function selectDuration(minutes) {
+
+    if (timer.running) {
+        showToast("Pause the timer before changing duration.");
+        return;
+    }
+
+    timer.duration = minutes;
+
+    timer.remaining =
+        minutes * 60;
+
+    timer.sessionRecorded = false;
+
+    data.preferredFocus = minutes;
+
+    saveData();
+
+    updateTimerDisplay();
+
+    highlightDuration(minutes);
+
+    document.getElementById("timerStatus").textContent =
+        "Ready when you are.";
+}
+
+
+function customDuration() {
+
+    if (timer.running) {
+        showToast("Pause the timer before changing duration.");
+        return;
+    }
+
+    const value =
+        prompt(
+            "Enter focus duration in minutes (1–240):",
+            String(timer.duration)
+        );
+
+    if (value === null) {
+        return;
+    }
+
+    const minutes =
+        Number(value);
+
+    if (
+        !Number.isFinite(minutes) ||
+        minutes < 1 ||
+        minutes > 240
+    ) {
+        showToast("Choose a duration between 1 and 240 minutes.");
+        return;
+    }
+
+    timer.duration =
+        Math.round(minutes);
+
+    timer.remaining =
+        timer.duration * 60;
+
+    timer.sessionRecorded = false;
+
+    data.preferredFocus =
+        timer.duration;
+
+    saveData();
+
+    updateTimerDisplay();
+
+    document
+        .querySelectorAll(".timer-options button")
+        .forEach(button =>
+            button.classList.remove("selected")
+        );
+
+    document.getElementById("timerStatus").textContent =
+        `${timer.duration}-minute custom session ready.`;
+}
+
+
+function highlightDuration(minutes) {
+
+    document
+        .querySelectorAll(
+            ".timer-options button[data-duration]"
+        )
+        .forEach(button => {
+
+            button.classList.toggle(
+                "selected",
+                Number(button.dataset.duration) === minutes
+            );
+
+        });
+}
+
+
+function updateTimerDisplay() {
+
+    const totalSeconds =
+        Math.max(
+            0,
+            Math.floor(timer.remaining)
+        );
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
+
+    document.getElementById("timerDisplay").textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    document.getElementById("timerStartButton").textContent =
+        timer.running
+            ? "Pause"
+            : "Start";
+}
+
+
+function toggleTimer() {
+
+    if (timer.running) {
+
+        pauseTimer();
+
+    } else {
+
+        startTimer();
+
+    }
+}
+
+
+function startTimer() {
+
+    if (timer.remaining <= 0) {
+
+        timer.remaining =
+            timer.duration * 60;
+
+        timer.sessionRecorded = false;
+    }
+
+    timer.running = true;
+
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        "Focus mode is running…";
+
+
+    requestNotificationPermission();
+
+
+    clearInterval(timer.interval);
+
+    timer.interval =
+        setInterval(() => {
+
+            if (!timer.running) {
+                return;
+            }
+
+            timer.remaining--;
+
+            updateTimerDisplay();
+
+            if (timer.remaining <= 0) {
+
+                completeTimer();
+            }
+
+        }, 1000);
+}
+
+
+function pauseTimer() {
+
+    timer.running = false;
+
+    clearInterval(timer.interval);
+
+    timer.interval = null;
+
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        "Paused. Resume when you're ready.";
+}
+
+
+function resetTimer() {
+
+    timer.running = false;
+
+    clearInterval(timer.interval);
+
+    timer.interval = null;
+
+    timer.remaining =
+        timer.duration * 60;
+
+    timer.sessionRecorded = false;
+
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        "Timer reset.";
+}
+
+
+function completeTimer() {
+
+    if (timer.sessionRecorded) {
+        return;
+    }
+
+    timer.sessionRecorded = true;
+
+    timer.running = false;
+
+    clearInterval(timer.interval);
+
+    timer.interval = null;
+
+    const minutes =
+        timer.duration;
+
+    const key =
+        todayKey();
+
+    data.studyLog[key] =
+        Number(data.studyLog[key] || 0) +
+        minutes;
+
+    data.totalFocusMinutes =
+        Number(data.totalFocusMinutes || 0) +
+        minutes;
+
+    data.focusSessions =
+        Number(data.focusSessions || 0) +
+        1;
+
+
+    /*
+      If a future version assigns a subject to a focus session,
+      this object is ready for it. The current UI keeps subject
+      selection optional and does not pretend timer minutes belong
+      to a subject when they do not.
+    */
+
+    if (timer.subjectId) {
+
+        if (!data.subjectStudyLog[timer.subjectId]) {
+            data.subjectStudyLog[timer.subjectId] = {};
+        }
+
+        data.subjectStudyLog[timer.subjectId][key] =
+            Number(
+                data.subjectStudyLog[timer.subjectId][key] || 0
+            ) + minutes;
+    }
+
+
+    saveData();
+
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        `Session complete! ${minutes} minutes logged. 🎉`;
+
+    showToast(
+        `${minutes}-minute focus session complete! 🎉`
+    );
+
+    sendCompletionNotification();
+
+    refreshAll();
+}
+
+
+function requestNotificationPermission() {
+
+    if (
+        !("Notification" in window)
+    ) {
+        return;
+    }
+
+    if (
+        Notification.permission === "default"
+    ) {
+
+        Notification.requestPermission()
+            .catch(() => {});
+
+    }
+}
+
+
+function sendCompletionNotification() {
+
+    if (
+        !("Notification" in window)
+    ) {
+        return;
+    }
+
+    if (
+        Notification.permission === "granted"
+    ) {
+
+        try {
+
+            new Notification(
+                "Nexus Focus Complete 🎉",
+                {
+                    body:
+                        `${timer.duration} minutes completed. Nice work!`
+                }
+            );
+
+        } catch (error) {
+
+            /* Browser may block notifications in some contexts. */
+        }
+    }
+}
+
+
+function renderFocusStats() {
+
+    document.getElementById("totalFocus").textContent =
+        formatMinutes(data.totalFocusMinutes);
+
+    document.getElementById("focusSessions").textContent =
+        data.focusSessions;
+
+    document.getElementById("focusToday").textContent =
+        formatMinutes(getTodayStudy());
+}
+
+
+/* =========================================================
+   EXAMS
+========================================================= */
+
+function renderExamSubjectOptions() {
+
+    const select =
+        document.getElementById("examSubject");
+
+    if (!select) {
+        return;
+    }
+
+    const current =
+        select.value;
+
+    select.innerHTML =
+        `<option value="">No subject</option>` +
+        data.subjects
+            .map(
+                subject =>
+                    `<option value="${subject.id}">
+                        ${escapeHTML(subject.name)}
+                    </option>`
+            )
+            .join("");
+
+    if (
+        data.subjects.some(
+            s => s.id === current
+        )
+    ) {
+        select.value = current;
+    }
+}
+
+
+function createExam() {
+
+    const name =
+        document
+            .getElementById("examName")
+            .value
+            .trim();
+
+    const subjectId =
+        document.getElementById("examSubject").value;
+
+    const date =
+        document.getElementById("examDate").value;
+
+    if (!name) {
+        showToast("Enter an exam name.");
+        return;
+    }
+
+    if (!date) {
+        showToast("Choose an exam date.");
+        return;
+    }
+
+    data.exams.push({
+        id: createId("exam"),
+        name,
+        subjectId,
+        date
+    });
+
+    document.getElementById("examName").value = "";
+    document.getElementById("examDate").value = "";
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Exam added.");
+}
+
+
+function deleteExam(id) {
+
+    if (!confirm("Delete this exam?")) {
+        return;
+    }
+
+    data.exams =
+        data.exams.filter(
+            exam =>
+                exam.id !== id
+        );
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Exam deleted.");
+}
+
+
+function examStatus(date) {
+
+    const difference =
+        daysBetween(
+            todayKey(),
+            date
+        );
+
+    if (difference < 0) {
+        return "Past";
+    }
+
+    if (difference === 0) {
+        return "Today";
+    }
+
+    if (difference === 1) {
+        return "1 day left";
+    }
+
+    return `${difference} days left`;
+}
+
+
+function renderExams() {
+
+    const container =
+        document.getElementById("examList");
+
+    const exams =
+        [...data.exams].sort(
+            (a, b) =>
+                a.date.localeCompare(b.date)
+        );
+
+    if (exams.length === 0) {
+
+        container.innerHTML = `
+            <div class="card empty" style="grid-column:1/-1">
+                <div class="empty-icon">📅</div>
+                No exams added yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        exams.map(exam => {
+
+            const date =
+                dateFromKey(exam.date);
+
+            return `
+                <div class="card exam-card">
+
+                    <div class="exam-date">
+
+                        <strong>
+                            ${date.getDate()}
+                        </strong>
+
+                        <span>
+                            ${date.toLocaleDateString(
+                                undefined,
+                                { month: "short" }
+                            )}
+                        </span>
+
+                    </div>
+
+                    <div class="exam-info">
+
+                        <h3>
+                            ${escapeHTML(exam.name)}
+                        </h3>
+
+                        <p>
+                            ${escapeHTML(
+                                getSubjectName(exam.subjectId)
+                            )}
+                        </p>
+
+                        <div class="task-meta">
+                            <span class="badge">
+                                ${escapeHTML(
+                                    examStatus(exam.date)
+                                )}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="small-btn"
+                        onclick="deleteExam('${exam.id}')"
+                    >
+                        🗑️
+                    </button>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+function getLastNDates(n) {
+
+    const dates = [];
+
+    const now = new Date();
+
+    for (let i = n - 1; i >= 0; i--) {
+
+        const date =
+            new Date(now);
+
+        date.setDate(
+            now.getDate() - i
+        );
+
+        const year =
+            date.getFullYear();
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+        dates.push(
+            `${year}-${month}-${day}`
+        );
+    }
+
+    return dates;
+}
+
+
+function getStudySum(dates) {
+
+    return dates.reduce(
+        (total, date) =>
+            total +
+            Number(
+                data.studyLog[date] || 0
+            ),
+        0
+    );
+}
+
+
+function renderAnalytics() {
+
+    const today =
+        todayKey();
+
+    const todayMinutes =
+        Number(
+            data.studyLog[today] || 0
+        );
+
+    const last7 =
+        getLastNDates(7);
+
+    const last30 =
+        getLastNDates(30);
+
+    document.getElementById("analyticsToday").textContent =
+        formatMinutes(todayMinutes);
+
+    document.getElementById("analyticsWeek").textContent =
+        formatMinutes(
+            getStudySum(last7)
+        );
+
+    document.getElementById("analyticsMonth").textContent =
+        formatMinutes(
+            getStudySum(last30)
+        );
+
+    document.getElementById("analyticsAll").textContent =
+        formatMinutes(
+            data.totalFocusMinutes
+        );
+
+
+    renderWeeklyChart(last7);
+
+    renderSubjectAnalytics();
+}
+
+
+function renderWeeklyChart(dates) {
+
+    const container =
+        document.getElementById("weeklyChart");
+
+    const values =
+        dates.map(
+            date =>
+                Number(
+                    data.studyLog[date] || 0
+                )
+        );
+
+    const max =
+        Math.max(
+            1,
+            ...values
+        );
+
+    container.innerHTML =
+        dates.map(
+            (date, index) => {
+
+                const value =
+                    values[index];
+
+                const height =
+                    Math.max(
+                        3,
+                        (value / max) * 170
+                    );
+
+                const label =
+                    dateFromKey(date).toLocaleDateString(
+                        undefined,
+                        { weekday: "short" }
+                    ).slice(0, 3);
+
+                return `
+                    <div class="chart-column">
+
+                        <span class="chart-value">
+                            ${value}m
+                        </span>
+
+                        <div
+                            class="chart-bar"
+                            style="height:${height}px"
+                            title="${value} minutes"
+                        ></div>
+
+                        <span class="chart-label">
+                            ${escapeHTML(label)}
+                        </span>
+
+                    </div>
+                `;
+            }
+        ).join("");
+}
+
+
+function renderSubjectAnalytics() {
+
+    const container =
+        document.getElementById("subjectAnalytics");
+
+    if (data.subjects.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty">
+                Add subjects to see task progress.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML =
+        data.subjects.map(subject => {
+
+            const tasks =
+                data.tasks.filter(
+                    task =>
+                        task.subjectId === subject.id
+                );
+
+            const completed =
+                tasks.filter(
+                    task =>
+                        task.completed
+                ).length;
+
+            const percent =
+                tasks.length
+                    ? Math.round(
+                        completed / tasks.length * 100
+                    )
+                    : 0;
+
+            return `
+                <div>
+
+                    <div class="subject-progress-text">
+                        <strong>
+                            ${escapeHTML(subject.name)}
+                        </strong>
+
+                        <span>
+                            ${completed}/${tasks.length}
+                        </span>
+                    </div>
+
+                    <div class="progress">
+                        <div
+                            class="progress-bar"
+                            style="width:${percent}%"
+                        ></div>
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+function saveNotes() {
+
+    const textarea =
+        document.getElementById("notesArea");
+
+    data.notes =
+        textarea.value;
+
+    saveData();
+
+    document.getElementById("notesCount").textContent =
+        `${textarea.value.length} / 20000`;
+}
+
+
+function renderNotes() {
+
+    const textarea =
+        document.getElementById("notesArea");
+
+    textarea.value =
+        data.notes || "";
+
+    document.getElementById("notesCount").textContent =
+        `${textarea.value.length} / 20000`;
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function renderSettings() {
+
+    document.getElementById("settingsName").value =
+        data.profile.name || "";
+
+    document.getElementById("settingsGrade").value =
+        data.profile.grade || "";
+
+    document.getElementById("settingsGoal").value =
+        data.dailyGoal || 120;
+}
+
+
+function saveSettings() {
+
+    const name =
+        document
+            .getElementById("settingsName")
+            .value
+            .trim();
+
+    const grade =
+        document
+            .getElementById("settingsGrade")
+            .value
+            .trim();
+
+    let goal =
+        Number(
+            document.getElementById("settingsGoal").value
+        );
+
+    if (
+        !Number.isFinite(goal) ||
+        goal < 1
+    ) {
+        showToast("Enter a valid daily goal.");
+        return;
+    }
+
+    data.profile.name =
+        name;
+
+    data.profile.grade =
+        grade;
+
+    data.dailyGoal =
+        Math.min(
+            1440,
+            Math.round(goal)
+        );
+
+    saveData();
+
+    refreshAll();
+
+    showToast("Settings saved.");
+}
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+function exportData() {
+
+    try {
+
+        const exportObject = {
+            exportedAt: new Date().toISOString(),
+            app: "Nexus",
+            version: "2.1",
+            workspace: data
+        };
+
+        const json =
+            JSON.stringify(
+                exportObject,
+                null,
+                2
+            );
+
+        const blob =
+            new Blob(
+                [json],
+                {
+                    type: "application/json"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download =
+            "nexus-workspace.json";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+        showToast(
+            "Workspace exported successfully."
+        );
+
+    } catch (error) {
+
+        showToast(
+            "Could not export the workspace."
+        );
+    }
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetWorkspace() {
+
+    const first =
+        confirm(
+            "This will permanently clear this browser's Nexus workspace. Continue?"
+        );
+
+    if (!first) {
+        return;
+    }
+
+    const second =
+        confirm(
+            "Are you absolutely sure? Export a backup first if you need your data."
+        );
+
+    if (!second) {
+        return;
+    }
+
+    clearInterval(timer.interval);
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    location.reload();
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+document
+    .getElementById("mobileMenu")
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("open");
+
+        }
     );
 
 
-  div.textContent =
-    String(text);
+/* =========================================================
+   NAV BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(".nav button")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+                navigate(button.dataset.page);
+            }
+        );
+
+    });
 
 
-  return div.innerHTML;
-}
+/* =========================================================
+   ENTER KEY SUPPORT
+========================================================= */
 
+document
+    .getElementById("setupSubjectInput")
+    .addEventListener(
+        "keydown",
+        event => {
 
-/* =====================================================
-   MOTIVATION
-===================================================== */
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addSetupSubject();
+            }
 
-const quotes = [
-
-  "Small progress every day becomes extraordinary progress.",
-
-  "Focus on the next step, not the entire staircase.",
-
-  "Consistency beats intensity when intensity cannot be sustained.",
-
-  "Your future is built from what you repeatedly do.",
-
-  "Start before you feel ready.",
-
-  "One focused session can change the direction of a day.",
-
-  "Do the work. Let the results speak."
-
-];
-
-
-function randomQuote(){
-
-  const quote =
-    quotes[
-      Math.floor(
-        Math.random() *
-        quotes.length
-      )
-    ];
-
-
-  document.getElementById(
-    "quote"
-  ).textContent =
-    "“" + quote + "”";
-}
-
-
-/* =====================================================
-   DATE
-===================================================== */
-
-function updateDate(){
-
-  const date =
-    new Date();
-
-
-  document.getElementById(
-    "dateText"
-  ).textContent =
-    date.toLocaleDateString(
-      undefined,
-      {
-        weekday:"long",
-        year:"numeric",
-        month:"long",
-        day:"numeric"
-      }
+        }
     );
-}
 
 
-/* =====================================================
-   GENERAL RENDER
-===================================================== */
+document
+    .getElementById("newSubjectName")
+    .addEventListener(
+        "keydown",
+        event => {
 
-function render(){
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addSubject();
+            }
 
-  renderDashboard();
-
-  renderSubjects();
-
-  renderTasks();
-
-  renderGoals();
-
-  renderTimerStats();
+        }
+    );
 
 
-  document.getElementById(
-    "notesArea"
-  ).value =
-    notes;
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
 
+if (data.setupComplete) {
 
-  randomQuote();
+    startApp();
 
-  updateDate();
+} else {
 
-  updateTimerDisplay();
-}
+    document
+        .getElementById("setupScreen")
+        .classList.remove("hidden");
 
-
-/* =====================================================
-   LOAD SAVED THEME
-===================================================== */
-
-if(
-  localStorage.getItem(
-    "nexus_theme"
-  ) === "light"
-){
-
-  document.body.classList.add(
-    "light"
-  );
+    document
+        .getElementById("app")
+        .classList.add("hidden");
 
 }
 
 
-/* =====================================================
-   INITIALIZE
-===================================================== */
+/* =========================================================
+   KEEP DASHBOARD DATE / EXAM COUNT FRESH
+========================================================= */
 
-render();
+setInterval(() => {
+
+    if (data.setupComplete) {
+        renderDashboard();
+    }
+
+}, 60000);
 
 </script>
 
 </body>
 </html>
-```
