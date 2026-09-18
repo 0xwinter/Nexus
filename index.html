@@ -3,2089 +3,2403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#6366f1">
-<meta name="description" content="Nexus — a free productivity workspace for every student.">
-<title>Nexus — Student Workspace</title>
+<meta name="description" content="Nexus — a free productivity workspace for students.">
+<meta name="theme-color" content="#635bff">
+<title>Nexus — Student Productivity</title>
 
 <style>
-:root {
-    --bg: #f5f7fb;
-    --surface: #ffffff;
-    --surface-2: #f1f3f8;
-    --text: #171923;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --shadow: 0 10px 30px rgba(0,0,0,.07);
-    --radius: 18px;
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#151821;
+  --muted:#697386;
+  --border:#e5e8ef;
+  --primary:#635bff;
+  --primary-dark:#5048d8;
+  --soft:#eeedff;
+  --success:#20a464;
+  --danger:#e05252;
+  --warning:#b17800;
+  --shadow:0 10px 30px rgba(20,25,40,.07);
+  --radius:18px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+  scroll-behavior:smooth;
 }
 
-body {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+body.modal-open{
+  overflow:hidden;
 }
 
 button,
 input,
 select,
-textarea {
-    font: inherit;
+textarea{
+  font:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+  cursor:pointer;
 }
 
-.hidden {
-    display: none !important;
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
 }
 
-/* ---------------- SETUP ---------------- */
-
-#setupScreen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background:
-        radial-gradient(circle at top left, rgba(99,102,241,.15), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(16,185,129,.12), transparent 35%),
-        var(--bg);
+.app{
+  display:flex;
+  min-height:100vh;
 }
 
-.setup-card {
-    width: min(700px, 100%);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    box-shadow: var(--shadow);
-    padding: 36px;
+/* SIDEBAR */
+
+.sidebar{
+  width:245px;
+  background:var(--card);
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  z-index:20;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -.5px;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 10px 28px;
 }
 
-.logo-mark {
-    width: 42px;
-    height: 42px;
-    border-radius: 13px;
-    background: var(--primary);
-    color: white;
-    display: grid;
-    place-items: center;
-    font-weight: 900;
+.logo-mark{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  font-size:19px;
+  flex-shrink:0;
 }
 
-.setup-card h1 {
-    font-size: clamp(28px, 5vw, 44px);
-    margin: 28px 0 10px;
-    letter-spacing: -1.5px;
+.logo-text{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.5px;
 }
 
-.setup-card > p {
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 28px;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+.nav button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:12px 14px;
+  border-radius:12px;
+  text-align:left;
+  font-weight:600;
+  transition:.2s;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+.nav button:hover,
+.nav button.active{
+  background:var(--soft);
+  color:var(--primary);
 }
 
-.form-group.full {
-    grid-column: 1 / -1;
+.sidebar-bottom{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:20px;
 }
 
-.form-group label {
-    font-size: 13px;
-    font-weight: 700;
+/* MAIN */
+
+.main{
+  margin-left:245px;
+  width:calc(100% - 245px);
 }
 
-.form-group small {
-    color: var(--muted);
+.topbar{
+  height:72px;
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.topbar-title{
+  font-size:19px;
+  font-weight:750;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.icon-btn{
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  background:var(--card);
+  border-radius:11px;
+  color:var(--text);
+}
+
+.icon-btn:hover{
+  background:var(--soft);
+}
+
+.content{
+  padding:30px;
+  max-width:1400px;
+  margin:auto;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-header{
+  margin-bottom:25px;
+}
+
+.page-header h1{
+  font-size:30px;
+  letter-spacing:-.8px;
+}
+
+.page-header p{
+  color:var(--muted);
+  margin-top:5px;
+}
+
+/* CARDS */
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.grid{
+  display:grid;
+  gap:18px;
+}
+
+.grid-4{
+  grid-template-columns:repeat(4,1fr);
+}
+
+.grid-3{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.grid-2{
+  grid-template-columns:repeat(2,1fr);
+}
+
+.stat{
+  min-height:125px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:14px;
+  font-weight:600;
+}
+
+.stat-value{
+  font-size:30px;
+  font-weight:800;
+  margin-top:12px;
+}
+
+.stat-small{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px;
+}
+
+/* WELCOME */
+
+.welcome{
+  background:linear-gradient(135deg,var(--primary),#8c84ff);
+  color:white;
+  border:0;
+  padding:30px;
+  border-radius:22px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.welcome h1{
+  font-size:30px;
+  margin-bottom:8px;
+}
+
+.welcome p{
+  opacity:.9;
+}
+
+.welcome-date{
+  margin-top:18px;
+  font-size:14px;
+  opacity:.8;
+}
+
+/* BUTTONS */
+
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:10px 15px;
+  font-weight:700;
+  transition:.2s;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-primary:hover{
+  background:var(--primary-dark);
+}
+
+.btn-secondary{
+  background:var(--soft);
+  color:var(--primary);
+}
+
+.btn-outline{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.btn-outline:hover{
+  background:var(--soft);
+}
+
+.btn-danger{
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.btn-small{
+  padding:7px 10px;
+  font-size:13px;
+}
+
+/* SECTION */
+
+.section{
+  margin-top:20px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:13px;
+}
+
+.section-head h2{
+  font-size:18px;
+}
+
+/* PROGRESS */
+
+.progress{
+  height:9px;
+  background:var(--border);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  background:var(--primary);
+  border-radius:20px;
+  transition:.3s;
+}
+
+/* LISTS */
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.list-item{
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.item-main{
+  min-width:0;
+}
+
+.item-title{
+  font-weight:700;
+  word-break:break-word;
+}
+
+.item-meta{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px;
+}
+
+.item-actions{
+  display:flex;
+  gap:7px;
+  flex-shrink:0;
+  align-items:center;
+}
+
+/* FORMS */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.field label{
+  font-size:13px;
+  font-weight:700;
 }
 
 input,
 select,
-textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    border-radius: 12px;
-    padding: 12px 14px;
-    outline: none;
-    transition: .2s;
+textarea{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:11px;
+  padding:11px 12px;
+  outline:none;
 }
 
 input:focus,
 select:focus,
-textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(99,91,255,.10);
 }
 
-textarea {
-    min-height: 150px;
-    resize: vertical;
+textarea{
+  min-height:150px;
+  resize:vertical;
 }
 
-.subject-builder {
-    margin-top: 22px;
-}
-
-.subject-input-row {
-    display: flex;
-    gap: 8px;
-}
-
-.subject-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.subject-tag {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 8px 12px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.subject-tag button {
-    border: none;
-    background: transparent;
-    color: var(--danger);
-    font-weight: 800;
-}
-
-.primary-btn,
-.secondary-btn,
-.danger-btn,
-.icon-btn {
-    border: none;
-    border-radius: 12px;
-    padding: 11px 15px;
-    font-weight: 700;
-    transition: transform .15s, opacity .15s, background .15s;
-}
-
-.primary-btn:hover,
-.secondary-btn:hover,
-.danger-btn:hover,
-.icon-btn:hover {
-    transform: translateY(-1px);
-}
-
-.primary-btn {
-    background: var(--primary);
-    color: white;
-}
-
-.primary-btn:hover {
-    background: var(--primary-dark);
-}
-
-.secondary-btn {
-    background: var(--surface-2);
-    color: var(--text);
-    border: 1px solid var(--border);
-}
-
-.danger-btn {
-    background: rgba(239,68,68,.1);
-    color: var(--danger);
-}
-
-.setup-submit {
-    width: 100%;
-    margin-top: 26px;
-    padding: 15px;
-    font-size: 16px;
-}
-
-/* ---------------- APP LAYOUT ---------------- */
-
-#app {
-    min-height: 100vh;
-    display: flex;
-}
-
-.sidebar {
-    width: 250px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    position: fixed;
-    inset: 0 auto 0 0;
-    z-index: 100;
-    padding: 22px 14px;
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-logo {
-    padding: 4px 10px 26px;
-}
-
-.nav {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.nav button {
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    text-align: left;
-    padding: 12px 13px;
-    border-radius: 12px;
-    font-weight: 650;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-}
-
-.nav button:hover {
-    background: var(--surface-2);
-    color: var(--text);
-}
-
-.nav button.active {
-    background: rgba(99,102,241,.1);
-    color: var(--primary);
-}
-
-.sidebar-bottom {
-    margin-top: auto;
-    padding: 10px;
-}
-
-.workspace-badge {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 14px;
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.workspace-badge strong {
-    display: block;
-    color: var(--text);
-    margin-bottom: 3px;
-}
-
-.main {
-    margin-left: 250px;
-    width: calc(100% - 250px);
-    min-height: 100vh;
-}
+/* TAGS */
 
-.topbar {
-    height: 72px;
-    padding: 0 30px;
-    background: rgba(255,255,255,.8);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+.tag{
+  display:inline-block;
+  background:var(--soft);
+  color:var(--primary);
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
 }
 
-body.dark .topbar {
-    background: rgba(24,25,35,.85);
+.priority-high{
+  color:var(--danger);
 }
 
-.mobile-menu {
-    display: none;
+.priority-medium{
+  color:var(--warning);
 }
 
-.page {
-    display: none;
-    padding: 30px;
-    max-width: 1400px;
-    margin: auto;
+.priority-low{
+  color:var(--success);
 }
 
-.page.active {
-    display: block;
-}
-
-.page-header {
-    margin-bottom: 25px;
-}
-
-.page-header h1 {
-    font-size: 30px;
-    letter-spacing: -.8px;
-}
-
-.page-header p {
-    color: var(--muted);
-    margin-top: 5px;
-}
-
-/* ---------------- CARDS ---------------- */
-
-.card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 18px rgba(0,0,0,.035);
-    padding: 20px;
-}
-
-.grid {
-    display: grid;
-    gap: 18px;
-}
-
-.stats-grid {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.two-grid {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.three-grid {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.stat-card {
-    min-height: 130px;
-}
-
-.stat-label {
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-.stat-value {
-    font-size: 31px;
-    font-weight: 850;
-    letter-spacing: -1px;
-}
-
-.stat-sub {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 6px;
-}
+/* EMPTY */
 
-.section-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:35px 15px;
 }
 
-.section-title h2 {
-    font-size: 17px;
+.empty-icon{
+  font-size:35px;
+  margin-bottom:10px;
 }
 
-/* ---------------- PROGRESS ---------------- */
+/* TIMER */
 
-.progress {
-    width: 100%;
-    height: 9px;
-    border-radius: 99px;
-    background: var(--surface-2);
-    overflow: hidden;
+.timer-card{
+  text-align:center;
+  max-width:650px;
+  margin:0 auto;
 }
 
-.progress-bar {
-    height: 100%;
-    background: var(--primary);
-    border-radius: inherit;
-    transition: width .3s ease;
+.timer-display{
+  font-size:86px;
+  font-weight:850;
+  letter-spacing:-4px;
+  margin:25px 0;
 }
 
-/* ---------------- TASKS ---------------- */
-
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.timer-selectors{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:18px;
 }
 
-.task-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    padding: 12px;
+.timer-preset{
+  border:1px solid var(--border);
+  background:var(--card);
+  padding:8px 12px;
+  border-radius:10px;
+  font-weight:700;
+  color:var(--muted);
 }
 
-.task-check {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--primary);
-    flex-shrink: 0;
+.timer-preset:hover,
+.timer-preset.active{
+  background:var(--soft);
+  color:var(--primary);
+  border-color:var(--primary);
 }
 
-.task-content {
-    flex: 1;
-    min-width: 0;
+.timer-controls{
+  display:flex;
+  justify-content:center;
+  gap:10px;
 }
 
-.task-title {
-    font-weight: 700;
-    word-break: break-word;
+.timer-controls .btn{
+  min-width:130px;
 }
 
-.task-item.completed .task-title {
-    text-decoration: line-through;
-    color: var(--muted);
+.timer-stats{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
 }
 
-.task-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 5px;
-    font-size: 11px;
-    color: var(--muted);
+.timer-stat{
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:12px;
 }
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: var(--surface-2);
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 700;
+.timer-stat strong{
+  display:block;
+  font-size:21px;
 }
 
-.priority-high {
-    color: var(--danger);
+.timer-stat span{
+  font-size:12px;
+  color:var(--muted);
 }
 
-.priority-medium {
-    color: var(--warning);
-}
+/* SUBJECT */
 
-.priority-low {
-    color: var(--success);
+.subject-card{
+  position:relative;
 }
 
-.item-actions {
-    display: flex;
-    gap: 5px;
+.subject-progress{
+  margin:15px 0 8px;
 }
 
-.small-btn {
-    border: none;
-    background: var(--surface-2);
-    color: var(--text);
-    border-radius: 9px;
-    padding: 7px 9px;
+.subject-footer{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:13px;
 }
-
-/* ---------------- FORMS / TOOLBARS ---------------- */
 
-.toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
-}
+/* CHECKBOX */
 
-.toolbar-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+.check-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.form-card {
-    margin-bottom: 18px;
+.check-row input{
+  width:18px;
+  height:18px;
+  accent-color:var(--primary);
 }
 
-.form-card h3 {
-    margin-bottom: 15px;
-}
+/* MODAL */
 
-.form-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 15px;
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
-
-/* ---------------- SUBJECTS ---------------- */
 
-.subject-card {
-    position: relative;
+.modal.show{
+  display:flex;
 }
 
-.subject-card h3 {
-    margin-bottom: 7px;
+.modal-box{
+  background:var(--card);
+  width:100%;
+  max-width:550px;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:20px;
+  padding:24px;
 }
 
-.subject-card p {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 15px;
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
 }
 
-.subject-progress-text {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    margin-bottom: 7px;
+.close{
+  border:0;
+  background:transparent;
+  font-size:25px;
+  color:var(--muted);
 }
 
-/* ---------------- TIMER ---------------- */
+/* SETUP */
 
-.timer-card {
-    text-align: center;
-    padding: 35px 20px;
+.setup{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:25px;
+  background:var(--bg);
 }
 
-.timer-display {
-    font-size: clamp(55px, 10vw, 105px);
-    line-height: 1;
-    font-weight: 900;
-    letter-spacing: -5px;
-    margin: 20px 0 25px;
-    font-variant-numeric: tabular-nums;
+.setup-box{
+  width:100%;
+  max-width:650px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:35px;
+  box-shadow:var(--shadow);
 }
 
-.timer-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 7px;
-    margin-bottom: 20px;
+.setup-logo{
+  text-align:center;
+  margin-bottom:25px;
 }
 
-.timer-options button {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-weight: 700;
+.setup-logo .logo-mark{
+  margin:0 auto 12px;
 }
 
-.timer-options button.selected {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+.setup-logo h1{
+  font-size:34px;
 }
 
-.timer-controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+.setup-logo p{
+  color:var(--muted);
+  margin-top:5px;
 }
 
-.timer-controls button {
-    min-width: 125px;
-    padding: 13px 20px;
+.subject-input-row{
+  display:flex;
+  gap:8px;
 }
 
-.timer-status {
-    color: var(--muted);
-    margin-top: 14px;
-    font-size: 13px;
+.subject-input-row input{
+  flex:1;
 }
 
-/* ---------------- EXAMS ---------------- */
-
-.exam-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+.setup-subjects{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
 }
 
-.exam-date {
-    min-width: 65px;
-    text-align: center;
-    background: var(--surface-2);
-    border-radius: 12px;
-    padding: 10px;
+.setup-subject{
+  padding:7px 10px;
+  border-radius:20px;
+  background:var(--soft);
+  color:var(--primary);
+  font-size:13px;
+  font-weight:700;
 }
 
-.exam-date strong {
-    display: block;
-    font-size: 20px;
+.setup-subject button{
+  border:0;
+  background:transparent;
+  color:inherit;
+  margin-left:5px;
 }
 
-.exam-info {
-    flex: 1;
-}
+/* SETTINGS */
 
-.exam-info h3 {
-    margin-bottom: 5px;
+.setting-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:17px 0;
+  border-bottom:1px solid var(--border);
 }
 
-.exam-info p {
-    color: var(--muted);
-    font-size: 13px;
+.setting-row:last-child{
+  border-bottom:0;
 }
-
-/* ---------------- ANALYTICS ---------------- */
 
-.chart {
-    display: flex;
-    align-items: end;
-    gap: 10px;
-    height: 230px;
-    padding-top: 20px;
+.setting-info{
+  min-width:0;
 }
 
-.chart-column {
-    flex: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    align-items: center;
-    gap: 7px;
+.setting-info strong{
+  display:block;
 }
 
-.chart-value {
-    font-size: 10px;
-    color: var(--muted);
+.setting-info span{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-top:3px;
 }
 
-.chart-bar {
-    width: min(42px, 70%);
-    min-height: 3px;
-    background: var(--primary);
-    border-radius: 8px 8px 3px 3px;
-}
+/* ANALYTICS */
 
-.chart-label {
-    font-size: 11px;
-    color: var(--muted);
+.chart-wrap{
+  width:100%;
+  overflow-x:auto;
 }
 
-/* ---------------- NOTES ---------------- */
-
-.notes-area {
-    min-height: 420px;
+.chart{
+  min-width:520px;
 }
-
-/* ---------------- EMPTY ---------------- */
 
-.empty {
-    padding: 35px 15px;
-    text-align: center;
-    color: var(--muted);
-}
+/* TOAST */
 
-.empty-icon {
-    font-size: 30px;
-    margin-bottom: 8px;
+.toast{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#151821;
+  color:white;
+  padding:13px 17px;
+  border-radius:11px;
+  opacity:0;
+  transform:translateY(15px);
+  pointer-events:none;
+  transition:.25s;
+  z-index:200;
+  max-width:calc(100vw - 40px);
 }
 
-/* ---------------- TOAST ---------------- */
-
-#toastContainer {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
 }
 
-.toast {
-    background: var(--text);
-    color: var(--surface);
-    padding: 12px 16px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    font-size: 13px;
-    animation: toastIn .2s ease;
-    max-width: 320px;
-}
+/* MOBILE */
 
-@keyframes toastIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.mobile-menu{
+  display:none;
 }
 
-/* ---------------- DARK MODE ---------------- */
+@media(max-width:1000px){
 
-body.dark {
-    --bg: #0e1017;
-    --surface: #181923;
-    --surface-2: #222431;
-    --text: #f4f5f7;
-    --muted: #9ca3af;
-    --border: #2c2f3c;
-    --shadow: 0 10px 30px rgba(0,0,0,.25);
-}
-
-body.dark .sidebar {
-    background: var(--surface);
-}
+  .grid-4{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-body.dark input,
-body.dark select,
-body.dark textarea {
-    background: var(--surface);
+  .grid-3{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
-/* ---------------- RESPONSIVE ---------------- */
+@media(max-width:750px){
 
-@media (max-width: 1000px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s;
+    box-shadow:var(--shadow);
+  }
 
-    .three-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
+  .sidebar.open{
+    transform:translateX(0);
+  }
 
-@media (max-width: 760px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform .25s ease;
-        box-shadow: var(--shadow);
-    }
+  .main{
+    margin-left:0;
+    width:100%;
+  }
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
+  .mobile-menu{
+    display:block;
+  }
 
-    .main {
-        margin-left: 0;
-        width: 100%;
-    }
+  .content{
+    padding:20px 15px;
+  }
 
-    .mobile-menu {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--border);
-        background: var(--surface);
-        color: var(--text);
-        border-radius: 10px;
-        font-size: 20px;
-    }
+  .topbar{
+    padding:0 15px;
+  }
 
-    .topbar {
-        padding: 0 16px;
-    }
+  .grid-4,
+  .grid-3,
+  .grid-2{
+    grid-template-columns:1fr;
+  }
 
-    .page {
-        padding: 20px 15px;
-    }
+  .form-grid{
+    grid-template-columns:1fr;
+  }
 
-    .form-grid,
-    .two-grid,
-    .three-grid {
-        grid-template-columns: 1fr;
-    }
+  .timer-display{
+    font-size:62px;
+  }
 
-    .form-group.full {
-        grid-column: auto;
-    }
+  .timer-stats{
+    grid-template-columns:1fr;
+  }
 
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .toolbar {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
+  .setup-box{
+    padding:24px 18px;
+  }
 
-@media (max-width: 480px) {
-    .setup-card {
-        padding: 24px 18px;
-    }
+  .welcome{
+    padding:24px 20px;
+  }
 
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+  .welcome h1{
+    font-size:25px;
+  }
 
-    .timer-display {
-        font-size: 58px;
-    }
+  .page-header h1{
+    font-size:26px;
+  }
 
-    .timer-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .list-item{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
-    .timer-controls button {
-        width: 100%;
-    }
+  .item-actions{
+    width:100%;
+    justify-content:flex-end;
+  }
 
-    .exam-card {
-        align-items: flex-start;
-    }
+  .setting-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
+<!-- =========================
      SETUP SCREEN
-========================================================= -->
+========================= -->
 
-<section id="setupScreen">
-    <div class="setup-card">
+<div id="setupScreen" class="setup">
 
-        <div class="logo">
-            <div class="logo-mark">N</div>
-            Nexus
-        </div>
+  <div class="setup-box">
 
-        <h1>Your student workspace.</h1>
-
-        <p>
-            Set up Nexus once, then use it your way.
-            Your workspace stays in this browser and is not uploaded
-            to a Nexus server.
-        </p>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label for="setupName">Name <span style="color:var(--muted)">(optional)</span></label>
-                <input id="setupName" type="text" maxlength="60" placeholder="Your name">
-            </div>
-
-            <div class="form-group">
-                <label for="setupGrade">Grade / Level <span style="color:var(--muted)">(optional)</span></label>
-                <input id="setupGrade" type="text" maxlength="40" placeholder="e.g. Grade 10">
-            </div>
-
-            <div class="form-group">
-                <label for="setupGoal">Daily study goal</label>
-                <input id="setupGoal" type="number" min="1" max="1440" value="120">
-                <small>Minutes per day</small>
-            </div>
-
-            <div class="form-group">
-                <label for="setupFocus">Preferred focus duration</label>
-                <select id="setupFocus">
-                    <option value="25">25 minutes</option>
-                    <option value="50">50 minutes</option>
-                    <option value="60" selected>60 minutes</option>
-                    <option value="90">90 minutes</option>
-                </select>
-            </div>
-
-        </div>
-
-        <div class="subject-builder">
-
-            <div class="form-group">
-                <label>Add your subjects</label>
-
-                <div class="subject-input-row">
-                    <input
-                        id="setupSubjectInput"
-                        type="text"
-                        maxlength="50"
-                        placeholder="e.g. Mathematics"
-                    >
-                    <button class="secondary-btn" onclick="addSetupSubject()">
-                        Add
-                    </button>
-                </div>
-            </div>
-
-            <div id="setupSubjectTags" class="subject-tags"></div>
-
-            <small style="display:block;margin-top:10px;color:var(--muted)">
-                You can also add subjects later.
-            </small>
-        </div>
-
-        <button class="primary-btn setup-submit" onclick="finishSetup()">
-            Enter Nexus →
-        </button>
-
+    <div class="setup-logo">
+      <div class="logo-mark">N</div>
+      <h1>Nexus</h1>
+      <p>Your free student productivity workspace.</p>
     </div>
-</section>
 
+    <form id="setupForm">
 
-<!-- =========================================================
-     MAIN APP
-========================================================= -->
+      <div class="field">
+        <label>Your name (optional)</label>
+        <input
+          id="setupName"
+          type="text"
+          maxlength="40"
+          autocomplete="name"
+          placeholder="e.g. Alex">
+      </div>
 
-<div id="app" class="hidden">
+      <br>
 
-    <aside id="sidebar" class="sidebar">
+      <div class="field">
+        <label>Class / Grade (optional)</label>
+        <input
+          id="setupGrade"
+          type="text"
+          maxlength="30"
+          placeholder="e.g. Class 10">
+      </div>
 
-        <div class="sidebar-logo">
-            <div class="logo">
-                <div class="logo-mark">N</div>
-                Nexus
-            </div>
+      <br>
+
+      <div class="field">
+        <label>Daily study goal (minutes)</label>
+        <input
+          id="setupGoal"
+          type="number"
+          min="1"
+          max="1440"
+          value="120">
+      </div>
+
+      <br>
+
+      <div class="field">
+
+        <label>Add your subjects</label>
+
+        <div class="subject-input-row">
+
+          <input
+            id="setupSubjectInput"
+            type="text"
+            maxlength="40"
+            placeholder="e.g. Mathematics">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            id="addSetupSubjectBtn">
+            Add
+          </button>
+
         </div>
 
-        <nav class="nav">
+        <div id="setupSubjects" class="setup-subjects"></div>
 
-            <button data-page="dashboard" class="active">
-                📊 <span>Dashboard</span>
-            </button>
+      </div>
 
-            <button data-page="subjects">
-                📚 <span>Subjects</span>
-            </button>
+      <br>
 
-            <button data-page="tasks">
-                ✅ <span>Tasks</span>
-            </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="width:100%;padding:13px;">
+        Enter Nexus →
+      </button>
 
-            <button data-page="goals">
-                🎯 <span>Goals</span>
-            </button>
+    </form>
 
-            <button data-page="focus">
-                ⏱️ <span>Focus</span>
-            </button>
-
-            <button data-page="exams">
-                📅 <span>Exams</span>
-            </button>
-
-            <button data-page="analytics">
-                📈 <span>Analytics</span>
-            </button>
-
-            <button data-page="notes">
-                📝 <span>Notes</span>
-            </button>
-
-            <button data-page="settings">
-                ⚙️ <span>Settings</span>
-            </button>
-
-        </nav>
-
-        <div class="sidebar-bottom">
-            <div class="workspace-badge">
-                <strong>Free student workspace</strong>
-                Data stays in this browser.
-            </div>
-        </div>
-
-    </aside>
-
-
-    <main class="main">
-
-        <header class="topbar">
-
-            <button id="mobileMenu" class="mobile-menu">
-                ☰
-            </button>
-
-            <div>
-                <strong id="topbarTitle">Dashboard</strong>
-            </div>
-
-            <button
-                id="themeToggle"
-                class="icon-btn secondary-btn"
-                title="Toggle theme"
-                onclick="toggleTheme()"
-            >
-                🌙
-            </button>
-
-        </header>
-
-
-        <!-- =================================================
-             DASHBOARD
-        ================================================== -->
-
-        <section id="page-dashboard" class="page active">
-
-            <div class="page-header">
-                <h1 id="welcomeTitle">Welcome to Nexus 👋</h1>
-                <p id="dashboardDate"></p>
-            </div>
-
-            <div class="grid stats-grid">
-
-                <div class="card stat-card">
-                    <div class="stat-label">TODAY'S STUDY</div>
-                    <div class="stat-value" id="todayStudy">0m</div>
-                    <div class="stat-sub" id="todayGoalText">of 120m goal</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">STREAK</div>
-                    <div class="stat-value" id="streakValue">0</div>
-                    <div class="stat-sub">consecutive study days</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">TASKS TODAY</div>
-                    <div class="stat-value" id="todayTasks">0</div>
-                    <div class="stat-sub" id="taskProgressText">0 completed</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">UPCOMING EXAMS</div>
-                    <div class="stat-value" id="upcomingExams">0</div>
-                    <div class="stat-sub">future exams</div>
-                </div>
-
-            </div>
-
-            <br>
-
-            <div class="grid two-grid">
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Daily goal</h2>
-                        <span id="goalPercent">0%</span>
-                    </div>
-
-                    <div class="progress">
-                        <div
-                            id="dailyGoalProgress"
-                            class="progress-bar"
-                            style="width:0%"
-                        ></div>
-                    </div>
-
-                    <p
-                        id="dailyGoalMessage"
-                        style="margin-top:12px;color:var(--muted);font-size:13px"
-                    >
-                        Start your first focus session.
-                    </p>
-
-                    <button
-                        class="primary-btn"
-                        style="margin-top:14px"
-                        onclick="navigate('focus')"
-                    >
-                        Start Focus →
-                    </button>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Upcoming exams</h2>
-                        <button
-                            class="secondary-btn"
-                            onclick="navigate('exams')"
-                        >
-                            View all
-                        </button>
-                    </div>
-
-                    <div id="dashboardExams"></div>
-
-                </div>
-
-            </div>
-
-            <br>
-
-            <div class="card">
-
-                <div class="section-title">
-                    <h2>Today's tasks</h2>
-
-                    <button
-                        class="secondary-btn"
-                        onclick="navigate('tasks')"
-                    >
-                        Manage tasks
-                    </button>
-                </div>
-
-                <div id="dashboardTasks"></div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             SUBJECTS
-        ================================================== -->
-
-        <section id="page-subjects" class="page">
-
-            <div class="page-header">
-                <h1>Subjects</h1>
-                <p>Create the subjects that matter to you.</p>
-            </div>
-
-            <div class="card form-card">
-
-                <h3>Add subject</h3>
-
-                <div class="subject-input-row">
-                    <input
-                        id="newSubjectName"
-                        type="text"
-                        maxlength="50"
-                        placeholder="Subject name"
-                    >
-
-                    <button
-                        class="primary-btn"
-                        onclick="addSubject()"
-                    >
-                        Add
-                    </button>
-                </div>
-
-            </div>
-
-            <div id="subjectsGrid" class="grid three-grid"></div>
-
-        </section>
-
-
-        <!-- =================================================
-             TASKS
-        ================================================== -->
-
-        <section id="page-tasks" class="page">
-
-            <div class="page-header">
-                <h1>Tasks</h1>
-                <p>Turn your plans into clear actions.</p>
-            </div>
-
-            <div class="card form-card">
-
-                <h3>New task</h3>
-
-                <div class="form-grid">
-
-                    <div class="form-group full">
-                        <label>Task</label>
-                        <input
-                            id="taskTitle"
-                            maxlength="120"
-                            placeholder="What do you need to do?"
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Subject</label>
-                        <select id="taskSubject"></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Priority</label>
-                        <select id="taskPriority">
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Due date</label>
-                        <input id="taskDue" type="date">
-                    </div>
-
-                </div>
-
-                <div class="form-actions">
-                    <button class="primary-btn" onclick="createTask()">
-                        Add task
-                    </button>
-                </div>
-
-            </div>
-
-
-            <div class="toolbar">
-
-                <div class="toolbar-actions">
-
-                    <button
-                        class="secondary-btn"
-                        onclick="setTaskFilter('all')"
-                    >
-                        All
-                    </button>
-
-                    <button
-                        class="secondary-btn"
-                        onclick="setTaskFilter('active')"
-                    >
-                        Active
-                    </button>
-
-                    <button
-                        class="secondary-btn"
-                        onclick="setTaskFilter('completed')"
-                    >
-                        Completed
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div id="taskList" class="task-list"></div>
-
-        </section>
-
-
-        <!-- =================================================
-             GOALS
-        ================================================== -->
-
-        <section id="page-goals" class="page">
-
-            <div class="page-header">
-                <h1>Goals</h1>
-                <p>Define what you want to accomplish.</p>
-            </div>
-
-            <div class="card form-card">
-
-                <h3>New goal</h3>
-
-                <div class="form-grid">
-
-                    <div class="form-group full">
-                        <label>Goal</label>
-                        <input
-                            id="goalTitle"
-                            maxlength="120"
-                            placeholder="e.g. Finish algebra revision"
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Target</label>
-                        <input
-                            id="goalTarget"
-                            type="number"
-                            min="1"
-                            value="10"
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Unit</label>
-                        <input
-                            id="goalUnit"
-                            maxlength="20"
-                            value="tasks"
-                        >
-                    </div>
-
-                </div>
-
-                <div class="form-actions">
-
-                    <button
-                        class="primary-btn"
-                        onclick="createGoal()"
-                    >
-                        Add goal
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div id="goalsGrid" class="grid two-grid"></div>
-
-        </section>
-
-
-        <!-- =================================================
-             FOCUS
-        ================================================== -->
-
-        <section id="page-focus" class="page">
-
-            <div class="page-header">
-                <h1>Focus</h1>
-                <p>One session. One target. Full attention.</p>
-            </div>
-
-            <div class="card timer-card">
-
-                <div class="stat-label">FOCUS TIMER</div>
-
-                <div id="timerDisplay" class="timer-display">
-                    60:00
-                </div>
-
-                <div class="timer-options">
-
-                    <button data-duration="25" onclick="selectDuration(25)">
-                        25m
-                    </button>
-
-                    <button data-duration="50" onclick="selectDuration(50)">
-                        50m
-                    </button>
-
-                    <button data-duration="60" onclick="selectDuration(60)">
-                        60m
-                    </button>
-
-                    <button data-duration="90" onclick="selectDuration(90)">
-                        90m
-                    </button>
-
-                    <button onclick="customDuration()">
-                        Custom
-                    </button>
-
-                </div>
-
-                <div class="timer-controls">
-
-                    <button
-                        id="timerStartButton"
-                        class="primary-btn"
-                        onclick="toggleTimer()"
-                    >
-                        Start
-                    </button>
-
-                    <button
-                        class="secondary-btn"
-                        onclick="resetTimer()"
-                    >
-                        Reset
-                    </button>
-
-                </div>
-
-                <div
-                    id="timerStatus"
-                    class="timer-status"
-                >
-                    Ready when you are.
-                </div>
-
-            </div>
-
-
-            <br>
-
-            <div class="grid three-grid">
-
-                <div class="card stat-card">
-                    <div class="stat-label">TOTAL FOCUS TIME</div>
-                    <div
-                        id="totalFocus"
-                        class="stat-value"
-                    >
-                        0m
-                    </div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">FOCUS SESSIONS</div>
-                    <div
-                        id="focusSessions"
-                        class="stat-value"
-                    >
-                        0
-                    </div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">TODAY</div>
-                    <div
-                        id="focusToday"
-                        class="stat-value"
-                    >
-                        0m
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             EXAMS
-        ================================================== -->
-
-        <section id="page-exams" class="page">
-
-            <div class="page-header">
-                <h1>Exams</h1>
-                <p>Keep important dates visible.</p>
-            </div>
-
-            <div class="card form-card">
-
-                <h3>Add exam</h3>
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-                        <label>Exam name</label>
-                        <input
-                            id="examName"
-                            maxlength="100"
-                            placeholder="Exam / test name"
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Subject</label>
-                        <select id="examSubject"></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input id="examDate" type="date">
-                    </div>
-
-                </div>
-
-                <div class="form-actions">
-
-                    <button
-                        class="primary-btn"
-                        onclick="createExam()"
-                    >
-                        Add exam
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div id="examList" class="grid two-grid"></div>
-
-        </section>
-
-
-        <!-- =================================================
-             ANALYTICS
-        ================================================== -->
-
-        <section id="page-analytics" class="page">
-
-            <div class="page-header">
-                <h1>Analytics</h1>
-                <p>See your study activity over time.</p>
-            </div>
-
-            <div class="grid stats-grid">
-
-                <div class="card stat-card">
-                    <div class="stat-label">TODAY</div>
-                    <div id="analyticsToday" class="stat-value">0m</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">THIS WEEK</div>
-                    <div id="analyticsWeek" class="stat-value">0m</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">THIS MONTH</div>
-                    <div id="analyticsMonth" class="stat-value">0m</div>
-                </div>
-
-                <div class="card stat-card">
-                    <div class="stat-label">ALL TIME</div>
-                    <div id="analyticsAll" class="stat-value">0m</div>
-                </div>
-
-            </div>
-
-            <br>
-
-            <div class="grid two-grid">
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Last 7 days</h2>
-                        <span style="font-size:12px;color:var(--muted)">
-                            Focus minutes
-                        </span>
-                    </div>
-
-                    <div id="weeklyChart" class="chart"></div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Subject task progress</h2>
-                    </div>
-
-                    <div
-                        id="subjectAnalytics"
-                        class="task-list"
-                    ></div>
-
-                    <p
-                        style="font-size:12px;color:var(--muted);margin-top:12px"
-                    >
-                        This section measures completed tasks by subject,
-                        not study minutes.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             NOTES
-        ================================================== -->
-
-        <section id="page-notes" class="page">
-
-            <div class="page-header">
-                <h1>Notes</h1>
-                <p>A simple space for ideas, reminders, and planning.</p>
-            </div>
-
-            <div class="card">
-
-                <textarea
-                    id="notesArea"
-                    class="notes-area"
-                    maxlength="20000"
-                    placeholder="Write anything you want to remember..."
-                    oninput="saveNotes()"
-                ></textarea>
-
-                <div
-                    style="display:flex;justify-content:space-between;gap:10px;margin-top:10px"
-                >
-                    <small style="color:var(--muted)">
-                        Saved automatically in this browser.
-                    </small>
-
-                    <small
-                        id="notesCount"
-                        style="color:var(--muted)"
-                    >
-                        0 / 20000
-                    </small>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             SETTINGS
-        ================================================== -->
-
-        <section id="page-settings" class="page">
-
-            <div class="page-header">
-                <h1>Settings</h1>
-                <p>Manage your Nexus workspace.</p>
-            </div>
-
-            <div class="grid two-grid">
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Profile</h2>
-                    </div>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input
-                                id="settingsName"
-                                maxlength="60"
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label>Grade / Level</label>
-                            <input
-                                id="settingsGrade"
-                                maxlength="40"
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label>Daily study goal</label>
-                            <input
-                                id="settingsGoal"
-                                type="number"
-                                min="1"
-                                max="1440"
-                            >
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-
-                        <button
-                            class="primary-btn"
-                            onclick="saveSettings()"
-                        >
-                            Save changes
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="section-title">
-                        <h2>Workspace</h2>
-                    </div>
-
-                    <p
-                        style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:15px"
-                    >
-                        Nexus stores your workspace locally in your browser.
-                        Export a backup before clearing it.
-                    </p>
-
-                    <div class="toolbar-actions">
-
-                        <button
-                            class="secondary-btn"
-                            onclick="exportData()"
-                        >
-                            ⬇ Export workspace
-                        </button>
-
-                        <button
-                            class="danger-btn"
-                            onclick="resetWorkspace()"
-                        >
-                            Reset workspace
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <br>
-
-            <div class="card">
-
-                <div class="section-title">
-                    <h2>About Nexus</h2>
-                </div>
-
-                <p
-                    style="color:var(--muted);line-height:1.7;font-size:14px"
-                >
-                    Nexus is a free student productivity workspace.
-                    It does not require an account, payment, or server
-                    connection for the current version.
-                </p>
-
-                <br>
-
-                <p
-                    style="color:var(--muted);line-height:1.7;font-size:14px"
-                >
-                    Your tasks, goals, exams, notes, and study records are
-                    stored locally in the browser you are using.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
+  </div>
 
 </div>
 
 
-<div id="toastContainer"></div>
+<!-- =========================
+     APP
+========================= -->
+
+<div id="app" class="app" style="display:none;">
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="logo">
+      <div class="logo-mark">N</div>
+      <div class="logo-text">Nexus</div>
+    </div>
+
+    <nav class="nav">
+
+      <button class="nav-btn active" data-page="dashboard">
+        🏠 Dashboard
+      </button>
+
+      <button class="nav-btn" data-page="subjects">
+        📚 Subjects
+      </button>
+
+      <button class="nav-btn" data-page="tasks">
+        ✅ Tasks
+      </button>
+
+      <button class="nav-btn" data-page="goals">
+        🎯 Goals
+      </button>
+
+      <button class="nav-btn" data-page="focus">
+        ⏱️ Focus
+      </button>
+
+      <button class="nav-btn" data-page="exams">
+        📅 Exams
+      </button>
+
+      <button class="nav-btn" data-page="analytics">
+        📊 Analytics
+      </button>
+
+      <button class="nav-btn" data-page="notes">
+        📝 Notes
+      </button>
+
+      <button class="nav-btn" data-page="settings">
+        ⚙️ Settings
+      </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <button
+        class="btn btn-secondary"
+        style="width:100%;"
+        onclick="showPage('focus')">
+        ▶ Start Focus
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;align-items:center;gap:12px;">
+
+        <button
+          id="mobileMenu"
+          class="icon-btn mobile-menu"
+          aria-label="Open menu">
+          ☰
+        </button>
+
+        <div id="topbarTitle" class="topbar-title">
+          Dashboard
+        </div>
+
+      </div>
+
+      <div class="top-actions">
+
+        <button
+          id="themeButton"
+          class="icon-btn"
+          title="Toggle theme"
+          aria-label="Toggle theme"
+          onclick="toggleTheme()">
+          🌙
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+
+      <section id="page-dashboard" class="page active">
+
+        <div class="welcome">
+
+          <h1 id="welcomeTitle">
+            Welcome to Nexus 👋
+          </h1>
+
+          <p id="welcomeText">
+            Your study. Your goals. Your system.
+          </p>
+
+          <div id="welcomeDate" class="welcome-date"></div>
+
+        </div>
+
+
+        <div class="grid grid-4">
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              Today's study
+            </div>
+
+            <div id="dashTodayStudy" class="stat-value">
+              0m
+            </div>
+
+            <div id="dashStudyGoalText" class="stat-small">
+              of 120m goal
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              Tasks completed
+            </div>
+
+            <div id="dashTasks" class="stat-value">
+              0
+            </div>
+
+            <div class="stat-small">
+              all-time
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              Focus sessions
+            </div>
+
+            <div id="dashSessions" class="stat-value">
+              0
+            </div>
+
+            <div class="stat-small">
+              completed
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              Study streak
+            </div>
+
+            <div id="dashStreak" class="stat-value">
+              0 🔥
+            </div>
+
+            <div class="stat-small">
+              days
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <div class="section-head">
+
+            <h2>
+              Today's progress
+            </h2>
+
+            <button
+              class="btn btn-secondary btn-small"
+              onclick="showPage('tasks')">
+              View Tasks
+            </button>
+
+          </div>
+
+
+          <div class="card">
+
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+
+              <span>
+                Daily study goal
+              </span>
+
+              <strong id="dashGoalPercent">
+                0%
+              </strong>
+
+            </div>
+
+            <div class="progress">
+
+              <div
+                id="dashGoalBar"
+                class="progress-bar"
+                style="width:0%">
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="grid grid-2 section">
+
+          <div class="card">
+
+            <div class="section-head">
+
+              <h2>
+                Today's tasks
+              </h2>
+
+              <button
+                class="btn btn-primary btn-small"
+                onclick="openTaskModal()">
+                + Add
+              </button>
+
+            </div>
+
+            <div id="dashboardTasks" class="list"></div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="section-head">
+
+              <h2>
+                Upcoming exams
+              </h2>
+
+              <button
+                class="btn btn-primary btn-small"
+                onclick="openExamModal()">
+                + Add
+              </button>
+
+            </div>
+
+            <div id="dashboardExams" class="list"></div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SUBJECTS -->
+
+      <section id="page-subjects" class="page">
+
+        <div class="page-header">
+          <h1>Subjects 📚</h1>
+          <p>Create the subjects that YOU study.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="section-head">
+
+            <h2>
+              Your subjects
+            </h2>
+
+            <button
+              class="btn btn-primary"
+              onclick="openSubjectModal()">
+              + Add Subject
+            </button>
+
+          </div>
+
+          <div id="subjectsGrid" class="grid grid-3"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TASKS -->
+
+      <section id="page-tasks" class="page">
+
+        <div class="page-header">
+          <h1>Tasks ✅</h1>
+          <p>Turn your study plans into actions.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="section-head">
+
+            <h2>
+              All tasks
+            </h2>
+
+            <button
+              class="btn btn-primary"
+              onclick="openTaskModal()">
+              + Add Task
+            </button>
+
+          </div>
+
+          <div id="tasksList" class="list"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- GOALS -->
+
+      <section id="page-goals" class="page">
+
+        <div class="page-header">
+          <h1>Goals 🎯</h1>
+          <p>Set goals and track your progress.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="section-head">
+
+            <h2>
+              Your goals
+            </h2>
+
+            <button
+              class="btn btn-primary"
+              onclick="openGoalModal()">
+              + Add Goal
+            </button>
+
+          </div>
+
+          <div id="goalsList" class="list"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- FOCUS -->
+
+      <section id="page-focus" class="page">
+
+        <div class="page-header">
+          <h1>Focus ⏱️</h1>
+          <p>Choose your study duration and get to work.</p>
+        </div>
+
+        <div class="card timer-card">
+
+          <div class="timer-selectors">
+
+            <button
+              class="timer-preset"
+              data-minutes="25">
+              25m
+            </button>
+
+            <button
+              class="timer-preset"
+              data-minutes="50">
+              50m
+            </button>
+
+            <button
+              class="timer-preset active"
+              data-minutes="60">
+              60m
+            </button>
+
+            <button
+              class="timer-preset"
+              data-minutes="90">
+              90m
+            </button>
+
+            <input
+              id="customMinutes"
+              type="number"
+              min="1"
+              max="600"
+              placeholder="Custom"
+              style="width:100px;">
+
+            <button
+              id="customSet"
+              class="btn btn-outline btn-small">
+              Set
+            </button>
+
+          </div>
+
+
+          <div id="timerDisplay" class="timer-display">
+            60:00
+          </div>
+
+
+          <div class="timer-controls">
+
+            <button
+              id="startPauseBtn"
+              class="btn btn-primary">
+              ▶ Start
+            </button>
+
+            <button
+              id="resetTimerBtn"
+              class="btn btn-outline">
+              ↻ Reset
+            </button>
+
+          </div>
+
+
+          <div class="timer-stats">
+
+            <div class="timer-stat">
+
+              <strong id="focusToday">
+                0m
+              </strong>
+
+              <span>
+                Today
+              </span>
+
+            </div>
+
+
+            <div class="timer-stat">
+
+              <strong id="focusTotal">
+                0m
+              </strong>
+
+              <span>
+                Total study
+              </span>
+
+            </div>
+
+
+            <div class="timer-stat">
+
+              <strong id="focusSessions">
+                0
+              </strong>
+
+              <span>
+                Sessions
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- EXAMS -->
+
+      <section id="page-exams" class="page">
+
+        <div class="page-header">
+          <h1>Exams 📅</h1>
+          <p>Never lose track of an important exam.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="section-head">
+
+            <h2>
+              Upcoming exams
+            </h2>
+
+            <button
+              class="btn btn-primary"
+              onclick="openExamModal()">
+              + Add Exam
+            </button>
+
+          </div>
+
+          <div id="examsList" class="list"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ANALYTICS -->
+
+      <section id="page-analytics" class="page">
+
+        <div class="page-header">
+          <h1>Analytics 📊</h1>
+          <p>See how your study time is building up.</p>
+        </div>
+
+
+        <div class="grid grid-4">
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              Today
+            </div>
+
+            <div id="analyticsToday" class="stat-value">
+              0m
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              This week
+            </div>
+
+            <div id="analyticsWeek" class="stat-value">
+              0m
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              This month
+            </div>
+
+            <div id="analyticsMonth" class="stat-value">
+              0m
+            </div>
+
+          </div>
+
+
+          <div class="card stat">
+
+            <div class="stat-label">
+              All time
+            </div>
+
+            <div id="analyticsAll" class="stat-value">
+              0m
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card section">
+
+          <div class="section-head">
+            <h2>Last 7 days</h2>
+          </div>
+
+          <div class="chart-wrap">
+            <div id="weeklyChart" class="chart"></div>
+          </div>
+
+        </div>
+
+
+        <div class="card section">
+
+          <div class="section-head">
+            <h2>Subject activity</h2>
+          </div>
+
+          <div id="subjectAnalytics"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- NOTES -->
+
+      <section id="page-notes" class="page">
+
+        <div class="page-header">
+          <h1>Notes 📝</h1>
+          <p>Keep useful thoughts, reminders and study notes here.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="section-head">
+
+            <h2>
+              Quick notes
+            </h2>
+
+            <button
+              class="btn btn-primary"
+              onclick="saveNotes()">
+              Save Notes
+            </button>
+
+          </div>
+
+          <textarea
+            id="notesArea"
+            placeholder="Write your notes here..."></textarea>
+
+        </div>
+
+      </section>
+
+
+      <!-- SETTINGS -->
+
+      <section id="page-settings" class="page">
+
+        <div class="page-header">
+          <h1>Settings ⚙️</h1>
+          <p>Control your Nexus workspace.</p>
+        </div>
+
+        <div class="card">
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <strong>
+                Profile
+              </strong>
+
+              <span id="settingsProfile">
+                No profile information
+              </span>
+
+            </div>
+
+            <button
+              class="btn btn-outline"
+              onclick="openProfileModal()">
+              Edit
+            </button>
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <strong>
+                Daily study goal
+              </strong>
+
+              <span>
+                How many minutes you want to study each day.
+              </span>
+
+            </div>
+
+            <button
+              class="btn btn-outline"
+              onclick="editDailyGoal()">
+              Change
+            </button>
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <strong>
+                Export workspace
+              </strong>
+
+              <span>
+                Download your Nexus data as a JSON file.
+              </span>
+
+            </div>
+
+            <button
+              class="btn btn-secondary"
+              onclick="exportData()">
+              Export
+            </button>
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <strong>
+                Import workspace
+              </strong>
+
+              <span>
+                Restore a previously exported Nexus JSON file.
+              </span>
+
+            </div>
+
+            <button
+              class="btn btn-secondary"
+              onclick="document.getElementById('importFile').click()">
+              Import
+            </button>
+
+            <input
+              id="importFile"
+              type="file"
+              accept=".json,application/json"
+              style="display:none;">
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div class="setting-info">
+
+              <strong>
+                Reset workspace
+              </strong>
+
+              <span>
+                Delete all Nexus data from this browser.
+              </span>
+
+            </div>
+
+            <button
+              class="btn btn-danger"
+              onclick="resetWorkspace()">
+              Reset
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =========================
+     SUBJECT MODAL
+========================= -->
+
+<div id="subjectModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Add Subject
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('subjectModal')">
+        ×
+      </button>
+
+    </div>
+
+    <form id="subjectForm">
+
+      <div class="field">
+
+        <label>
+          Subject name
+        </label>
+
+        <input
+          id="subjectName"
+          required
+          maxlength="50"
+          placeholder="e.g. Mathematics">
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-primary">
+        Add Subject
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     TASK MODAL
+========================= -->
+
+<div id="taskModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Add Task
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('taskModal')">
+        ×
+      </button>
+
+    </div>
+
+    <form id="taskForm">
+
+      <div class="form-grid">
+
+        <div class="field full">
+
+          <label>
+            Task
+          </label>
+
+          <input
+            id="taskTitle"
+            required
+            maxlength="100"
+            placeholder="e.g. Revise quadratic equations">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Subject
+          </label>
+
+          <select id="taskSubject">
+            <option value="">
+              No subject
+            </option>
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Priority
+          </label>
+
+          <select id="taskPriority">
+
+            <option value="high">
+              High
+            </option>
+
+            <option value="medium" selected>
+              Medium
+            </option>
+
+            <option value="low">
+              Low
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            Due date
+          </label>
+
+          <input
+            id="taskDue"
+            type="date">
+
+        </div>
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-primary">
+        Add Task
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     GOAL MODAL
+========================= -->
+
+<div id="goalModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Add Goal
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('goalModal')">
+        ×
+      </button>
+
+    </div>
+
+    <form id="goalForm">
+
+      <div class="field">
+
+        <label>
+          Goal
+        </label>
+
+        <input
+          id="goalTitle"
+          required
+          maxlength="100"
+          placeholder="e.g. Complete Chemistry revision">
+
+      </div>
+
+      <br>
+
+      <div class="field">
+
+        <label>
+          Target
+        </label>
+
+        <input
+          id="goalTarget"
+          type="number"
+          min="1"
+          value="10">
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-primary">
+        Add Goal
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     EXAM MODAL
+========================= -->
+
+<div id="examModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Add Exam
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('examModal')">
+        ×
+      </button>
+
+    </div>
+
+    <form id="examForm">
+
+      <div class="field">
+
+        <label>
+          Exam name
+        </label>
+
+        <input
+          id="examName"
+          required
+          maxlength="100"
+          placeholder="e.g. Mathematics Final Exam">
+
+      </div>
+
+      <br>
+
+      <div class="field">
+
+        <label>
+          Subject
+        </label>
+
+        <select id="examSubject">
+
+          <option value="">
+            No subject
+          </option>
+
+        </select>
+
+      </div>
+
+      <br>
+
+      <div class="field">
+
+        <label>
+          Exam date
+        </label>
+
+        <input
+          id="examDate"
+          type="date"
+          required>
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-primary">
+        Add Exam
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     PROFILE MODAL
+========================= -->
+
+<div id="profileModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Edit Profile
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('profileModal')">
+        ×
+      </button>
+
+    </div>
+
+    <form id="profileForm">
+
+      <div class="field">
+
+        <label>
+          Name
+        </label>
+
+        <input
+          id="profileName"
+          maxlength="40">
+
+      </div>
+
+      <br>
+
+      <div class="field">
+
+        <label>
+          Class / Grade
+        </label>
+
+        <input
+          id="profileGrade"
+          maxlength="30">
+
+      </div>
+
+      <br>
+
+      <button class="btn btn-primary">
+        Save Profile
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
 
 
 <script>
 "use strict";
 
 /* =========================================================
-   NEXUS V2.1
+   NEXUS DATA
 ========================================================= */
 
-const STORAGE_KEY = "nexus_v21_workspace";
+const STORAGE_KEY = "nexus_v2_workspace";
 
-const defaultData = {
-    setupComplete: false,
+const DEFAULT_DATA = {
+  setupComplete:false,
 
-    profile: {
-        name: "",
-        grade: ""
-    },
+  profile:{
+    name:"",
+    grade:""
+  },
 
-    dailyGoal: 120,
+  dailyGoal:120,
 
-    preferredFocus: 60,
+  subjects:[],
+  tasks:[],
+  goals:[],
+  exams:[],
 
-    subjects: [],
+  notes:"",
 
-    tasks: [],
+  studyLog:{},
 
-    goals: [],
+  focusSessions:0,
+  totalFocusMinutes:0,
 
-    exams: [],
+  streak:0,
+  lastStudyDate:"",
 
-    notes: "",
-
-    studyLog: {},
-
-    subjectStudyLog: {},
-
-    focusSessions: 0,
-
-    totalFocusMinutes: 0,
-
-    theme: "light"
+  theme:"light"
 };
 
-
-let data = loadData();
+let data = cloneDefaultData();
 
 let setupSubjects = [];
 
-let currentTaskFilter = "all";
-
-let timer = {
-    duration: data.preferredFocus || 60,
-    remaining: (data.preferredFocus || 60) * 60,
-    running: false,
-    interval: null,
-    subjectId: null,
-    sessionRecorded: false
-};
+let timerMinutes = 60;
+let remainingSeconds = 3600;
+let timerRunning = false;
+let timerInterval = null;
 
 
 /* =========================================================
-   STORAGE
+   GENERAL UTILITIES
 ========================================================= */
 
-function deepClone(object) {
-    return JSON.parse(JSON.stringify(object));
+function cloneDefaultData(){
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
 
 
-function loadData() {
+function uid(){
 
-    try {
+  return (
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2,8)
+  );
 
-        const saved = localStorage.getItem(STORAGE_KEY);
-
-        if (!saved) {
-            return deepClone(defaultData);
-        }
-
-        const parsed = JSON.parse(saved);
-
-        return mergeData(defaultData, parsed);
-
-    } catch (error) {
-
-        console.warn("Could not load Nexus data.", error);
-
-        return deepClone(defaultData);
-    }
 }
 
 
-function mergeData(defaults, saved) {
+function todayKey(){
 
-    const result = deepClone(defaults);
+  const d = new Date();
 
-    if (!saved || typeof saved !== "object") {
-        return result;
-    }
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
 
-    result.setupComplete =
-        typeof saved.setupComplete === "boolean"
-            ? saved.setupComplete
-            : result.setupComplete;
+  return `${y}-${m}-${day}`;
 
-    result.dailyGoal =
-        Number.isFinite(Number(saved.dailyGoal))
-            ? Number(saved.dailyGoal)
-            : result.dailyGoal;
-
-    result.preferredFocus =
-        Number.isFinite(Number(saved.preferredFocus))
-            ? Number(saved.preferredFocus)
-            : result.preferredFocus;
-
-    result.profile = {
-        ...result.profile,
-        ...(saved.profile || {})
-    };
-
-    if (Array.isArray(saved.subjects)) {
-        result.subjects = saved.subjects;
-    }
-
-    if (Array.isArray(saved.tasks)) {
-        result.tasks = saved.tasks;
-    }
-
-    if (Array.isArray(saved.goals)) {
-        result.goals = saved.goals;
-    }
-
-    if (Array.isArray(saved.exams)) {
-        result.exams = saved.exams;
-    }
-
-    if (typeof saved.notes === "string") {
-        result.notes = saved.notes;
-    }
-
-    if (saved.studyLog && typeof saved.studyLog === "object") {
-        result.studyLog = saved.studyLog;
-    }
-
-    if (
-        saved.subjectStudyLog &&
-        typeof saved.subjectStudyLog === "object"
-    ) {
-        result.subjectStudyLog = saved.subjectStudyLog;
-    }
-
-    result.focusSessions =
-        Number(saved.focusSessions) || 0;
-
-    result.totalFocusMinutes =
-        Number(saved.totalFocusMinutes) || 0;
-
-    result.theme =
-        saved.theme === "dark" ? "dark" : "light";
-
-    return result;
 }
 
 
-function saveData() {
+function getDateKeyFromDate(date){
 
-    try {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,"0");
+  const day = String(date.getDate()).padStart(2,"0");
 
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(data)
-        );
+  return `${y}-${m}-${day}`;
 
-    } catch (error) {
-
-        showToast(
-            "Your browser could not save the workspace."
-        );
-    }
 }
 
 
-/* =========================================================
-   UTILITIES
-========================================================= */
+function formatMinutes(minutes){
 
-function createId(prefix = "id") {
+  minutes = Math.max(
+    0,
+    Math.round(Number(minutes) || 0)
+  );
 
-    return (
-        prefix +
-        "_" +
-        Date.now().toString(36) +
-        "_" +
-        Math.random().toString(36).slice(2, 8)
+  if(minutes < 60){
+    return `${minutes}m`;
+  }
+
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+
+  return m
+    ? `${h}h ${m}m`
+    : `${h}h`;
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function normalizeData(parsed){
+
+  const defaults = cloneDefaultData();
+
+  if(!parsed || typeof parsed !== "object"){
+    return defaults;
+  }
+
+  const normalized = {
+    ...defaults,
+    ...parsed,
+
+    profile:{
+      ...defaults.profile,
+      ...(parsed.profile || {})
+    },
+
+    subjects:Array.isArray(parsed.subjects)
+      ? parsed.subjects
+      : [],
+
+    tasks:Array.isArray(parsed.tasks)
+      ? parsed.tasks
+      : [],
+
+    goals:Array.isArray(parsed.goals)
+      ? parsed.goals
+      : [],
+
+    exams:Array.isArray(parsed.exams)
+      ? parsed.exams
+      : [],
+
+    studyLog:
+      parsed.studyLog &&
+      typeof parsed.studyLog === "object"
+        ? parsed.studyLog
+        : {}
+  };
+
+  normalized.dailyGoal =
+    Number(normalized.dailyGoal) > 0
+      ? Math.min(1440,Number(normalized.dailyGoal))
+      : 120;
+
+  normalized.focusSessions =
+    Math.max(0,Number(normalized.focusSessions) || 0);
+
+  normalized.totalFocusMinutes =
+    Math.max(0,Number(normalized.totalFocusMinutes) || 0);
+
+  normalized.streak =
+    Math.max(0,Number(normalized.streak) || 0);
+
+  return normalized;
+
+}
+
+
+function saveData(){
+
+  try{
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(data)
     );
-}
 
+    return true;
 
-function escapeHTML(value) {
+  }catch(error){
 
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+    console.error("Could not save Nexus data.",error);
 
-
-function todayKey() {
-
-    const now = new Date();
-
-    const year = now.getFullYear();
-
-    const month =
-        String(now.getMonth() + 1).padStart(2, "0");
-
-    const day =
-        String(now.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-}
-
-
-function dateFromKey(key) {
-
-    const [year, month, day] =
-        key.split("-").map(Number);
-
-    return new Date(year, month - 1, day);
-}
-
-
-function formatMinutes(minutes) {
-
-    minutes = Math.max(0, Math.round(Number(minutes) || 0));
-
-    const hours = Math.floor(minutes / 60);
-
-    const mins = minutes % 60;
-
-    if (hours > 0) {
-        return `${hours}h ${mins}m`;
-    }
-
-    return `${mins}m`;
-}
-
-
-function formatDate(dateString) {
-
-    if (!dateString) {
-        return "No date";
-    }
-
-    const date = dateFromKey(dateString);
-
-    return date.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-        year: "numeric"
-    });
-}
-
-
-function daysBetween(a, b) {
-
-    const ms = 24 * 60 * 60 * 1000;
-
-    return Math.round(
-        (dateFromKey(b) - dateFromKey(a)) / ms
+    showToast(
+      "Could not save data. Your browser storage may be full."
     );
+
+    return false;
+
+  }
+
 }
 
 
-function getSubjectName(subjectId) {
+function loadData(){
 
-    const subject =
-        data.subjects.find(
-            s => s.id === subjectId
-        );
+  const saved = localStorage.getItem(STORAGE_KEY);
 
-    return subject ? subject.name : "No subject";
+  if(!saved){
+    return;
+  }
+
+  try{
+
+    data = normalizeData(
+      JSON.parse(saved)
+    );
+
+  }catch(error){
+
+    console.error(
+      "Could not load Nexus data.",
+      error
+    );
+
+    data = cloneDefaultData();
+
+    showToast(
+      "Saved data could not be read."
+    );
+
+  }
+
 }
 
 
-function showToast(message) {
+let toastTimeout = null;
 
-    const container =
-        document.getElementById("toastContainer");
+function showToast(message){
 
-    const toast =
-        document.createElement("div");
+  const toast =
+    document.getElementById("toast");
 
-    toast.className = "toast";
+  if(!toast) return;
 
-    toast.textContent = message;
+  toast.textContent = message;
 
-    container.appendChild(toast);
+  toast.classList.add("show");
 
-    setTimeout(() => {
-        toast.remove();
-    }, 2800);
+  clearTimeout(toastTimeout);
+
+  toastTimeout = setTimeout(()=>{
+    toast.classList.remove("show");
+  },2400);
+
 }
 
 
@@ -2093,117 +2407,161 @@ function showToast(message) {
    SETUP
 ========================================================= */
 
-function addSetupSubject() {
+function addSetupSubject(){
 
-    const input =
-        document.getElementById("setupSubjectInput");
+  const input =
+    document.getElementById(
+      "setupSubjectInput"
+    );
 
-    const name = input.value.trim();
+  const name =
+    input.value.trim();
 
-    if (!name) {
-        return;
-    }
+  if(!name){
+    return;
+  }
 
-    if (
-        setupSubjects.some(
-            s => s.toLowerCase() === name.toLowerCase()
-        )
-    ) {
-        showToast("That subject is already added.");
-        return;
-    }
+  if(
+    setupSubjects.some(
+      s => s.toLowerCase() === name.toLowerCase()
+    )
+  ){
 
-    setupSubjects.push(name);
+    showToast(
+      "That subject is already added."
+    );
 
-    input.value = "";
+    return;
+  }
 
-    renderSetupSubjects();
+  setupSubjects.push(name);
+
+  input.value = "";
+
+  renderSetupSubjects();
+
+  input.focus();
+
 }
 
 
-function removeSetupSubject(index) {
+function removeSetupSubject(index){
 
-    setupSubjects.splice(index, 1);
+  if(index < 0 || index >= setupSubjects.length){
+    return;
+  }
 
-    renderSetupSubjects();
+  setupSubjects.splice(index,1);
+
+  renderSetupSubjects();
+
 }
 
 
-function renderSetupSubjects() {
+function renderSetupSubjects(){
 
-    const container =
-        document.getElementById("setupSubjectTags");
+  const container =
+    document.getElementById(
+      "setupSubjects"
+    );
 
-    container.innerHTML =
-        setupSubjects.map(
-            (subject, index) => `
-                <span class="subject-tag">
-                    ${escapeHTML(subject)}
-                    <button
-                        onclick="removeSetupSubject(${index})"
-                        aria-label="Remove subject"
-                    >
-                        ×
-                    </button>
-                </span>
-            `
-        ).join("");
+  if(!container) return;
+
+  if(setupSubjects.length === 0){
+
+    container.innerHTML = "";
+
+    return;
+  }
+
+  container.innerHTML =
+    setupSubjects.map(
+      (subject,index)=>`
+
+        <div class="setup-subject">
+
+          ${escapeHTML(subject)}
+
+          <button
+            type="button"
+            aria-label="Remove subject"
+            onclick="removeSetupSubject(${index})">
+            ×
+          </button>
+
+        </div>
+
+      `
+    ).join("");
+
 }
 
 
-function finishSetup() {
+document
+  .getElementById("addSetupSubjectBtn")
+  .addEventListener("click",addSetupSubject);
 
-    const name =
-        document.getElementById("setupName").value.trim();
 
-    const grade =
-        document.getElementById("setupGrade").value.trim();
+document
+  .getElementById("setupSubjectInput")
+  .addEventListener("keydown",(e)=>{
 
-    let goal =
-        Number(
-            document.getElementById("setupGoal").value
-        );
+    if(e.key === "Enter"){
 
-    const focus =
-        Number(
-            document.getElementById("setupFocus").value
-        );
+      e.preventDefault();
 
-    if (!Number.isFinite(goal) || goal < 1) {
-        goal = 120;
+      addSetupSubject();
+
     }
 
-    data.profile.name = name;
-    data.profile.grade = grade;
+  });
 
-    data.dailyGoal =
-        Math.min(1440, Math.round(goal));
 
-    data.preferredFocus =
-        [25, 50, 60, 90].includes(focus)
-            ? focus
-            : 60;
+document
+  .getElementById("setupForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    data.profile.name =
+      document
+        .getElementById("setupName")
+        .value
+        .trim();
+
+    data.profile.grade =
+      document
+        .getElementById("setupGrade")
+        .value
+        .trim();
+
+    const goal =
+      Number(
+        document
+          .getElementById("setupGoal")
+          .value
+      );
+
+    if(!goal || goal < 1 || goal > 1440){
+
+      showToast(
+        "Daily goal must be between 1 and 1440 minutes."
+      );
+
+      return;
+
+    }
+
+    data.dailyGoal = goal;
 
     data.subjects =
-        setupSubjects.map(name => ({
-            id: createId("sub"),
-            name
-        }));
+      setupSubjects.map(name=>({
 
-    /*
-      Everything else remains empty.
-      This is intentional: Nexus does not ship with
-      personal/sample student data.
-    */
+        id:uid(),
+        name:name.trim(),
+        createdAt:new Date().toISOString()
 
-    data.tasks = [];
-    data.goals = [];
-    data.exams = [];
-    data.notes = "";
-    data.studyLog = {};
-    data.subjectStudyLog = {};
-    data.focusSessions = 0;
-    data.totalFocusMinutes = 0;
+      }));
 
     data.setupComplete = true;
 
@@ -2211,63 +2569,34 @@ function finishSetup() {
 
     startApp();
 
-    showToast("Welcome to Nexus 🚀");
-}
+  });
 
 
 /* =========================================================
    APP START
 ========================================================= */
 
-function startApp() {
+function startApp(){
 
-    document
-        .getElementById("setupScreen")
-        .classList.add("hidden");
+  document
+    .getElementById("setupScreen")
+    .style.display = "none";
 
-    document
-        .getElementById("app")
-        .classList.remove("hidden");
+  document
+    .getElementById("app")
+    .style.display = "flex";
 
-    applyTheme();
+  applyTheme();
 
-    initializeTimer();
+  renderAll();
 
-    refreshAll();
-
-    navigate("dashboard");
 }
 
 
-function applyTheme() {
+loadData();
 
-    document.body.classList.toggle(
-        "dark",
-        data.theme === "dark"
-    );
-
-    const button =
-        document.getElementById("themeToggle");
-
-    if (button) {
-        button.textContent =
-            data.theme === "dark"
-                ? "☀️"
-                : "🌙";
-    }
-}
-
-
-function toggleTheme() {
-
-    data.theme =
-        data.theme === "dark"
-            ? "light"
-            : "dark";
-
-    saveData();
-
-    applyTheme();
+if(data.setupComplete){
+  startApp();
 }
 
 
@@ -2275,1991 +2604,90 @@ function toggleTheme() {
    NAVIGATION
 ========================================================= */
 
-function navigate(page) {
+const pageTitles = {
 
-    document
-        .querySelectorAll(".page")
-        .forEach(section => {
-            section.classList.remove("active");
-        });
+  dashboard:"Dashboard",
+  subjects:"Subjects",
+  tasks:"Tasks",
+  goals:"Goals",
+  focus:"Focus",
+  exams:"Exams",
+  analytics:"Analytics",
+  notes:"Notes",
+  settings:"Settings"
 
-    const target =
-        document.getElementById(`page-${page}`);
-
-    if (!target) {
-        return;
-    }
-
-    target.classList.add("active");
-
-    document
-        .querySelectorAll(".nav button")
-        .forEach(button => {
-            button.classList.toggle(
-                "active",
-                button.dataset.page === page
-            );
-        });
-
-    const activeButton =
-        document.querySelector(
-            `.nav button[data-page="${page}"]`
-        );
-
-    if (activeButton) {
-        document.getElementById("topbarTitle").textContent =
-            activeButton.textContent.trim();
-    }
-
-    document
-        .getElementById("sidebar")
-        .classList.remove("open");
-
-    refreshPage(page);
-}
+};
 
 
-function refreshPage(page) {
+document
+  .querySelectorAll(".nav-btn")
+  .forEach(button=>{
 
-    if (page === "dashboard") {
-        renderDashboard();
-    }
+    button.addEventListener("click",()=>{
 
-    if (page === "subjects") {
-        renderSubjects();
-    }
+      showPage(
+        button.dataset.page
+      );
 
-    if (page === "tasks") {
-        renderTasks();
-    }
+    });
 
-    if (page === "goals") {
-        renderGoals();
-    }
-
-    if (page === "focus") {
-        renderFocusStats();
-    }
-
-    if (page === "exams") {
-        renderExams();
-    }
-
-    if (page === "analytics") {
-        renderAnalytics();
-    }
-
-    if (page === "notes") {
-        renderNotes();
-    }
-
-    if (page === "settings") {
-        renderSettings();
-    }
-}
+  });
 
 
-/* =========================================================
-   REFRESH ALL
-========================================================= */
+function showPage(page){
 
-function refreshAll() {
+  if(!pageTitles[page]){
+    return;
+  }
 
-    renderDashboard();
-    renderSubjects();
-    renderTaskSubjectOptions();
-    renderTasks();
-    renderGoals();
-    renderFocusStats();
-    renderExamSubjectOptions();
-    renderExams();
+  document
+    .querySelectorAll(".page")
+    .forEach(section=>{
+      section.classList.remove("active");
+    });
+
+  const target =
+    document.getElementById(
+      `page-${page}`
+    );
+
+  if(!target){
+    return;
+  }
+
+  target.classList.add("active");
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(button=>{
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === page
+      );
+
+    });
+
+  document
+    .getElementById("topbarTitle")
+    .textContent = pageTitles[page];
+
+  document
+    .getElementById("sidebar")
+    .classList.remove("open");
+
+  if(page === "analytics"){
     renderAnalytics();
-    renderNotes();
-    renderSettings();
-}
+  }
 
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-function getTodayStudy() {
-
-    return Number(
-        data.studyLog[todayKey()] || 0
-    );
-}
-
-
-function calculateStreak() {
-
-    const dates =
-        Object.keys(data.studyLog)
-            .filter(
-                date =>
-                    Number(data.studyLog[date]) > 0
-            )
-            .sort();
-
-    if (dates.length === 0) {
-        return 0;
-    }
-
-    let streak = 1;
-
-    for (let i = dates.length - 1; i > 0; i--) {
-
-        const difference =
-            daysBetween(
-                dates[i - 1],
-                dates[i]
-            );
-
-        if (difference === 1) {
-            streak++;
-        } else {
-            break;
-        }
-    }
-
-    /*
-      A streak is only current if the latest study day
-      is today or yesterday.
-    */
-
-    const latest =
-        dates[dates.length - 1];
-
-    const gap =
-        daysBetween(latest, todayKey());
-
-    if (gap > 1) {
-        return 0;
-    }
-
-    return streak;
-}
-
-
-function renderDashboard() {
-
-    const name =
-        data.profile.name.trim();
-
-    document.getElementById("welcomeTitle").textContent =
-        name
-            ? `Welcome back, ${name} 👋`
-            : "Welcome to Nexus 👋";
-
-    document.getElementById("dashboardDate").textContent =
-        new Date().toLocaleDateString(undefined, {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-
-
-    const today =
-        getTodayStudy();
-
-    const goal =
-        Math.max(1, Number(data.dailyGoal) || 120);
-
-    const percent =
-        Math.min(100, Math.round((today / goal) * 100));
-
-    document.getElementById("todayStudy").textContent =
-        formatMinutes(today);
-
-    document.getElementById("todayGoalText").textContent =
-        `of ${goal}m goal`;
-
-    document.getElementById("streakValue").textContent =
-        calculateStreak();
-
-    const activeToday =
-        data.tasks.filter(
-            task =>
-                !task.completed &&
-                (
-                    !task.due ||
-                    task.due <= todayKey()
-                )
-        );
-
-    const completedToday =
-        data.tasks.filter(
-            task =>
-                task.completed &&
-                task.completedDate === todayKey()
-        );
-
-    document.getElementById("todayTasks").textContent =
-        activeToday.length;
-
-    document.getElementById("taskProgressText").textContent =
-        `${completedToday.length} completed today`;
-
-    const futureExams =
-        data.exams.filter(
-            exam =>
-                exam.date >= todayKey()
-        );
-
-    document.getElementById("upcomingExams").textContent =
-        futureExams.length;
-
-    document.getElementById("goalPercent").textContent =
-        `${percent}%`;
-
-    document.getElementById("dailyGoalProgress").style.width =
-        `${percent}%`;
-
-    document.getElementById("dailyGoalMessage").textContent =
-        today >= goal
-            ? "Daily goal complete. Great work! 🎉"
-            : `${formatMinutes(goal - today)} remaining today.`;
-
-
-    renderDashboardTasks();
-
-    renderDashboardExams();
-}
-
-
-function renderDashboardTasks() {
-
-    const container =
-        document.getElementById("dashboardTasks");
-
-    const tasks =
-        data.tasks
-            .filter(
-                task =>
-                    !task.completed &&
-                    (
-                        !task.due ||
-                        task.due <= todayKey()
-                    )
-            )
-            .slice(0, 8);
-
-    if (tasks.length === 0) {
-
-        container.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">✨</div>
-                No tasks due today.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        tasks.map(taskHTML).join("");
-}
-
-
-function renderDashboardExams() {
-
-    const container =
-        document.getElementById("dashboardExams");
-
-    const exams =
-        data.exams
-            .filter(
-                exam =>
-                    exam.date >= todayKey()
-            )
-            .sort(
-                (a, b) =>
-                    a.date.localeCompare(b.date)
-            )
-            .slice(0, 4);
-
-    if (exams.length === 0) {
-
-        container.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">📅</div>
-                No upcoming exams.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        exams.map(exam => {
-
-            const days =
-                daysBetween(
-                    todayKey(),
-                    exam.date
-                );
-
-            let countdown = "Today";
-
-            if (days > 0) {
-                countdown =
-                    days === 1
-                        ? "1 day left"
-                        : `${days} days left`;
-            }
-
-            return `
-                <div class="task-item">
-                    <div class="task-content">
-                        <div class="task-title">
-                            ${escapeHTML(exam.name)}
-                        </div>
-
-                        <div class="task-meta">
-                            <span class="badge">
-                                ${escapeHTML(
-                                    getSubjectName(exam.subjectId)
-                                )}
-                            </span>
-
-                            <span class="badge">
-                                ${escapeHTML(countdown)}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join("");
-}
-
-
-/* =========================================================
-   SUBJECTS
-========================================================= */
-
-function addSubject() {
-
-    const input =
-        document.getElementById("newSubjectName");
-
-    const name =
-        input.value.trim();
-
-    if (!name) {
-        showToast("Enter a subject name.");
-        return;
-    }
-
-    if (
-        data.subjects.some(
-            subject =>
-                subject.name.toLowerCase() ===
-                name.toLowerCase()
-        )
-    ) {
-        showToast("That subject already exists.");
-        return;
-    }
-
-    data.subjects.push({
-        id: createId("sub"),
-        name
-    });
-
-    input.value = "";
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Subject added.");
-}
-
-
-function deleteSubject(id) {
-
-    const subject =
-        data.subjects.find(
-            s => s.id === id
-        );
-
-    if (!subject) {
-        return;
-    }
-
-    const linkedTasks =
-        data.tasks.some(
-            task =>
-                task.subjectId === id
-        );
-
-    const linkedExams =
-        data.exams.some(
-            exam =>
-                exam.subjectId === id
-        );
-
-    let message =
-        `Delete "${subject.name}"?`;
-
-    if (linkedTasks || linkedExams) {
-
-        message +=
-            "\n\nTasks or exams using this subject will remain, but will show as 'No subject'.";
-    }
-
-    if (!confirm(message)) {
-        return;
-    }
-
-    data.subjects =
-        data.subjects.filter(
-            s => s.id !== id
-        );
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Subject deleted.");
-}
-
-
-function renderSubjects() {
-
-    const container =
-        document.getElementById("subjectsGrid");
-
-    if (data.subjects.length === 0) {
-
-        container.innerHTML = `
-            <div class="card empty" style="grid-column:1/-1">
-                <div class="empty-icon">📚</div>
-                <p>No subjects yet.</p>
-                <p style="font-size:12px;margin-top:5px">
-                    Add your first subject above.
-                </p>
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        data.subjects.map(subject => {
-
-            const tasks =
-                data.tasks.filter(
-                    task =>
-                        task.subjectId === subject.id
-                );
-
-            const completed =
-                tasks.filter(
-                    task =>
-                        task.completed
-                ).length;
-
-            const percent =
-                tasks.length
-                    ? Math.round(
-                        completed / tasks.length * 100
-                    )
-                    : 0;
-
-            return `
-                <div class="card subject-card">
-
-                    <div class="section-title">
-                        <h3>
-                            ${escapeHTML(subject.name)}
-                        </h3>
-
-                        <button
-                            class="small-btn"
-                            onclick="deleteSubject('${subject.id}')"
-                            title="Delete subject"
-                        >
-                            🗑️
-                        </button>
-                    </div>
-
-                    <p>
-                        ${completed} of ${tasks.length}
-                        tasks completed
-                    </p>
-
-                    <div class="subject-progress-text">
-                        <span>Task progress</span>
-                        <span>${percent}%</span>
-                    </div>
-
-                    <div class="progress">
-                        <div
-                            class="progress-bar"
-                            style="width:${percent}%"
-                        ></div>
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
-}
-
-
-/* =========================================================
-   TASKS
-========================================================= */
-
-function renderTaskSubjectOptions() {
-
-    const select =
-        document.getElementById("taskSubject");
-
-    if (!select) {
-        return;
-    }
-
-    const current =
-        select.value;
-
-    select.innerHTML =
-        `<option value="">No subject</option>` +
-        data.subjects
-            .map(
-                subject =>
-                    `<option value="${subject.id}">
-                        ${escapeHTML(subject.name)}
-                    </option>`
-            )
-            .join("");
-
-    if (
-        data.subjects.some(
-            s => s.id === current
-        )
-    ) {
-        select.value = current;
-    }
-}
-
-
-function createTask() {
-
-    const title =
-        document
-            .getElementById("taskTitle")
-            .value
-            .trim();
-
-    const subjectId =
-        document.getElementById("taskSubject").value;
-
-    const priority =
-        document.getElementById("taskPriority").value;
-
-    const due =
-        document.getElementById("taskDue").value;
-
-    if (!title) {
-        showToast("Enter a task.");
-        return;
-    }
-
-    data.tasks.push({
-        id: createId("task"),
-        title,
-        subjectId,
-        priority,
-        due,
-        completed: false,
-        completedDate: ""
-    });
-
-    document.getElementById("taskTitle").value = "";
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Task added.");
-}
-
-
-function toggleTask(id) {
-
-    const task =
-        data.tasks.find(
-            t => t.id === id
-        );
-
-    if (!task) {
-        return;
-    }
-
-    task.completed =
-        !task.completed;
-
-    task.completedDate =
-        task.completed
-            ? todayKey()
-            : "";
-
-    saveData();
-
-    refreshAll();
-}
-
-
-function deleteTask(id) {
-
-    if (!confirm("Delete this task?")) {
-        return;
-    }
-
-    data.tasks =
-        data.tasks.filter(
-            task =>
-                task.id !== id
-        );
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Task deleted.");
-}
-
-
-function setTaskFilter(filter) {
-
-    currentTaskFilter = filter;
-
-    renderTasks();
-}
-
-
-function taskHTML(task) {
-
-    const priorityLabel =
-        task.priority.charAt(0).toUpperCase() +
-        task.priority.slice(1);
-
-    const dueText =
-        task.due
-            ? formatDate(task.due)
-            : "No due date";
-
-    return `
-        <div class="task-item ${task.completed ? "completed" : ""}">
-
-            <input
-                class="task-check"
-                type="checkbox"
-                ${task.completed ? "checked" : ""}
-                onchange="toggleTask('${task.id}')"
-            >
-
-            <div class="task-content">
-
-                <div class="task-title">
-                    ${escapeHTML(task.title)}
-                </div>
-
-                <div class="task-meta">
-
-                    <span class="badge">
-                        ${escapeHTML(
-                            getSubjectName(task.subjectId)
-                        )}
-                    </span>
-
-                    <span class="badge priority-${escapeHTML(task.priority)}">
-                        ${escapeHTML(priorityLabel)}
-                    </span>
-
-                    <span class="badge">
-                        ${escapeHTML(dueText)}
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="item-actions">
-
-                <button
-                    class="small-btn"
-                    onclick="deleteTask('${task.id}')"
-                    title="Delete task"
-                >
-                    🗑️
-                </button>
-
-            </div>
-
-        </div>
-    `;
-}
-
-
-function renderTasks() {
-
-    const container =
-        document.getElementById("taskList");
-
-    let tasks =
-        [...data.tasks];
-
-    if (currentTaskFilter === "active") {
-
-        tasks =
-            tasks.filter(
-                task =>
-                    !task.completed
-            );
-    }
-
-    if (currentTaskFilter === "completed") {
-
-        tasks =
-            tasks.filter(
-                task =>
-                    task.completed
-            );
-    }
-
-    tasks.sort((a, b) => {
-
-        if (
-            a.completed !==
-            b.completed
-        ) {
-            return a.completed ? 1 : -1;
-        }
-
-        if (a.due && b.due) {
-            return a.due.localeCompare(b.due);
-        }
-
-        if (a.due) {
-            return -1;
-        }
-
-        if (b.due) {
-            return 1;
-        }
-
-        return 0;
-    });
-
-    if (tasks.length === 0) {
-
-        container.innerHTML = `
-            <div class="card empty">
-                <div class="empty-icon">✅</div>
-                No tasks here.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        tasks.map(taskHTML).join("");
-}
-
-
-/* =========================================================
-   GOALS
-========================================================= */
-
-function createGoal() {
-
-    const title =
-        document
-            .getElementById("goalTitle")
-            .value
-            .trim();
-
-    const target =
-        Number(
-            document.getElementById("goalTarget").value
-        );
-
-    const unit =
-        document
-            .getElementById("goalUnit")
-            .value
-            .trim();
-
-    if (!title) {
-        showToast("Enter a goal.");
-        return;
-    }
-
-    if (
-        !Number.isFinite(target) ||
-        target < 1
-    ) {
-        showToast("Enter a valid target.");
-        return;
-    }
-
-    data.goals.push({
-        id: createId("goal"),
-        title,
-        target: Math.round(target),
-        progress: 0,
-        unit: unit || "tasks"
-    });
-
-    document.getElementById("goalTitle").value = "";
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Goal created.");
-}
-
-
-function updateGoal(id, amount) {
-
-    const goal =
-        data.goals.find(
-            g => g.id === id
-        );
-
-    if (!goal) {
-        return;
-    }
-
-    goal.progress =
-        Math.max(
-            0,
-            Math.min(
-                goal.target,
-                Number(goal.progress || 0) + amount
-            )
-        );
-
-    saveData();
-
-    renderGoals();
-}
-
-
-function deleteGoal(id) {
-
-    if (!confirm("Delete this goal?")) {
-        return;
-    }
-
-    data.goals =
-        data.goals.filter(
-            goal =>
-                goal.id !== id
-        );
-
-    saveData();
-
-    renderGoals();
-
-    showToast("Goal deleted.");
-}
-
-
-function renderGoals() {
-
-    const container =
-        document.getElementById("goalsGrid");
-
-    if (data.goals.length === 0) {
-
-        container.innerHTML = `
-            <div class="card empty" style="grid-column:1/-1">
-                <div class="empty-icon">🎯</div>
-                No goals yet.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        data.goals.map(goal => {
-
-            const target =
-                Math.max(1, Number(goal.target));
-
-            const progress =
-                Math.max(
-                    0,
-                    Math.min(
-                        target,
-                        Number(goal.progress) || 0
-                    )
-                );
-
-            const percent =
-                Math.round(
-                    progress / target * 100
-                );
-
-            return `
-                <div class="card">
-
-                    <div class="section-title">
-
-                        <h3>
-                            ${escapeHTML(goal.title)}
-                        </h3>
-
-                        <button
-                            class="small-btn"
-                            onclick="deleteGoal('${goal.id}')"
-                        >
-                            🗑️
-                        </button>
-
-                    </div>
-
-                    <div class="subject-progress-text">
-                        <span>
-                            ${progress}
-                            /
-                            ${target}
-                            ${escapeHTML(goal.unit)}
-                        </span>
-
-                        <span>${percent}%</span>
-                    </div>
-
-                    <div class="progress">
-                        <div
-                            class="progress-bar"
-                            style="width:${percent}%"
-                        ></div>
-                    </div>
-
-                    <div class="form-actions">
-
-                        <button
-                            class="secondary-btn"
-                            onclick="updateGoal('${goal.id}', -1)"
-                        >
-                            −1
-                        </button>
-
-                        <button
-                            class="primary-btn"
-                            onclick="updateGoal('${goal.id}', 1)"
-                        >
-                            +1
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
-}
-
-
-/* =========================================================
-   TIMER
-========================================================= */
-
-function initializeTimer() {
-
-    timer.duration =
-        data.preferredFocus || 60;
-
-    timer.remaining =
-        timer.duration * 60;
-
-    timer.running = false;
-
-    timer.interval = null;
-
-    timer.subjectId = null;
-
-    timer.sessionRecorded = false;
-
-    updateTimerDisplay();
-
-    highlightDuration(timer.duration);
-}
-
-
-function selectDuration(minutes) {
-
-    if (timer.running) {
-        showToast("Pause the timer before changing duration.");
-        return;
-    }
-
-    timer.duration = minutes;
-
-    timer.remaining =
-        minutes * 60;
-
-    timer.sessionRecorded = false;
-
-    data.preferredFocus = minutes;
-
-    saveData();
-
-    updateTimerDisplay();
-
-    highlightDuration(minutes);
-
-    document.getElementById("timerStatus").textContent =
-        "Ready when you are.";
-}
-
-
-function customDuration() {
-
-    if (timer.running) {
-        showToast("Pause the timer before changing duration.");
-        return;
-    }
-
-    const value =
-        prompt(
-            "Enter focus duration in minutes (1–240):",
-            String(timer.duration)
-        );
-
-    if (value === null) {
-        return;
-    }
-
-    const minutes =
-        Number(value);
-
-    if (
-        !Number.isFinite(minutes) ||
-        minutes < 1 ||
-        minutes > 240
-    ) {
-        showToast("Choose a duration between 1 and 240 minutes.");
-        return;
-    }
-
-    timer.duration =
-        Math.round(minutes);
-
-    timer.remaining =
-        timer.duration * 60;
-
-    timer.sessionRecorded = false;
-
-    data.preferredFocus =
-        timer.duration;
-
-    saveData();
-
-    updateTimerDisplay();
+  if(page === "notes"){
 
     document
-        .querySelectorAll(".timer-options button")
-        .forEach(button =>
-            button.classList.remove("selected")
-        );
+      .getElementById("notesArea")
+      .value = data.notes || "";
 
-    document.getElementById("timerStatus").textContent =
-        `${timer.duration}-minute custom session ready.`;
-}
+  }
 
-
-function highlightDuration(minutes) {
-
-    document
-        .querySelectorAll(
-            ".timer-options button[data-duration]"
-        )
-        .forEach(button => {
-
-            button.classList.toggle(
-                "selected",
-                Number(button.dataset.duration) === minutes
-            );
-
-        });
-}
-
-
-function updateTimerDisplay() {
-
-    const totalSeconds =
-        Math.max(
-            0,
-            Math.floor(timer.remaining)
-        );
-
-    const minutes =
-        Math.floor(
-            totalSeconds / 60
-        );
-
-    const seconds =
-        totalSeconds % 60;
-
-    document.getElementById("timerDisplay").textContent =
-        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-
-    document.getElementById("timerStartButton").textContent =
-        timer.running
-            ? "Pause"
-            : "Start";
-}
-
-
-function toggleTimer() {
-
-    if (timer.running) {
-
-        pauseTimer();
-
-    } else {
-
-        startTimer();
-
-    }
-}
-
-
-function startTimer() {
-
-    if (timer.remaining <= 0) {
-
-        timer.remaining =
-            timer.duration * 60;
-
-        timer.sessionRecorded = false;
-    }
-
-    timer.running = true;
-
-    updateTimerDisplay();
-
-    document.getElementById("timerStatus").textContent =
-        "Focus mode is running…";
-
-
-    requestNotificationPermission();
-
-
-    clearInterval(timer.interval);
-
-    timer.interval =
-        setInterval(() => {
-
-            if (!timer.running) {
-                return;
-            }
-
-            timer.remaining--;
-
-            updateTimerDisplay();
-
-            if (timer.remaining <= 0) {
-
-                completeTimer();
-            }
-
-        }, 1000);
-}
-
-
-function pauseTimer() {
-
-    timer.running = false;
-
-    clearInterval(timer.interval);
-
-    timer.interval = null;
-
-    updateTimerDisplay();
-
-    document.getElementById("timerStatus").textContent =
-        "Paused. Resume when you're ready.";
-}
-
-
-function resetTimer() {
-
-    timer.running = false;
-
-    clearInterval(timer.interval);
-
-    timer.interval = null;
-
-    timer.remaining =
-        timer.duration * 60;
-
-    timer.sessionRecorded = false;
-
-    updateTimerDisplay();
-
-    document.getElementById("timerStatus").textContent =
-        "Timer reset.";
-}
-
-
-function completeTimer() {
-
-    if (timer.sessionRecorded) {
-        return;
-    }
-
-    timer.sessionRecorded = true;
-
-    timer.running = false;
-
-    clearInterval(timer.interval);
-
-    timer.interval = null;
-
-    const minutes =
-        timer.duration;
-
-    const key =
-        todayKey();
-
-    data.studyLog[key] =
-        Number(data.studyLog[key] || 0) +
-        minutes;
-
-    data.totalFocusMinutes =
-        Number(data.totalFocusMinutes || 0) +
-        minutes;
-
-    data.focusSessions =
-        Number(data.focusSessions || 0) +
-        1;
-
-
-    /*
-      If a future version assigns a subject to a focus session,
-      this object is ready for it. The current UI keeps subject
-      selection optional and does not pretend timer minutes belong
-      to a subject when they do not.
-    */
-
-    if (timer.subjectId) {
-
-        if (!data.subjectStudyLog[timer.subjectId]) {
-            data.subjectStudyLog[timer.subjectId] = {};
-        }
-
-        data.subjectStudyLog[timer.subjectId][key] =
-            Number(
-                data.subjectStudyLog[timer.subjectId][key] || 0
-            ) + minutes;
-    }
-
-
-    saveData();
-
-    updateTimerDisplay();
-
-    document.getElementById("timerStatus").textContent =
-        `Session complete! ${minutes} minutes logged. 🎉`;
-
-    showToast(
-        `${minutes}-minute focus session complete! 🎉`
-    );
-
-    sendCompletionNotification();
-
-    refreshAll();
-}
-
-
-function requestNotificationPermission() {
-
-    if (
-        !("Notification" in window)
-    ) {
-        return;
-    }
-
-    if (
-        Notification.permission === "default"
-    ) {
-
-        Notification.requestPermission()
-            .catch(() => {});
-
-    }
-}
-
-
-function sendCompletionNotification() {
-
-    if (
-        !("Notification" in window)
-    ) {
-        return;
-    }
-
-    if (
-        Notification.permission === "granted"
-    ) {
-
-        try {
-
-            new Notification(
-                "Nexus Focus Complete 🎉",
-                {
-                    body:
-                        `${timer.duration} minutes completed. Nice work!`
-                }
-            );
-
-        } catch (error) {
-
-            /* Browser may block notifications in some contexts. */
-        }
-    }
-}
-
-
-function renderFocusStats() {
-
-    document.getElementById("totalFocus").textContent =
-        formatMinutes(data.totalFocusMinutes);
-
-    document.getElementById("focusSessions").textContent =
-        data.focusSessions;
-
-    document.getElementById("focusToday").textContent =
-        formatMinutes(getTodayStudy());
-}
-
-
-/* =========================================================
-   EXAMS
-========================================================= */
-
-function renderExamSubjectOptions() {
-
-    const select =
-        document.getElementById("examSubject");
-
-    if (!select) {
-        return;
-    }
-
-    const current =
-        select.value;
-
-    select.innerHTML =
-        `<option value="">No subject</option>` +
-        data.subjects
-            .map(
-                subject =>
-                    `<option value="${subject.id}">
-                        ${escapeHTML(subject.name)}
-                    </option>`
-            )
-            .join("");
-
-    if (
-        data.subjects.some(
-            s => s.id === current
-        )
-    ) {
-        select.value = current;
-    }
-}
-
-
-function createExam() {
-
-    const name =
-        document
-            .getElementById("examName")
-            .value
-            .trim();
-
-    const subjectId =
-        document.getElementById("examSubject").value;
-
-    const date =
-        document.getElementById("examDate").value;
-
-    if (!name) {
-        showToast("Enter an exam name.");
-        return;
-    }
-
-    if (!date) {
-        showToast("Choose an exam date.");
-        return;
-    }
-
-    data.exams.push({
-        id: createId("exam"),
-        name,
-        subjectId,
-        date
-    });
-
-    document.getElementById("examName").value = "";
-    document.getElementById("examDate").value = "";
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Exam added.");
-}
-
-
-function deleteExam(id) {
-
-    if (!confirm("Delete this exam?")) {
-        return;
-    }
-
-    data.exams =
-        data.exams.filter(
-            exam =>
-                exam.id !== id
-        );
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Exam deleted.");
-}
-
-
-function examStatus(date) {
-
-    const difference =
-        daysBetween(
-            todayKey(),
-            date
-        );
-
-    if (difference < 0) {
-        return "Past";
-    }
-
-    if (difference === 0) {
-        return "Today";
-    }
-
-    if (difference === 1) {
-        return "1 day left";
-    }
-
-    return `${difference} days left`;
-}
-
-
-function renderExams() {
-
-    const container =
-        document.getElementById("examList");
-
-    const exams =
-        [...data.exams].sort(
-            (a, b) =>
-                a.date.localeCompare(b.date)
-        );
-
-    if (exams.length === 0) {
-
-        container.innerHTML = `
-            <div class="card empty" style="grid-column:1/-1">
-                <div class="empty-icon">📅</div>
-                No exams added yet.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        exams.map(exam => {
-
-            const date =
-                dateFromKey(exam.date);
-
-            return `
-                <div class="card exam-card">
-
-                    <div class="exam-date">
-
-                        <strong>
-                            ${date.getDate()}
-                        </strong>
-
-                        <span>
-                            ${date.toLocaleDateString(
-                                undefined,
-                                { month: "short" }
-                            )}
-                        </span>
-
-                    </div>
-
-                    <div class="exam-info">
-
-                        <h3>
-                            ${escapeHTML(exam.name)}
-                        </h3>
-
-                        <p>
-                            ${escapeHTML(
-                                getSubjectName(exam.subjectId)
-                            )}
-                        </p>
-
-                        <div class="task-meta">
-                            <span class="badge">
-                                ${escapeHTML(
-                                    examStatus(exam.date)
-                                )}
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <button
-                        class="small-btn"
-                        onclick="deleteExam('${exam.id}')"
-                    >
-                        🗑️
-                    </button>
-
-                </div>
-            `;
-
-        }).join("");
-}
-
-
-/* =========================================================
-   ANALYTICS
-========================================================= */
-
-function getLastNDates(n) {
-
-    const dates = [];
-
-    const now = new Date();
-
-    for (let i = n - 1; i >= 0; i--) {
-
-        const date =
-            new Date(now);
-
-        date.setDate(
-            now.getDate() - i
-        );
-
-        const year =
-            date.getFullYear();
-
-        const month =
-            String(
-                date.getMonth() + 1
-            ).padStart(2, "0");
-
-        const day =
-            String(
-                date.getDate()
-            ).padStart(2, "0");
-
-        dates.push(
-            `${year}-${month}-${day}`
-        );
-    }
-
-    return dates;
-}
-
-
-function getStudySum(dates) {
-
-    return dates.reduce(
-        (total, date) =>
-            total +
-            Number(
-                data.studyLog[date] || 0
-            ),
-        0
-    );
-}
-
-
-function renderAnalytics() {
-
-    const today =
-        todayKey();
-
-    const todayMinutes =
-        Number(
-            data.studyLog[today] || 0
-        );
-
-    const last7 =
-        getLastNDates(7);
-
-    const last30 =
-        getLastNDates(30);
-
-    document.getElementById("analyticsToday").textContent =
-        formatMinutes(todayMinutes);
-
-    document.getElementById("analyticsWeek").textContent =
-        formatMinutes(
-            getStudySum(last7)
-        );
-
-    document.getElementById("analyticsMonth").textContent =
-        formatMinutes(
-            getStudySum(last30)
-        );
-
-    document.getElementById("analyticsAll").textContent =
-        formatMinutes(
-            data.totalFocusMinutes
-        );
-
-
-    renderWeeklyChart(last7);
-
-    renderSubjectAnalytics();
-}
-
-
-function renderWeeklyChart(dates) {
-
-    const container =
-        document.getElementById("weeklyChart");
-
-    const values =
-        dates.map(
-            date =>
-                Number(
-                    data.studyLog[date] || 0
-                )
-        );
-
-    const max =
-        Math.max(
-            1,
-            ...values
-        );
-
-    container.innerHTML =
-        dates.map(
-            (date, index) => {
-
-                const value =
-                    values[index];
-
-                const height =
-                    Math.max(
-                        3,
-                        (value / max) * 170
-                    );
-
-                const label =
-                    dateFromKey(date).toLocaleDateString(
-                        undefined,
-                        { weekday: "short" }
-                    ).slice(0, 3);
-
-                return `
-                    <div class="chart-column">
-
-                        <span class="chart-value">
-                            ${value}m
-                        </span>
-
-                        <div
-                            class="chart-bar"
-                            style="height:${height}px"
-                            title="${value} minutes"
-                        ></div>
-
-                        <span class="chart-label">
-                            ${escapeHTML(label)}
-                        </span>
-
-                    </div>
-                `;
-            }
-        ).join("");
-}
-
-
-function renderSubjectAnalytics() {
-
-    const container =
-        document.getElementById("subjectAnalytics");
-
-    if (data.subjects.length === 0) {
-
-        container.innerHTML = `
-            <div class="empty">
-                Add subjects to see task progress.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        data.subjects.map(subject => {
-
-            const tasks =
-                data.tasks.filter(
-                    task =>
-                        task.subjectId === subject.id
-                );
-
-            const completed =
-                tasks.filter(
-                    task =>
-                        task.completed
-                ).length;
-
-            const percent =
-                tasks.length
-                    ? Math.round(
-                        completed / tasks.length * 100
-                    )
-                    : 0;
-
-            return `
-                <div>
-
-                    <div class="subject-progress-text">
-                        <strong>
-                            ${escapeHTML(subject.name)}
-                        </strong>
-
-                        <span>
-                            ${completed}/${tasks.length}
-                        </span>
-                    </div>
-
-                    <div class="progress">
-                        <div
-                            class="progress-bar"
-                            style="width:${percent}%"
-                        ></div>
-                    </div>
-
-                </div>
-            `;
-
-        }).join("");
-}
-
-
-/* =========================================================
-   NOTES
-========================================================= */
-
-function saveNotes() {
-
-    const textarea =
-        document.getElementById("notesArea");
-
-    data.notes =
-        textarea.value;
-
-    saveData();
-
-    document.getElementById("notesCount").textContent =
-        `${textarea.value.length} / 20000`;
-}
-
-
-function renderNotes() {
-
-    const textarea =
-        document.getElementById("notesArea");
-
-    textarea.value =
-        data.notes || "";
-
-    document.getElementById("notesCount").textContent =
-        `${textarea.value.length} / 20000`;
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-function renderSettings() {
-
-    document.getElementById("settingsName").value =
-        data.profile.name || "";
-
-    document.getElementById("settingsGrade").value =
-        data.profile.grade || "";
-
-    document.getElementById("settingsGoal").value =
-        data.dailyGoal || 120;
-}
-
-
-function saveSettings() {
-
-    const name =
-        document
-            .getElementById("settingsName")
-            .value
-            .trim();
-
-    const grade =
-        document
-            .getElementById("settingsGrade")
-            .value
-            .trim();
-
-    let goal =
-        Number(
-            document.getElementById("settingsGoal").value
-        );
-
-    if (
-        !Number.isFinite(goal) ||
-        goal < 1
-    ) {
-        showToast("Enter a valid daily goal.");
-        return;
-    }
-
-    data.profile.name =
-        name;
-
-    data.profile.grade =
-        grade;
-
-    data.dailyGoal =
-        Math.min(
-            1440,
-            Math.round(goal)
-        );
-
-    saveData();
-
-    refreshAll();
-
-    showToast("Settings saved.");
-}
-
-
-/* =========================================================
-   EXPORT
-========================================================= */
-
-function exportData() {
-
-    try {
-
-        const exportObject = {
-            exportedAt: new Date().toISOString(),
-            app: "Nexus",
-            version: "2.1",
-            workspace: data
-        };
-
-        const json =
-            JSON.stringify(
-                exportObject,
-                null,
-                2
-            );
-
-        const blob =
-            new Blob(
-                [json],
-                {
-                    type: "application/json"
-                }
-            );
-
-        const url =
-            URL.createObjectURL(blob);
-
-        const link =
-            document.createElement("a");
-
-        link.href = url;
-
-        link.download =
-            "nexus-workspace.json";
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        link.remove();
-
-        URL.revokeObjectURL(url);
-
-        showToast(
-            "Workspace exported successfully."
-        );
-
-    } catch (error) {
-
-        showToast(
-            "Could not export the workspace."
-        );
-    }
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function resetWorkspace() {
-
-    const first =
-        confirm(
-            "This will permanently clear this browser's Nexus workspace. Continue?"
-        );
-
-    if (!first) {
-        return;
-    }
-
-    const second =
-        confirm(
-            "Are you absolutely sure? Export a backup first if you need your data."
-        );
-
-    if (!second) {
-        return;
-    }
-
-    clearInterval(timer.interval);
-
-    localStorage.removeItem(STORAGE_KEY);
-
-    location.reload();
 }
 
 
@@ -4268,103 +2696,2558 @@ function resetWorkspace() {
 ========================================================= */
 
 document
-    .getElementById("mobileMenu")
-    .addEventListener(
-        "click",
-        () => {
-
-            document
-                .getElementById("sidebar")
-                .classList.toggle("open");
-
-        }
-    );
-
-
-/* =========================================================
-   NAV BUTTONS
-========================================================= */
-
-document
-    .querySelectorAll(".nav button")
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-                navigate(button.dataset.page);
-            }
-        );
-
-    });
-
-
-/* =========================================================
-   ENTER KEY SUPPORT
-========================================================= */
-
-document
-    .getElementById("setupSubjectInput")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                event.preventDefault();
-                addSetupSubject();
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("newSubjectName")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                event.preventDefault();
-                addSubject();
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   INITIAL LOAD
-========================================================= */
-
-if (data.setupComplete) {
-
-    startApp();
-
-} else {
+  .getElementById("mobileMenu")
+  .addEventListener("click",()=>{
 
     document
-        .getElementById("setupScreen")
-        .classList.remove("hidden");
+      .getElementById("sidebar")
+      .classList.toggle("open");
 
-    document
-        .getElementById("app")
-        .classList.add("hidden");
+  });
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+  const name =
+    data.profile.name;
+
+  document
+    .getElementById("welcomeTitle")
+    .textContent =
+      name
+        ? `Welcome back, ${name} 👋`
+        : "Welcome to Nexus 👋";
+
+  document
+    .getElementById("welcomeText")
+    .textContent =
+      data.profile.grade
+        ? `${data.profile.grade} • Your study. Your goals. Your system.`
+        : "Your study. Your goals. Your system.";
+
+  document
+    .getElementById("welcomeDate")
+    .textContent =
+      new Date().toLocaleDateString(
+        undefined,
+        {
+          weekday:"long",
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        }
+      );
+
+  const today =
+    Number(
+      data.studyLog[todayKey()] || 0
+    );
+
+  const completedTasks =
+    data.tasks.filter(
+      task => task.completed
+    ).length;
+
+  document
+    .getElementById("dashTodayStudy")
+    .textContent =
+      formatMinutes(today);
+
+  document
+    .getElementById("dashStudyGoalText")
+    .textContent =
+      `of ${formatMinutes(data.dailyGoal)} goal`;
+
+  document
+    .getElementById("dashTasks")
+    .textContent =
+      completedTasks;
+
+  document
+    .getElementById("dashSessions")
+    .textContent =
+      data.focusSessions;
+
+  document
+    .getElementById("dashStreak")
+    .textContent =
+      `${data.streak} 🔥`;
+
+  const percent =
+    data.dailyGoal
+      ? Math.min(
+          100,
+          Math.round(
+            (today / data.dailyGoal) * 100
+          )
+        )
+      : 0;
+
+  document
+    .getElementById("dashGoalPercent")
+    .textContent =
+      `${percent}%`;
+
+  document
+    .getElementById("dashGoalBar")
+    .style.width =
+      `${percent}%`;
+
+  renderDashboardTasks();
+  renderDashboardExams();
+
+}
+
+
+function renderDashboardTasks(){
+
+  const container =
+    document.getElementById(
+      "dashboardTasks"
+    );
+
+  const today =
+    todayKey();
+
+  const tasks =
+    data.tasks
+      .filter(
+        task =>
+          !task.completed &&
+          (!task.due || task.due <= today)
+      )
+      .slice(0,5);
+
+  if(tasks.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🎉
+        </div>
+
+        No urgent tasks. You're clear!
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    tasks.map(taskHTML).join("");
+
+}
+
+
+function renderDashboardExams(){
+
+  const container =
+    document.getElementById(
+      "dashboardExams"
+    );
+
+  const exams =
+    data.exams
+      .filter(
+        exam => daysUntil(exam.date) >= 0
+      )
+      .sort(
+        (a,b)=>a.date.localeCompare(b.date)
+      )
+      .slice(0,4);
+
+  if(exams.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📅
+        </div>
+
+        No upcoming exams.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    exams.map(examHTML).join("");
 
 }
 
 
 /* =========================================================
-   KEEP DASHBOARD DATE / EXAM COUNT FRESH
+   SUBJECTS
 ========================================================= */
 
-setInterval(() => {
+function openSubjectModal(){
 
-    if (data.setupComplete) {
-        renderDashboard();
+  document
+    .getElementById("subjectForm")
+    .reset();
+
+  openModal("subjectModal");
+
+}
+
+
+document
+  .getElementById("subjectForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const name =
+      document
+        .getElementById("subjectName")
+        .value
+        .trim();
+
+    if(!name){
+      return;
     }
 
-}, 60000);
+    if(
+      data.subjects.some(
+        s =>
+          s.name.toLowerCase() ===
+          name.toLowerCase()
+      )
+    ){
+
+      showToast(
+        "Subject already exists."
+      );
+
+      return;
+
+    }
+
+    data.subjects.push({
+
+      id:uid(),
+      name,
+      createdAt:new Date().toISOString()
+
+    });
+
+    saveData();
+
+    closeModal("subjectModal");
+
+    renderAll();
+
+    showToast(
+      "Subject added 📚"
+    );
+
+  });
+
+
+function renderSubjects(){
+
+  const container =
+    document.getElementById(
+      "subjectsGrid"
+    );
+
+  if(data.subjects.length === 0){
+
+    container.innerHTML = `
+
+      <div
+        class="empty"
+        style="grid-column:1/-1;">
+
+        <div class="empty-icon">
+          📚
+        </div>
+
+        <p>
+          You haven't added any subjects yet.
+        </p>
+
+        <br>
+
+        <button
+          class="btn btn-primary"
+          onclick="openSubjectModal()">
+          Add your first subject
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    data.subjects.map(subject=>{
+
+      const subjectTasks =
+        data.tasks.filter(
+          t => t.subjectId === subject.id
+        );
+
+      const completed =
+        subjectTasks.filter(
+          t => t.completed
+        ).length;
+
+      const percent =
+        subjectTasks.length
+          ? Math.round(
+              (completed / subjectTasks.length) * 100
+            )
+          : 0;
+
+      return `
+
+        <div class="card subject-card">
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              gap:10px;
+            ">
+
+            <h3>
+              ${escapeHTML(subject.name)}
+            </h3>
+
+            <button
+              class="btn btn-danger btn-small"
+              onclick="deleteSubject('${subject.id}')">
+              Delete
+            </button>
+
+          </div>
+
+          <div class="subject-progress progress">
+
+            <div
+              class="progress-bar"
+              style="width:${percent}%">
+            </div>
+
+          </div>
+
+          <div class="subject-footer">
+
+            <span>
+              ${completed}/${subjectTasks.length} tasks
+            </span>
+
+            <strong>
+              ${percent}%
+            </strong>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+function deleteSubject(id){
+
+  const subject =
+    data.subjects.find(
+      s => s.id === id
+    );
+
+  if(!subject){
+    return;
+  }
+
+  if(
+    !confirm(
+      `Delete "${subject.name}"? Tasks using this subject will remain.`
+    )
+  ){
+    return;
+  }
+
+  data.subjects =
+    data.subjects.filter(
+      s => s.id !== id
+    );
+
+  data.tasks.forEach(task=>{
+
+    if(task.subjectId === id){
+      task.subjectId = "";
+    }
+
+  });
+
+  data.exams.forEach(exam=>{
+
+    if(exam.subjectId === id){
+      exam.subjectId = "";
+    }
+
+  });
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    "Subject deleted."
+  );
+
+}
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+function openTaskModal(){
+
+  populateSubjectSelects();
+
+  document
+    .getElementById("taskForm")
+    .reset();
+
+  openModal("taskModal");
+
+}
+
+
+function populateSubjectSelects(){
+
+  const selects = [
+
+    document.getElementById(
+      "taskSubject"
+    ),
+
+    document.getElementById(
+      "examSubject"
+    )
+
+  ];
+
+  selects.forEach(select=>{
+
+    if(!select){
+      return;
+    }
+
+    select.innerHTML =
+      `<option value="">No subject</option>` +
+      data.subjects
+        .map(subject=>
+          `<option value="${escapeHTML(subject.id)}">
+            ${escapeHTML(subject.name)}
+          </option>`
+        )
+        .join("");
+
+  });
+
+}
+
+
+document
+  .getElementById("taskForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const title =
+      document
+        .getElementById("taskTitle")
+        .value
+        .trim();
+
+    if(!title){
+      return;
+    }
+
+    data.tasks.push({
+
+      id:uid(),
+
+      title,
+
+      subjectId:
+        document
+          .getElementById("taskSubject")
+          .value,
+
+      priority:
+        document
+          .getElementById("taskPriority")
+          .value,
+
+      due:
+        document
+          .getElementById("taskDue")
+          .value,
+
+      completed:false,
+
+      createdAt:
+        new Date().toISOString(),
+
+      completedAt:""
+
+    });
+
+    saveData();
+
+    closeModal("taskModal");
+
+    renderAll();
+
+    showToast(
+      "Task added ✅"
+    );
+
+  });
+
+
+function taskHTML(task){
+
+  const subject =
+    data.subjects.find(
+      s => s.id === task.subjectId
+    );
+
+  const priorityName =
+    task.priority === "high"
+      ? "High"
+      : task.priority === "low"
+        ? "Low"
+        : "Medium";
+
+  return `
+
+    <div class="list-item">
+
+      <div class="item-main">
+
+        <div class="check-row">
+
+          <input
+            type="checkbox"
+            ${task.completed ? "checked" : ""}
+            onchange="toggleTask('${task.id}')"
+            aria-label="Complete task">
+
+          <div>
+
+            <div
+              class="item-title"
+              style="${
+                task.completed
+                  ? "text-decoration:line-through;opacity:.55;"
+                  : ""
+              }">
+
+              ${escapeHTML(task.title)}
+
+            </div>
+
+            <div class="item-meta">
+
+              ${
+                subject
+                  ? escapeHTML(subject.name)
+                  : "No subject"
+              }
+
+              •
+
+              <span class="priority-${escapeHTML(task.priority)}">
+
+                ${priorityName} priority
+
+              </span>
+
+              ${
+                task.due
+                  ? ` • Due ${formatDate(task.due)}`
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="item-actions">
+
+        <button
+          class="btn btn-danger btn-small"
+          onclick="deleteTask('${task.id}')">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderTasks(){
+
+  const container =
+    document.getElementById(
+      "tasksList"
+    );
+
+  if(data.tasks.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ✅
+        </div>
+
+        No tasks yet. Add your first task.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  const sorted =
+    [...data.tasks].sort((a,b)=>{
+
+      if(a.completed !== b.completed){
+
+        return a.completed
+          ? 1
+          : -1;
+
+      }
+
+      if(a.due && b.due){
+
+        return a.due.localeCompare(
+          b.due
+        );
+
+      }
+
+      if(a.due && !b.due){
+        return -1;
+      }
+
+      if(!a.due && b.due){
+        return 1;
+      }
+
+      return 0;
+
+    });
+
+  container.innerHTML =
+    sorted.map(taskHTML).join("");
+
+}
+
+
+function toggleTask(id){
+
+  const task =
+    data.tasks.find(
+      t => t.id === id
+    );
+
+  if(!task){
+    return;
+  }
+
+  task.completed =
+    !task.completed;
+
+  task.completedAt =
+    task.completed
+      ? new Date().toISOString()
+      : "";
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    task.completed
+      ? "Task completed 🎉"
+      : "Task reopened."
+  );
+
+}
+
+
+function deleteTask(id){
+
+  if(
+    !confirm(
+      "Delete this task?"
+    )
+  ){
+    return;
+  }
+
+  data.tasks =
+    data.tasks.filter(
+      t => t.id !== id
+    );
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    "Task deleted."
+  );
+
+}
+
+
+/* =========================================================
+   GOALS
+========================================================= */
+
+function openGoalModal(){
+
+  document
+    .getElementById("goalForm")
+    .reset();
+
+  openModal("goalModal");
+
+}
+
+
+document
+  .getElementById("goalForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const title =
+      document
+        .getElementById("goalTitle")
+        .value
+        .trim();
+
+    const target =
+      Number(
+        document
+          .getElementById("goalTarget")
+          .value
+      );
+
+    if(
+      !title ||
+      !target ||
+      target < 1
+    ){
+      return;
+    }
+
+    data.goals.push({
+
+      id:uid(),
+      title,
+      target,
+      progress:0,
+      createdAt:new Date().toISOString()
+
+    });
+
+    saveData();
+
+    closeModal("goalModal");
+
+    renderAll();
+
+    showToast(
+      "Goal created 🎯"
+    );
+
+  });
+
+
+function renderGoals(){
+
+  const container =
+    document.getElementById(
+      "goalsList"
+    );
+
+  if(data.goals.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🎯
+        </div>
+
+        No goals yet.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    data.goals.map(goal=>{
+
+      const target =
+        Math.max(
+          1,
+          Number(goal.target) || 1
+        );
+
+      const progress =
+        Math.max(
+          0,
+          Number(goal.progress) || 0
+        );
+
+      const percent =
+        Math.min(
+          100,
+          Math.round(
+            (progress / target) * 100
+          )
+        );
+
+      return `
+
+        <div class="list-item">
+
+          <div style="flex:1;min-width:0;">
+
+            <div class="item-title">
+
+              ${escapeHTML(goal.title)}
+
+            </div>
+
+            <div class="item-meta">
+
+              ${progress} / ${target}
+
+            </div>
+
+            <div
+              class="progress"
+              style="margin-top:9px;">
+
+              <div
+                class="progress-bar"
+                style="width:${percent}%">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="item-actions">
+
+            <button
+              class="btn btn-secondary btn-small"
+              onclick="changeGoal('${goal.id}',1)">
+              +1
+            </button>
+
+            <button
+              class="btn btn-danger btn-small"
+              onclick="deleteGoal('${goal.id}')">
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+function changeGoal(id,amount){
+
+  const goal =
+    data.goals.find(
+      g => g.id === id
+    );
+
+  if(!goal){
+    return;
+  }
+
+  goal.progress =
+    Math.max(
+      0,
+      Math.min(
+        Number(goal.target) || 1,
+        (Number(goal.progress) || 0) +
+        Number(amount)
+      )
+    );
+
+  saveData();
+
+  renderAll();
+
+}
+
+
+function deleteGoal(id){
+
+  if(
+    !confirm(
+      "Delete this goal?"
+    )
+  ){
+    return;
+  }
+
+  data.goals =
+    data.goals.filter(
+      g => g.id !== id
+    );
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    "Goal deleted."
+  );
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function updateTimerDisplay(){
+
+  const minutes =
+    Math.floor(
+      remainingSeconds / 60
+    );
+
+  const seconds =
+    remainingSeconds % 60;
+
+  document
+    .getElementById("timerDisplay")
+    .textContent =
+      `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+
+}
+
+
+function setTimerDuration(minutes){
+
+  if(timerRunning){
+
+    showToast(
+      "Pause the timer before changing duration."
+    );
+
+    return;
+
+  }
+
+  minutes =
+    Number(minutes);
+
+  if(
+    !Number.isFinite(minutes) ||
+    minutes < 1 ||
+    minutes > 600
+  ){
+
+    showToast(
+      "Choose between 1 and 600 minutes."
+    );
+
+    return;
+
+  }
+
+  timerMinutes =
+    Math.round(minutes);
+
+  remainingSeconds =
+    timerMinutes * 60;
+
+  document
+    .querySelectorAll(".timer-preset")
+    .forEach(button=>{
+
+      button.classList.toggle(
+        "active",
+        Number(button.dataset.minutes) ===
+        timerMinutes
+      );
+
+    });
+
+  updateTimerDisplay();
+
+}
+
+
+document
+  .querySelectorAll(".timer-preset")
+  .forEach(button=>{
+
+    button.addEventListener(
+      "click",
+      ()=>{
+        setTimerDuration(
+          Number(
+            button.dataset.minutes
+          )
+        );
+      }
+    );
+
+  });
+
+
+document
+  .getElementById("customSet")
+  .addEventListener("click",()=>{
+
+    const value =
+      Number(
+        document
+          .getElementById("customMinutes")
+          .value
+      );
+
+    setTimerDuration(value);
+
+  });
+
+
+document
+  .getElementById("startPauseBtn")
+  .addEventListener("click",()=>{
+
+    if(timerRunning){
+
+      pauseTimer();
+
+    }else{
+
+      startTimer();
+
+    }
+
+  });
+
+
+function startTimer(){
+
+  if(timerRunning){
+    return;
+  }
+
+  if(remainingSeconds <= 0){
+
+    remainingSeconds =
+      timerMinutes * 60;
+
+  }
+
+  timerRunning = true;
+
+  document
+    .getElementById("startPauseBtn")
+    .textContent =
+      "⏸ Pause";
+
+  timerInterval =
+    setInterval(()=>{
+
+      remainingSeconds--;
+
+      updateTimerDisplay();
+
+      if(remainingSeconds <= 0){
+
+        completeFocusSession();
+
+      }
+
+    },1000);
+
+}
+
+
+function pauseTimer(){
+
+  timerRunning = false;
+
+  if(timerInterval !== null){
+
+    clearInterval(
+      timerInterval
+    );
+
+    timerInterval = null;
+
+  }
+
+  document
+    .getElementById("startPauseBtn")
+    .textContent =
+      "▶ Start";
+
+}
+
+
+document
+  .getElementById("resetTimerBtn")
+  .addEventListener("click",()=>{
+
+    pauseTimer();
+
+    remainingSeconds =
+      timerMinutes * 60;
+
+    updateTimerDisplay();
+
+  });
+
+
+function completeFocusSession(){
+
+  pauseTimer();
+
+  const minutes =
+    timerMinutes;
+
+  const today =
+    todayKey();
+
+  data.studyLog[today] =
+    Number(
+      data.studyLog[today] || 0
+    ) + minutes;
+
+  data.totalFocusMinutes =
+    Number(
+      data.totalFocusMinutes || 0
+    ) + minutes;
+
+  data.focusSessions =
+    Number(
+      data.focusSessions || 0
+    ) + 1;
+
+  updateStreak();
+
+  saveData();
+
+  renderAll();
+
+  notifyCompletion();
+
+  showToast(
+    `Focus complete! +${minutes} minutes 🎉`
+  );
+
+}
+
+
+function updateStreak(){
+
+  const today =
+    todayKey();
+
+  if(data.lastStudyDate === today){
+    return;
+  }
+
+  const yesterday =
+    new Date();
+
+  yesterday.setDate(
+    yesterday.getDate() - 1
+  );
+
+  const yesterdayKey =
+    getDateKeyFromDate(
+      yesterday
+    );
+
+  if(!data.lastStudyDate){
+
+    data.streak = 1;
+
+  }else if(
+    data.lastStudyDate === yesterdayKey
+  ){
+
+    data.streak =
+      Math.max(
+        1,
+        Number(data.streak) || 0
+      ) + 1;
+
+  }else{
+
+    data.streak = 1;
+
+  }
+
+  data.lastStudyDate =
+    today;
+
+}
+
+
+function notifyCompletion(){
+
+  if(
+    "Notification" in window &&
+    Notification.permission === "granted"
+  ){
+
+    try{
+
+      new Notification(
+        "Nexus Focus Complete 🎉",
+        {
+          body:
+            `You completed ${timerMinutes} minutes of focused work.`
+        }
+      );
+
+    }catch(error){
+
+      console.warn(
+        "Notification failed.",
+        error
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   EXAMS
+========================================================= */
+
+function openExamModal(){
+
+  populateSubjectSelects();
+
+  document
+    .getElementById("examForm")
+    .reset();
+
+  openModal("examModal");
+
+}
+
+
+document
+  .getElementById("examForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const name =
+      document
+        .getElementById("examName")
+        .value
+        .trim();
+
+    const date =
+      document
+        .getElementById("examDate")
+        .value;
+
+    if(!name || !date){
+      return;
+    }
+
+    data.exams.push({
+
+      id:uid(),
+
+      name,
+
+      subjectId:
+        document
+          .getElementById("examSubject")
+          .value,
+
+      date,
+
+      createdAt:
+        new Date().toISOString()
+
+    });
+
+    saveData();
+
+    closeModal("examModal");
+
+    renderAll();
+
+    showToast(
+      "Exam added 📅"
+    );
+
+  });
+
+
+function daysUntil(dateString){
+
+  if(!dateString){
+    return -1;
+  }
+
+  const target =
+    new Date(
+      `${dateString}T00:00:00`
+    );
+
+  if(Number.isNaN(target.getTime())){
+    return -1;
+  }
+
+  const now =
+    new Date();
+
+  now.setHours(
+    0,0,0,0
+  );
+
+  return Math.ceil(
+    (
+      target.getTime() -
+      now.getTime()
+    ) /
+    (1000 * 60 * 60 * 24)
+  );
+
+}
+
+
+function examHTML(exam){
+
+  const subject =
+    data.subjects.find(
+      s => s.id === exam.subjectId
+    );
+
+  const days =
+    daysUntil(exam.date);
+
+  let countdown;
+
+  if(days < 0){
+
+    countdown = "Past";
+
+  }else if(days === 0){
+
+    countdown = "Today";
+
+  }else if(days === 1){
+
+    countdown = "1 day left";
+
+  }else{
+
+    countdown =
+      `${days} days left`;
+
+  }
+
+  return `
+
+    <div class="list-item">
+
+      <div class="item-main">
+
+        <div class="item-title">
+
+          ${escapeHTML(exam.name)}
+
+        </div>
+
+        <div class="item-meta">
+
+          ${
+            subject
+              ? escapeHTML(subject.name)
+              : "No subject"
+          }
+
+          • ${formatDate(exam.date)}
+
+        </div>
+
+      </div>
+
+
+      <div class="item-actions">
+
+        <span class="tag">
+          ${countdown}
+        </span>
+
+        <button
+          class="btn btn-danger btn-small"
+          onclick="deleteExam('${exam.id}')">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderExams(){
+
+  const container =
+    document.getElementById(
+      "examsList"
+    );
+
+  const exams =
+    [...data.exams]
+      .sort(
+        (a,b)=>
+          String(a.date || "")
+            .localeCompare(
+              String(b.date || "")
+            )
+      );
+
+  if(exams.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📅
+        </div>
+
+        Add an exam to start your countdown.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    exams.map(examHTML).join("");
+
+}
+
+
+function deleteExam(id){
+
+  if(
+    !confirm(
+      "Delete this exam?"
+    )
+  ){
+    return;
+  }
+
+  data.exams =
+    data.exams.filter(
+      e => e.id !== id
+    );
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    "Exam deleted."
+  );
+
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+function getDateKey(offset){
+
+  const d =
+    new Date();
+
+  d.setDate(
+    d.getDate() - offset
+  );
+
+  return getDateKeyFromDate(d);
+
+}
+
+
+function getLastNDays(n){
+
+  const result = [];
+
+  for(
+    let i = n - 1;
+    i >= 0;
+    i--
+  ){
+
+    result.push(
+      getDateKey(i)
+    );
+
+  }
+
+  return result;
+
+}
+
+
+function sumStudyDays(days){
+
+  return days.reduce(
+    (total,key)=>
+      total +
+      Number(
+        data.studyLog[key] || 0
+      ),
+    0
+  );
+
+}
+
+
+function renderAnalytics(){
+
+  const today =
+    sumStudyDays([
+      todayKey()
+    ]);
+
+  const week =
+    sumStudyDays(
+      getLastNDays(7)
+    );
+
+  const month =
+    sumStudyDays(
+      getLastNDays(30)
+    );
+
+  const all =
+    Object.values(
+      data.studyLog
+    ).reduce(
+      (sum,value)=>
+        sum +
+        Number(value || 0),
+      0
+    );
+
+  document
+    .getElementById("analyticsToday")
+    .textContent =
+      formatMinutes(today);
+
+  document
+    .getElementById("analyticsWeek")
+    .textContent =
+      formatMinutes(week);
+
+  document
+    .getElementById("analyticsMonth")
+    .textContent =
+      formatMinutes(month);
+
+  document
+    .getElementById("analyticsAll")
+    .textContent =
+      formatMinutes(all);
+
+  renderWeeklyChart();
+  renderSubjectAnalytics();
+
+}
+
+
+function renderWeeklyChart(){
+
+  const container =
+    document.getElementById(
+      "weeklyChart"
+    );
+
+  const days =
+    getLastNDays(7);
+
+  const values =
+    days.map(
+      day =>
+        Number(
+          data.studyLog[day] || 0
+        )
+    );
+
+  const max =
+    Math.max(
+      ...values,
+      1
+    );
+
+  container.innerHTML = `
+
+    <div
+      style="
+        display:flex;
+        align-items:flex-end;
+        gap:10px;
+        height:210px;
+        padding-top:20px;
+      ">
+
+      ${
+        days.map(
+          (day,index)=>{
+
+            const height =
+              Math.max(
+                4,
+                (values[index] / max) * 160
+              );
+
+            const label =
+              new Date(
+                `${day}T00:00:00`
+              ).toLocaleDateString(
+                undefined,
+                {
+                  weekday:"short"
+                }
+              );
+
+            return `
+
+              <div
+                style="
+                  flex:1;
+                  height:180px;
+                  display:flex;
+                  flex-direction:column;
+                  justify-content:flex-end;
+                  align-items:center;
+                  gap:6px;
+                ">
+
+                <small>
+                  ${formatMinutes(values[index])}
+                </small>
+
+                <div
+                  title="${formatMinutes(values[index])}"
+                  style="
+                    width:100%;
+                    max-width:45px;
+                    height:${height}px;
+                    background:var(--primary);
+                    border-radius:8px 8px 3px 3px;
+                  ">
+                </div>
+
+                <small
+                  style="color:var(--muted);">
+                  ${label}
+                </small>
+
+              </div>
+
+            `;
+
+          }
+        ).join("")
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+function renderSubjectAnalytics(){
+
+  const container =
+    document.getElementById(
+      "subjectAnalytics"
+    );
+
+  if(data.subjects.length === 0){
+
+    container.innerHTML =
+      `<div class="empty">
+        Add subjects to see activity.
+      </div>`;
+
+    return;
+
+  }
+
+  container.innerHTML =
+    data.subjects.map(subject=>{
+
+      const subjectTasks =
+        data.tasks.filter(
+          t =>
+            t.subjectId ===
+            subject.id
+        );
+
+      const completed =
+        subjectTasks.filter(
+          t => t.completed
+        ).length;
+
+      const percent =
+        subjectTasks.length
+          ? Math.round(
+              (completed /
+                subjectTasks.length) *
+              100
+            )
+          : 0;
+
+      return `
+
+        <div
+          style="margin-bottom:18px;">
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              margin-bottom:7px;
+              gap:10px;
+            ">
+
+            <strong>
+              ${escapeHTML(subject.name)}
+            </strong>
+
+            <span
+              style="color:var(--muted);">
+              ${percent}% tasks
+            </span>
+
+          </div>
+
+          <div class="progress">
+
+            <div
+              class="progress-bar"
+              style="width:${percent}%">
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   NOTES
+========================================================= */
+
+function saveNotes(){
+
+  data.notes =
+    document
+      .getElementById("notesArea")
+      .value;
+
+  saveData();
+
+  showToast(
+    "Notes saved 📝"
+  );
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function openProfileModal(){
+
+  document
+    .getElementById("profileName")
+    .value =
+      data.profile.name || "";
+
+  document
+    .getElementById("profileGrade")
+    .value =
+      data.profile.grade || "";
+
+  openModal(
+    "profileModal"
+  );
+
+}
+
+
+document
+  .getElementById("profileForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    data.profile.name =
+      document
+        .getElementById("profileName")
+        .value
+        .trim();
+
+    data.profile.grade =
+      document
+        .getElementById("profileGrade")
+        .value
+        .trim();
+
+    saveData();
+
+    closeModal(
+      "profileModal"
+    );
+
+    renderAll();
+
+    showToast(
+      "Profile updated."
+    );
+
+  });
+
+
+function editDailyGoal(){
+
+  const value =
+    prompt(
+      "Enter your daily study goal in minutes:",
+      data.dailyGoal
+    );
+
+  if(value === null){
+    return;
+  }
+
+  const minutes =
+    Number(value);
+
+  if(
+    !Number.isFinite(minutes) ||
+    minutes < 1 ||
+    minutes > 1440
+  ){
+
+    showToast(
+      "Enter a value between 1 and 1440."
+    );
+
+    return;
+
+  }
+
+  data.dailyGoal =
+    Math.round(minutes);
+
+  saveData();
+
+  renderAll();
+
+  showToast(
+    "Daily goal updated 🎯"
+  );
+
+}
+
+
+/* =========================================================
+   EXPORT
+========================================================= */
+
+function exportData(){
+
+  try{
+
+    const exportObject = {
+
+      ...data,
+
+      exportedAt:
+        new Date().toISOString(),
+
+      nexusVersion:
+        "2.1"
+
+    };
+
+    const blob =
+      new Blob(
+        [
+          JSON.stringify(
+            exportObject,
+            null,
+            2
+          )
+        ],
+        {
+          type:"application/json"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+      "nexus-workspace.json";
+
+    document
+      .body
+      .appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+    },1000);
+
+    showToast(
+      "Workspace exported 💾"
+    );
+
+  }catch(error){
+
+    console.error(
+      "Export failed.",
+      error
+    );
+
+    showToast(
+      "Export failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   IMPORT
+========================================================= */
+
+document
+  .getElementById("importFile")
+  .addEventListener("change",function(e){
+
+    const file =
+      e.target.files &&
+      e.target.files[0];
+
+    if(!file){
+      return;
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload = function(){
+
+      try{
+
+        const imported =
+          JSON.parse(
+            reader.result
+          );
+
+        const normalized =
+          normalizeData(
+            imported
+          );
+
+        if(
+          !confirm(
+            "Import this workspace? Your current Nexus data in this browser will be replaced."
+          )
+        ){
+
+          e.target.value = "";
+
+          return;
+
+        }
+
+        data =
+          normalized;
+
+        saveData();
+
+        applyTheme();
+
+        renderAll();
+
+        showToast(
+          "Workspace imported successfully."
+        );
+
+      }catch(error){
+
+        console.error(
+          "Import failed.",
+          error
+        );
+
+        showToast(
+          "That file is not a valid Nexus workspace."
+        );
+
+      }
+
+      e.target.value = "";
+
+    };
+
+    reader.onerror = function(){
+
+      showToast(
+        "Could not read that file."
+      );
+
+      e.target.value = "";
+
+    };
+
+    reader.readAsText(file);
+
+  });
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetWorkspace(){
+
+  const confirmed =
+    confirm(
+      "This will delete your Nexus data from this browser. Continue?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+  pauseTimer();
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+  location.reload();
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function applyTheme(){
+
+  const root =
+    document.documentElement;
+
+  if(data.theme === "dark"){
+
+    root.style.setProperty(
+      "--bg",
+      "#101218"
+    );
+
+    root.style.setProperty(
+      "--card",
+      "#171a22"
+    );
+
+    root.style.setProperty(
+      "--text",
+      "#f5f7fb"
+    );
+
+    root.style.setProperty(
+      "--muted",
+      "#9aa3b5"
+    );
+
+    root.style.setProperty(
+      "--border",
+      "#2a2f3b"
+    );
+
+    root.style.setProperty(
+      "--soft",
+      "#252344"
+    );
+
+    root.style.setProperty(
+      "--shadow",
+      "0 10px 30px rgba(0,0,0,.22)"
+    );
+
+  }else{
+
+    root.style.setProperty(
+      "--bg",
+      "#f5f7fb"
+    );
+
+    root.style.setProperty(
+      "--card",
+      "#ffffff"
+    );
+
+    root.style.setProperty(
+      "--text",
+      "#151821"
+    );
+
+    root.style.setProperty(
+      "--muted",
+      "#697386"
+    );
+
+    root.style.setProperty(
+      "--border",
+      "#e5e8ef"
+    );
+
+    root.style.setProperty(
+      "--soft",
+      "#eeedff"
+    );
+
+    root.style.setProperty(
+      "--shadow",
+      "0 10px 30px rgba(20,25,40,.07)"
+    );
+
+  }
+
+  const button =
+    document.getElementById(
+      "themeButton"
+    );
+
+  if(button){
+
+    button.textContent =
+      data.theme === "dark"
+        ? "☀️"
+        : "🌙";
+
+    button.title =
+      data.theme === "dark"
+        ? "Switch to light mode"
+        : "Switch to dark mode";
+
+  }
+
+}
+
+
+function toggleTheme(){
+
+  data.theme =
+    data.theme === "dark"
+      ? "light"
+      : "dark";
+
+  applyTheme();
+
+  saveData();
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function openModal(id){
+
+  const modal =
+    document.getElementById(id);
+
+  if(!modal){
+    return;
+  }
+
+  modal.classList.add("show");
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+}
+
+
+function closeModal(id){
+
+  const modal =
+    document.getElementById(id);
+
+  if(!modal){
+    return;
+  }
+
+  modal.classList.remove("show");
+
+  const anyOpen =
+    document.querySelector(
+      ".modal.show"
+    );
+
+  if(!anyOpen){
+
+    document.body.classList.remove(
+      "modal-open"
+    );
+
+  }
+
+}
+
+
+document
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
+
+    modal.addEventListener(
+      "click",
+      (e)=>{
+
+        if(e.target === modal){
+
+          modal.classList.remove(
+            "show"
+          );
+
+          document.body.classList.remove(
+            "modal-open"
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(dateString){
+
+  if(!dateString){
+    return "";
+  }
+
+  const date =
+    new Date(
+      `${dateString}T00:00:00`
+    );
+
+  if(Number.isNaN(date.getTime())){
+    return "";
+  }
+
+  return date.toLocaleDateString(
+    undefined,
+    {
+      day:"numeric",
+      month:"short",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SETTINGS DISPLAY
+========================================================= */
+
+function renderSettings(){
+
+  const name =
+    data.profile.name ||
+    "No name";
+
+  const grade =
+    data.profile.grade ||
+    "No grade";
+
+  document
+    .getElementById(
+      "settingsProfile"
+    )
+    .textContent =
+      `${name} • ${grade}`;
+
+}
+
+
+/* =========================================================
+   FOCUS STATS
+========================================================= */
+
+function renderFocusStats(){
+
+  const today =
+    Number(
+      data.studyLog[todayKey()] || 0
+    );
+
+  document
+    .getElementById("focusToday")
+    .textContent =
+      formatMinutes(today);
+
+  document
+    .getElementById("focusTotal")
+    .textContent =
+      formatMinutes(
+        data.totalFocusMinutes
+      );
+
+  document
+    .getElementById("focusSessions")
+    .textContent =
+      data.focusSessions;
+
+}
+
+
+/* =========================================================
+   MASTER RENDER
+========================================================= */
+
+function renderAll(){
+
+  renderDashboard();
+  renderSubjects();
+  renderTasks();
+  renderGoals();
+  renderExams();
+  renderFocusStats();
+  renderSettings();
+
+  const notesArea =
+    document.getElementById(
+      "notesArea"
+    );
+
+  if(notesArea){
+
+    notesArea.value =
+      data.notes || "";
+
+  }
+
+}
+
+
+/* =========================================================
+   INITIAL TIMER
+========================================================= */
+
+setTimerDuration(60);
+
+
+/* =========================================================
+   OPTIONAL NOTIFICATIONS
+========================================================= */
+
+document.addEventListener(
+  "click",
+  function(e){
+
+    if(
+      e.target &&
+      e.target.id === "startPauseBtn" &&
+      !timerRunning &&
+      "Notification" in window &&
+      Notification.permission === "default"
+    ){
+
+      Notification
+        .requestPermission()
+        .catch(()=>{});
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(e.key === "Escape"){
+
+      document
+        .querySelectorAll(".modal")
+        .forEach(modal=>{
+          modal.classList.remove(
+            "show"
+          );
+        });
+
+      document.body.classList.remove(
+        "modal-open"
+      );
+
+      document
+        .getElementById("sidebar")
+        .classList.remove(
+          "open"
+        );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   PERIODIC UI REFRESH
+========================================================= */
+
+setInterval(()=>{
+
+  if(data.setupComplete){
+
+    renderDashboard();
+
+  }
+
+},60000);
+
+
+/* =========================================================
+   FINAL INITIALIZATION
+========================================================= */
+
+if(data.setupComplete){
+
+  applyTheme();
+
+  renderAll();
+
+}
 
 </script>
 
