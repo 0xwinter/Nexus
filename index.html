@@ -1,380 +1,674 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexus V3 — Student Productivity</title>
+<title>NEXUS — Your Space to Grow</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
 :root {
-  --bg:#0b1020;--panel:#141c30;--panel2:#1b2640;
-  --text:#e8eefc;--muted:#94a3b8;--blue:#648cff;
-  --green:#34d399;--border:#283650;--red:#fb7185;
+ --bg:#f5f5fa;
+ --panel:#ffffff;
+ --panel2:#f0eff7;
+ --text:#19172b;
+ --muted:#858398;
+ --border:#e9e7f1;
+ --accent:#7759f5;
+ --accent2:#a28aff;
+ --soft:#eee9ff;
+ --green:#26b98b;
+ --shadow:0 8px 30px rgba(30,20,80,.055);
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font:15px system-ui,-apple-system,sans-serif}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
-.sidebar{padding:24px 16px;border-right:1px solid var(--border);
-background:#0e1527}
-.logo{font-size:25px;font-weight:800;margin:0 0 30px}
-.logo span{color:var(--blue)}
-.nav{display:grid;gap:8px}
-.nav button{background:transparent;border:0;color:var(--muted);
-padding:12px;text-align:left;border-radius:10px}
-.nav button.active,.nav button:hover{background:var(--panel2);color:white}
-.main{padding:28px;max-width:1400px;width:100%;margin:auto}
-.top{display:flex;justify-content:space-between;align-items:center;
-gap:12px;flex-wrap:wrap;margin-bottom:25px}
-h1{font-size:27px;margin:0}
-h2{font-size:18px;margin:0 0 16px}
-p{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--border);
-border-radius:16px;padding:20px;margin-bottom:16px}
-.stat{font-size:28px;font-weight:800;margin:8px 0}
-.muted{color:var(--muted)}
-.layout{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
-input,select,textarea{background:var(--bg);color:var(--text);
-border:1px solid var(--border);border-radius:9px;padding:11px;width:100%}
-textarea{resize:vertical}
-button.primary{background:var(--blue);color:white;border:0;
-padding:11px 16px;border-radius:9px;font-weight:650}
-button.secondary{background:var(--panel2);color:var(--text);
-border:1px solid var(--border);padding:10px 14px;border-radius:9px}
-button.danger{color:var(--red);background:transparent;border:0}
-.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form .wide{grid-column:1/-1}
-.task{display:flex;align-items:center;gap:12px;padding:13px 0;
-border-bottom:1px solid var(--border)}
-.task:last-child{border:0}
-.task input[type=checkbox]{width:18px;height:18px;accent-color:var(--green)}
-.task.done .task-name{text-decoration:line-through;color:var(--muted)}
-.task-name{flex:1;overflow-wrap:anywhere}
-.tag{font-size:12px;color:var(--blue);background:#25345a;
-padding:4px 8px;border-radius:20px;white-space:nowrap}
-.timer{text-align:center;padding:20px 0}
-.clock{font-size:clamp(44px,8vw,70px);font-weight:800;
-font-variant-numeric:tabular-nums}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.flashcard{min-height:180px;display:grid;place-items:center;
-text-align:center;font-size:22px;cursor:pointer;padding:20px}
-.progress{height:8px;background:var(--panel2);border-radius:8px;overflow:hidden}
-.progress div{height:100%;background:var(--green);width:0}
-.section{display:none}
-.section.active{display:block}
-.small{font-size:13px}
-footer{text-align:center;color:var(--muted);padding:20px}
-@media(max-width:850px){
-.app{grid-template-columns:1fr}
-.sidebar{border-right:0;border-bottom:1px solid var(--border);padding:12px}
-.logo{margin:0 0 12px}
-.nav{display:flex;overflow-x:auto}
-.nav button{white-space:nowrap}
-.main{padding:16px}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.layout{grid-template-columns:1fr}
+[data-theme="dark"] {
+ --bg:#11111a;
+ --panel:#1c1b29;
+ --panel2:#252437;
+ --text:#f4f2ff;
+ --muted:#9996ae;
+ --border:#302e42;
+ --accent:#9a81ff;
+ --accent2:#b7a5ff;
+ --soft:#302849;
+ --green:#48d5a8;
+ --shadow:0 8px 30px rgba(0,0,0,.15);
 }
-@media(max-width:420px){.form{grid-template-columns:1fr}.form .wide{grid-column:auto}}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+ background:var(--bg);
+ color:var(--text);
+ font-family:'DM Sans',sans-serif;
+ transition:.25s;
+ min-height:100vh;
+}
+button,input,select {font:inherit}
+button {cursor:pointer}
+h1,h2,h3,.brand {font-family:'Space Grotesk',sans-serif}
+button:focus-visible,input:focus-visible,select:focus-visible {
+ outline:2px solid var(--accent);
+ outline-offset:3px;
+}
+.hidden {display:none!important}
+
+/* LOGIN */
+.auth {
+ min-height:100vh;display:flex;align-items:center;
+ justify-content:center;padding:24px;
+ background:
+ radial-gradient(circle at 15% 20%,#a28aff30,transparent 35%),
+ radial-gradient(circle at 85% 80%,#60d8bd25,transparent 35%),
+ var(--bg);
+}
+.auth-card {
+ width:100%;max-width:430px;background:var(--panel);
+ padding:35px;border:1px solid var(--border);
+ border-radius:25px;box-shadow:var(--shadow);
+}
+.brand {font-size:27px;font-weight:800;letter-spacing:-1.5px}
+.brand span {color:var(--accent)}
+.logo {
+ width:43px;height:43px;border-radius:14px;
+ display:grid;place-items:center;
+ background:var(--accent);color:white;font-size:21px;
+ font-weight:800;
+}
+.auth-logo {display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.auth h1 {font-size:30px;letter-spacing:-1.2px;margin-bottom:8px}
+.sub {color:var(--muted);font-size:14px;line-height:1.6}
+.field {margin-top:18px}
+.field label {display:block;font-size:12px;font-weight:700;margin-bottom:8px}
+.field input,.field select {
+ width:100%;padding:13px 14px;border:1px solid var(--border);
+ border-radius:12px;background:var(--bg);color:var(--text);
+ outline:none;
+}
+.field input:focus,.field select:focus {border-color:var(--accent)}
+.primary {
+ background:var(--accent);color:white;border:0;border-radius:12px;
+ padding:13px 18px;font-weight:700;transition:.2s;
+}
+.primary:hover {filter:brightness(1.1);transform:translateY(-1px)}
+.full {width:100%;margin-top:22px}
+.switch {text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+.link {color:var(--accent);font-weight:700;cursor:pointer}
+
+/* APP */
+.app {display:flex;min-height:100vh}
+.sidebar {
+ width:245px;background:var(--panel);border-right:1px solid var(--border);
+ padding:25px 17px;position:fixed;inset:0 auto 0 0;
+ display:flex;flex-direction:column;z-index:5;
+}
+.sidebar .auth-logo {margin:0 0 40px 8px}
+.nav-label {
+ font-size:10px;font-weight:800;letter-spacing:1.5px;
+ color:var(--muted);padding:0 12px;margin:12px 0;
+}
+.nav {
+ display:flex;align-items:center;gap:13px;padding:12px 13px;
+ border-radius:12px;color:var(--muted);font-size:14px;
+ font-weight:600;margin:3px 0;cursor:pointer;transition:.2s;
+}
+.nav:hover,.nav.active {background:var(--soft);color:var(--accent)}
+.nav i {width:18px;height:18px}
+.sidebar-bottom {margin-top:auto}
+.profile-mini {
+ border-top:1px solid var(--border);padding:17px 5px 0;
+ display:flex;align-items:center;gap:11px;
+}
+.avatar {
+ width:38px;height:38px;border-radius:13px;
+ background:linear-gradient(135deg,#8c70ff,#54cdb2);
+ display:grid;place-items:center;color:white;font-weight:800;
+}
+.profile-mini strong {font-size:13px}
+.profile-mini small {display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.main {margin-left:245px;width:calc(100% - 245px);padding:30px 4.5%}
+.topbar {
+ display:flex;align-items:center;justify-content:space-between;
+ margin-bottom:32px;gap:12px;
+}
+.topbar h2 {font-size:22px}
+.top-actions {display:flex;gap:10px;align-items:center}
+.icon-btn {
+ width:40px;height:40px;border:1px solid var(--border);
+ border-radius:12px;background:var(--panel);color:var(--text);
+ display:grid;place-items:center;
+}
+.icon-btn:hover {border-color:var(--accent);color:var(--accent)}
+.section {display:none;animation:fade .3s}
+.section.active {display:block}
+@keyframes fade {from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.welcome {margin-bottom:25px}
+.welcome h1 {font-size:clamp(25px,4vw,34px);letter-spacing:-1.5px}
+.welcome p {color:var(--muted);margin-top:7px;font-size:14px}
+.accent {color:var(--accent)}
+.grid {display:grid;gap:17px}
+.stats {grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}
+.card {
+ background:var(--panel);border:1px solid var(--border);
+ border-radius:18px;padding:20px;box-shadow:var(--shadow);
+ min-width:0;
+}
+.stat-head {display:flex;justify-content:space-between;align-items:center}
+.stat-icon {
+ width:37px;height:37px;border-radius:12px;
+ display:grid;place-items:center;background:var(--soft);color:var(--accent);
+}
+.stat-number {font:700 27px 'Space Grotesk';margin-top:17px}
+.stat-label {font-size:12px;color:var(--muted);margin-top:4px}
+.content-grid {grid-template-columns:1.4fr 1fr;margin-bottom:18px}
+.card-title {display:flex;align-items:center;justify-content:space-between;margin-bottom:19px}
+.card-title h3 {font-size:16px}
+.muted {color:var(--muted);font-size:12px}
+.task {
+ display:flex;align-items:center;gap:12px;padding:12px 0;
+ border-bottom:1px solid var(--border);
+}
+.task:last-child {border:0}
+.task input {accent-color:var(--accent);width:17px;height:17px}
+.task-info {flex:1;min-width:0}
+.task-info strong {font-size:13px;display:block;overflow-wrap:anywhere}
+.task-info small {color:var(--muted);font-size:11px}
+.done strong {text-decoration:line-through;color:var(--muted)}
+.tag {
+ font-size:10px;padding:5px 9px;border-radius:20px;
+ background:var(--soft);color:var(--accent);font-weight:700;
+}
+.progress-line {height:8px;background:var(--panel2);border-radius:20px;overflow:hidden}
+.progress-fill {height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b19aff);border-radius:20px;transition:.4s}
+.goal-row {display:flex;justify-content:space-between;margin:12px 0 8px;font-size:12px}
+.quick {display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+.secondary {
+ border:1px solid var(--border);background:var(--panel2);
+ color:var(--text);border-radius:11px;padding:10px 14px;
+ font-size:12px;font-weight:700;
+}
+.secondary:hover {border-color:var(--accent);color:var(--accent)}
+/* FOCUS */
+.focus-card {max-width:700px;margin:25px auto;text-align:center;padding:35px}
+.focus-card h1 {font-size:29px}
+.timer {
+ width:220px;height:220px;border-radius:50%;margin:28px auto;
+ display:grid;place-items:center;
+ border:9px solid var(--soft);
+ outline:3px solid var(--accent);
+ outline-offset:-9px;
+}
+.timer span {font:700 44px 'Space Grotesk';letter-spacing:-2px}
+.presets {display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:20px 0}
+.preset {padding:9px 16px;border:1px solid var(--border);border-radius:30px;background:var(--panel);color:var(--text);font-size:12px}
+.preset.active {background:var(--soft);color:var(--accent);border-color:var(--accent)}
+.timer-buttons {display:flex;justify-content:center;gap:10px}
+.focus-note {color:var(--muted);font-size:12px;margin-top:20px}
+/* TASKS */
+.task-form {display:flex;gap:10px;margin:20px 0}
+.task-form input {flex:1;min-width:0;padding:12px;border-radius:11px;border:1px solid var(--border);background:var(--panel);color:var(--text)}
+.task-list .task {padding:16px 5px}
+.delete {background:none;border:0;color:var(--muted);padding:5px}
+.delete:hover {color:#ef6175}
+/* PROGRESS */
+.progress-stats {grid-template-columns:repeat(2,1fr)}
+/* PROFILE */
+.profile-card {max-width:600px}
+.setting-row {padding:15px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child {border:0}
+.setting-row strong {font-size:14px}
+.setting-row p {color:var(--muted);font-size:12px;margin-top:4px}
+.setting-row input,.setting-row select {margin-top:10px;width:100%;max-width:400px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}
+.mobile-menu {display:none}
+
+@media(max-width:950px) {
+ .stats {grid-template-columns:repeat(2,1fr)}
+ .main {padding:25px 3%}
+}
+@media(max-width:650px) {
+ .sidebar {width:100%;height:65px;inset:auto 0 0;flex-direction:row;justify-content:space-around;padding:5px 8px;border-top:1px solid var(--border);border-right:0}
+ .sidebar .auth-logo,.sidebar .nav-label,.sidebar-bottom {display:none}
+ .sidebar nav {display:flex;width:100%;justify-content:space-around}
+ .nav {flex-direction:column;gap:4px;padding:7px 8px;margin:0;font-size:9px}
+ .nav i {width:19px;height:19px}
+ .main {margin:0 0 65px;width:100%;padding:20px 15px}
+ .topbar {margin-bottom:23px}
+ .topbar h2 {font-size:18px}
+ .content-grid {grid-template-columns:1fr}
+ .stats {gap:10px}
+ .card {padding:15px}
+ .stat-number {font-size:23px}
+ .focus-card {padding:22px 12px}
+ .timer {width:190px;height:190px}
+ .timer span {font-size:37px}
+}
 </style>
 </head>
+
 <body>
-<div class="app">
-<aside class="sidebar">
-  <div class="logo">NEXUS<span>.</span></div>
-  <nav class="nav">
-    <button class="active" data-page="dashboard">⌂ Dashboard</button>
-    <button data-page="planner">▦ Study Planner</button>
-    <button data-page="focus">◷ Focus Timer</button>
-    <button data-page="flashcards">▤ Flashcards</button>
-    <button data-page="analytics">↗ Analytics</button>
+
+<!-- SIGN IN -->
+<div class="auth" id="auth">
+ <div class="auth-card">
+  <div class="auth-logo">
+   <div class="logo">N</div>
+   <div class="brand">NEXUS<span>.</span></div>
+  </div>
+  <div id="signupBox">
+   <h1>Find your <span class="accent">focus.</span></h1>
+   <p class="sub">Your space. Your goals. Your next level. ✨</p>
+   <div class="field">
+    <label>YOUR NAME</label>
+    <input id="nameInput" placeholder="What should we call you?">
+   </div>
+   <div class="field">
+    <label>YOUR CLASS</label>
+    <select id="classInput">
+     <option value="Class 9">Class 9</option>
+     <option value="Class 10" selected>Class 10</option>
+     <option value="Class 11">Class 11</option>
+     <option value="Class 12">Class 12</option>
+     <option value="College">College</option>
+     <option value="Other">Other</option>
+    </select>
+   </div>
+   <div class="field">
+    <label>DAILY STUDY GOAL (MINUTES)</label>
+    <input id="goalInput" type="number" min="10" max="1440" value="120">
+   </div>
+   <button class="primary full" onclick="createAccount()">Create my space →</button>
+   <p class="switch">Already have a profile? <span class="link" onclick="showLogin()">Sign in</span></p>
+  </div>
+  <div id="loginBox" class="hidden">
+   <h1>Welcome <span class="accent">back.</span></h1>
+   <p class="sub">Your next chapter starts here.</p>
+   <div class="field">
+    <label>YOUR NAME</label>
+    <input id="loginName" placeholder="Enter your saved name">
+   </div>
+   <button class="primary full" onclick="login()">Enter NEXUS →</button>
+   <p class="switch">New here? <span class="link" onclick="showSignup()">Create profile</span></p>
+  </div>
+  <p class="muted" style="margin-top:25px;text-align:center">Your space is stored locally on this device.</p>
+ </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app hidden" id="app">
+ <aside class="sidebar">
+  <div class="auth-logo">
+   <div class="logo">N</div>
+   <div class="brand">NEXUS<span>.</span></div>
+  </div>
+  <nav>
+   <div class="nav-label">WORKSPACE</div>
+   <div class="nav active" onclick="navigate('home',this)"><i data-lucide="layout-dashboard"></i>Home</div>
+   <div class="nav" onclick="navigate('focus',this)"><i data-lucide="timer"></i>Focus room</div>
+   <div class="nav" onclick="navigate('tasks',this)"><i data-lucide="check-square"></i>My tasks</div>
+   <div class="nav" onclick="navigate('progress',this)"><i data-lucide="chart-no-axes-combined"></i>Progress</div>
+   <div class="nav-label">PERSONAL</div>
+   <div class="nav" onclick="navigate('profile',this)"><i data-lucide="user-round"></i>My profile</div>
   </nav>
-  <p class="small">Your space to learn, grow, and achieve.</p>
-</aside>
-
-<main class="main">
-<header class="top">
-  <div>
-    <h1 id="pageTitle">Dashboard</h1>
-    <p id="today"></p>
+  <div class="sidebar-bottom">
+   <div class="profile-mini">
+    <div class="avatar" id="sideAvatar">W</div>
+    <div><strong id="sideName">Student</strong><small id="sideClass">Class 10</small></div>
+   </div>
   </div>
-  <button class="secondary" id="exportBtn">Export data</button>
-</header>
+ </aside>
 
-<section class="section active" id="dashboard">
-  <div class="grid">
-    <div class="card"><div class="muted">Tasks completed</div>
-      <div class="stat" id="doneStat">0</div></div>
-    <div class="card"><div class="muted">Tasks remaining</div>
-      <div class="stat" id="leftStat">0</div></div>
-    <div class="card"><div class="muted">Focus minutes</div>
-      <div class="stat" id="focusStat">0</div></div>
-    <div class="card"><div class="muted">Flashcards</div>
-      <div class="stat" id="cardStat">0</div></div>
-  </div>
-  <div class="layout">
+ <main class="main">
+  <header class="topbar">
+   <h2 id="pageTitle">Dashboard</h2>
+   <div class="top-actions">
+    <button class="icon-btn" onclick="toggleTheme()" title="Change theme"><i data-lucide="sun-moon"></i></button>
+    <button class="icon-btn" onclick="navigate('profile')" title="Profile"><i data-lucide="user-round"></i></button>
+   </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="section active" id="home">
+   <div class="welcome">
+    <h1>Hey, <span class="accent" id="welcomeName">Winter</span> ✨</h1>
+    <p>New day. New opportunities. Let's make today count.</p>
+   </div>
+   <div class="grid stats">
     <div class="card">
-      <h2>Today's tasks</h2>
-      <div id="todayTasks"></div>
-      <button class="secondary" onclick="showPage('planner')">Manage tasks →</button>
+     <div class="stat-head"><span class="muted">Focus time today</span><span class="stat-icon"><i data-lucide="clock"></i></span></div>
+     <div class="stat-number" id="homeTime">0m</div>
+     <div class="stat-label">Time spent focusing</div>
     </div>
     <div class="card">
-      <h2>Daily progress</h2>
-      <div class="stat" id="progressText">0%</div>
-      <div class="progress"><div id="progressBar"></div></div>
-      <p id="progressMessage">Start with one task.</p>
-      <button class="primary" onclick="showPage('focus')">Start focusing</button>
+     <div class="stat-head"><span class="muted">Tasks completed</span><span class="stat-icon"><i data-lucide="check"></i></span></div>
+     <div class="stat-number" id="homeTasks">0</div>
+     <div class="stat-label">Today's completed tasks</div>
     </div>
-  </div>
-</section>
+    <div class="card">
+     <div class="stat-head"><span class="muted">Daily goal</span><span class="stat-icon"><i data-lucide="target"></i></span></div>
+     <div class="stat-number" id="homeGoal">120m</div>
+     <div class="stat-label">Your target</div>
+    </div>
+    <div class="card">
+     <div class="stat-head"><span class="muted">Total tasks</span><span class="stat-icon"><i data-lucide="list-checks"></i></span></div>
+     <div class="stat-number" id="homeTotal">0</div>
+     <div class="stat-label">All your tasks</div>
+    </div>
+   </div>
+   <div class="grid content-grid">
+    <div class="card">
+     <div class="card-title"><h3>Today's tasks</h3><span class="muted" onclick="navigate('tasks')" style="cursor:pointer">View all →</span></div>
+     <div id="homeTaskList"></div>
+     <button class="secondary" onclick="navigate('tasks')" style="margin-top:15px">+ Add a task</button>
+    </div>
+    <div class="card">
+     <div class="card-title"><h3>Daily progress</h3><span class="tag">TODAY</span></div>
+     <div class="stat-number" id="goalPercent">0%</div>
+     <div class="muted" style="margin:5px 0 17px">Your focus goal completion</div>
+     <div class="progress-line"><div class="progress-fill" id="goalBar"></div></div>
+     <div class="goal-row"><span>Keep going!</span><span id="goalMinutes">0 / 120 min</span></div>
+     <div style="margin-top:28px">
+      <h3 style="font-size:14px">Your next move 🚀</h3>
+      <p class="muted" style="margin-top:8px">Small steps every day create big results. Start a focus session and make progress.</p>
+      <button class="primary" onclick="navigate('focus')" style="margin-top:16px">Start focusing →</button>
+     </div>
+    </div>
+   </div>
+  </section>
 
-<section class="section" id="planner">
-  <div class="card">
-    <h2>Add a study task</h2>
-    <form class="form" id="taskForm">
-      <input class="wide" id="taskName" placeholder="What do you need to study?" required>
-      <input id="subject" placeholder="Subject (e.g. Maths)" required>
-      <select id="priority">
-        <option value="Normal">Normal priority</option>
-        <option value="High">High priority</option>
-        <option value="Low">Low priority</option>
-      </select>
-      <label class="small">Due date<input type="date" id="dueDate"></label>
-      <label class="small">Estimated minutes<input type="number" id="estimate" min="1" value="30"></label>
-      <button class="primary wide" type="submit">Add task</button>
+  <!-- FOCUS -->
+  <section class="section" id="focus">
+   <div class="welcome"><h1>Enter your <span class="accent">focus zone.</span></h1><p>Disconnect from distractions. Connect with your goals.</p></div>
+   <div class="card focus-card">
+    <h1>Deep work mode ✦</h1>
+    <p class="muted" style="margin-top:8px">Choose your session length</p>
+    <div class="presets">
+     <button class="preset" onclick="setPreset(25,this)">25 min</button>
+     <button class="preset" onclick="setPreset(50,this)">50 min</button>
+     <button class="preset active" onclick="setPreset(60,this)">60 min</button>
+     <button class="preset" onclick="setPreset(120,this)">120 min</button>
+    </div>
+    <div class="timer"><span id="timerDisplay">60:00</span></div>
+    <div class="timer-buttons">
+     <button class="primary" id="startBtn" onclick="startTimer()">▶ Start session</button>
+     <button class="secondary" onclick="resetTimer()">↻ Reset</button>
+    </div>
+    <p class="focus-note" id="timerStatus">Your focus journey begins when you do.</p>
+   </div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="section" id="tasks">
+   <div class="welcome"><h1>Make it <span class="accent">happen.</span></h1><p>Plan your work. Work your plan.</p></div>
+   <div class="card">
+    <div class="card-title"><h3>Your task manager</h3><span class="tag" id="taskCount">0 TASKS</span></div>
+    <form class="task-form" onsubmit="addTask(event)">
+     <input id="taskInput" placeholder="What needs to get done?" maxlength="100" required>
+     <button class="primary" type="submit">Add +</button>
     </form>
-  </div>
-  <div class="card">
-    <h2>Your tasks</h2>
-    <div class="form">
-      <select id="filter">
-        <option value="all">All tasks</option>
-        <option value="pending">Pending</option>
-        <option value="done">Completed</option>
-      </select>
-      <input id="search" placeholder="Search tasks or subjects">
-    </div>
-    <div id="taskList"></div>
-  </div>
-</section>
+    <div class="task-list" id="allTaskList"></div>
+   </div>
+  </section>
 
-<section class="section" id="focus">
-  <div class="card timer">
-    <h2>Focus session</h2>
-    <div class="clock" id="clock">25:00</div>
-    <p id="timerStatus">Ready when you are.</p>
-    <div class="actions">
-      <button class="secondary" data-min="25">25 min</button>
-      <button class="secondary" data-min="50">50 min</button>
-      <button class="secondary" data-min="60">60 min</button>
-    </div>
-    <br>
-    <div class="actions">
-      <button class="primary" id="startTimer">Start</button>
-      <button class="secondary" id="pauseTimer">Pause</button>
-      <button class="secondary" id="resetTimer">Reset</button>
-    </div>
-  </div>
-</section>
+  <!-- PROGRESS -->
+  <section class="section" id="progress">
+   <div class="welcome"><h1>Your growth, <span class="accent">visualised.</span></h1><p>Track your effort. Celebrate your consistency.</p></div>
+   <div class="grid progress-stats">
+    <div class="card"><div class="muted">Total focus time</div><div class="stat-number" id="totalFocus">0m</div></div>
+    <div class="card"><div class="muted">Completed tasks</div><div class="stat-number" id="totalDone">0</div></div>
+   </div>
+   <div class="card" style="margin-top:18px">
+    <div class="card-title"><h3>Daily goal progress</h3><span class="tag">TODAY</span></div>
+    <div class="stat-number" id="progressPercent">0%</div>
+    <div class="progress-line" style="margin-top:16px"><div class="progress-fill" id="progressBar"></div></div>
+    <p class="muted" style="margin-top:15px" id="progressText">Start your first session today.</p>
+   </div>
+  </section>
 
-<section class="section" id="flashcards">
-  <div class="card">
-    <h2>Create a flashcard</h2>
-    <form class="form" id="cardForm">
-      <input id="question" placeholder="Question / Front" required>
-      <input id="answer" placeholder="Answer / Back" required>
-      <button class="primary wide">Add flashcard</button>
-    </form>
-  </div>
-  <div class="card">
-    <h2>Revision deck</h2>
-    <div class="flashcard" id="flashcard">Your flashcards will appear here.</div>
-    <div class="actions">
-      <button class="secondary" id="prevCard">← Previous</button>
-      <button class="primary" id="flipCard">Flip</button>
-      <button class="secondary" id="nextCard">Next →</button>
-      <button class="danger" id="deleteCard">Delete</button>
+  <!-- PROFILE -->
+  <section class="section" id="profile">
+   <div class="welcome"><h1>Your <span class="accent">space.</span></h1><p>Make NEXUS feel like yours.</p></div>
+   <div class="card profile-card">
+    <div class="card-title"><h3>Profile settings</h3><span class="tag">PERSONAL</span></div>
+    <div class="setting-row"><strong>Display name</strong><p>How should NEXUS call you?</p><input id="editName" maxlength="30"></div>
+    <div class="setting-row"><strong>Class / Education</strong><p>Your current level</p>
+     <select id="editClass">
+      <option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>College</option><option>Other</option>
+     </select>
     </div>
-    <p class="small" id="cardPosition"></p>
-  </div>
-</section>
-
-<section class="section" id="analytics">
-  <div class="grid">
-    <div class="card"><div class="muted">Total tasks</div>
-      <div class="stat" id="totalStat">0</div></div>
-    <div class="card"><div class="muted">Completion rate</div>
-      <div class="stat" id="rateStat">0%</div></div>
-    <div class="card"><div class="muted">Focus sessions</div>
-      <div class="stat" id="sessionsStat">0</div></div>
-    <div class="card"><div class="muted">Study time</div>
-      <div class="stat" id="hoursStat">0h</div></div>
-  </div>
-  <div class="card">
-    <h2>Subject breakdown</h2>
-    <div id="subjectStats"></div>
-  </div>
-</section>
-
-<footer>Nexus V3 · Your progress belongs to you.</footer>
-</main>
+    <div class="setting-row"><strong>Daily focus goal</strong><p>Your target in minutes</p><input id="editGoal" type="number" min="10" max="1440"></div>
+    <button class="primary" style="margin-top:20px" onclick="saveProfile()">Save changes</button>
+    <button class="secondary" style="margin:20px 0 0 8px" onclick="logout()">Sign out</button>
+   </div>
+  </section>
+ </main>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-const today = new Date().toISOString().slice(0,10);
-$("today").textContent = new Date().toLocaleDateString(undefined,
-  {weekday:"long",year:"numeric",month:"long",day:"numeric"});
-$("dueDate").value = today;
+const today = () => new Date().toLocaleDateString('en-CA');
 
-let data;
-try {
-  data = JSON.parse(localStorage.getItem("nexus_v3")) || {};
-} catch { data = {}; }
-data.tasks ||= [];
-data.cards ||= [];
-data.focusMinutes ||= 0;
-data.sessions ||= 0;
+let data = JSON.parse(localStorage.getItem('nexusData') || 'null');
+let theme = localStorage.getItem('nexusTheme') || 'light';
+let minutes = 60, remaining = 3600, timerInterval = null, running = false;
 
-function save(){
-  localStorage.setItem("nexus_v3",JSON.stringify(data));
-  render();
-}
-function escapeHTML(s){
-  return String(s).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-function showPage(page){
-  document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===page));
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
-  $("pageTitle").textContent=({dashboard:"Dashboard",planner:"Study Planner",focus:"Focus Timer",flashcards:"Flashcards",analytics:"Analytics"})[page];
-}
-document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+document.documentElement.dataset.theme = theme;
 
-$("taskForm").onsubmit=e=>{
-  e.preventDefault();
-  data.tasks.push({
-    id:Date.now(),name:$("taskName").value.trim(),
-    subject:$("subject").value.trim(),
-    priority:$("priority").value,
-    due:$("dueDate").value,
-    estimate:Number($("estimate").value)||30,
-    done:false
+function save() {
+ localStorage.setItem('nexusData',JSON.stringify(data));
+ render();
+}
+
+function showLogin() {
+ $('signupBox').classList.add('hidden');
+ $('loginBox').classList.remove('hidden');
+}
+function showSignup() {
+ $('loginBox').classList.add('hidden');
+ $('signupBox').classList.remove('hidden');
+}
+function createAccount() {
+ const name = $('nameInput').value.trim();
+ const goal = Number($('goalInput').value);
+ if(!name) return alert('Please enter your name.');
+ if(!Number.isFinite(goal) || goal<10 || goal>1440) return alert('Enter a goal between 10 and 1440 minutes.');
+ data = {
+  name,level:$('classInput').value,goal,
+  tasks:[],days:{},created:new Date().toISOString()
+ };
+ save();
+ enterApp();
+}
+function login() {
+ const name = $('loginName').value.trim();
+ if(!data || name.toLowerCase()!==data.name.toLowerCase())
+  return alert('Profile not found on this device. Create a profile first.');
+ enterApp();
+}
+function enterApp() {
+ $('auth').classList.add('hidden');
+ $('app').classList.remove('hidden');
+ render();
+ lucide.createIcons();
+}
+function logout() {
+ if(running && !confirm('Sign out and stop the current timer?')) return;
+ clearInterval(timerInterval);
+ running=false;
+ $('app').classList.add('hidden');
+ $('auth').classList.remove('hidden');
+ showLogin();
+}
+function dayData() {
+ const key=today();
+ if(!data.days[key]) data.days[key]={seconds:0};
+ return data.days[key];
+}
+function navigate(page,element) {
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ $(page).classList.add('active');
+ document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+ if(element) element.classList.add('active');
+ else {
+  document.querySelectorAll('.nav').forEach(n=>{
+   if(n.getAttribute('onclick')?.includes("'"+page+"'")) n.classList.add('active');
   });
-  e.target.reset();$("dueDate").value=today;$("estimate").value=30;
-  save();
-};
-function taskHTML(t){
-  return `<div class="task ${t.done?"done":""}">
-    <input type="checkbox" ${t.done?"checked":""} onchange="toggleTask(${t.id})">
-    <div class="task-name"><strong>${escapeHTML(t.name)}</strong>
-    <div class="small muted">${escapeHTML(t.subject)} · ${t.estimate} min · ${t.due||"No due date"}</div></div>
-    <span class="tag">${escapeHTML(t.priority)}</span>
-    <button class="danger" onclick="deleteTask(${t.id})">×</button>
+ }
+ $('pageTitle').textContent=({
+  home:'Dashboard',focus:'Focus room',tasks:'My tasks',
+  progress:'Your progress',profile:'My profile'
+ })[page];
+ render();
+ lucide.createIcons();
+}
+function toggleTheme() {
+ theme=theme==='light'?'dark':'light';
+ document.documentElement.dataset.theme=theme;
+ localStorage.setItem('nexusTheme',theme);
+ lucide.createIcons();
+}
+function saveProfile() {
+ const name=$('editName').value.trim(),goal=Number($('editGoal').value);
+ if(!name || !Number.isFinite(goal)||goal<10||goal>1440) return alert('Check your name and study goal.');
+ data.name=name;
+ data.level=$('editClass').value;
+ data.goal=goal;
+ save();
+ alert('Profile updated!');
+}
+function addTask(e) {
+ e.preventDefault();
+ const title=$('taskInput').value.trim();
+ if(!title)return;
+ data.tasks.push({id:Date.now(),title,done:false,created:today()});
+ $('taskInput').value='';
+ save();
+}
+function toggleTask(id) {
+ const task=data.tasks.find(t=>t.id===id);
+ if(task) task.done=!task.done;
+ save();
+}
+function deleteTask(id) {
+ data.tasks=data.tasks.filter(t=>t.id!==id);
+ save();
+}
+function setPreset(n,button) {
+ if(running) return;
+ minutes=n;
+ remaining=n*60;
+ document.querySelectorAll('.preset').forEach(b=>b.classList.remove('active'));
+ button.classList.add('active');
+ updateTimerDisplay();
+}
+function updateTimerDisplay() {
+ const m=Math.floor(remaining/60),s=remaining%60;
+ $('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function startTimer() {
+ if(running)return;
+ if(remaining<=0) remaining=minutes*60;
+ running=true;
+ $('startBtn').textContent='Ⅱ Pause';
+ $('startBtn').onclick=pauseTimer;
+ $('timerStatus').textContent='You are in the zone. Stay focused!';
+ timerInterval=setInterval(()=>{
+  remaining--;
+  updateTimerDisplay();
+  if(remaining<=0) finishTimer();
+ },1000);
+}
+function pauseTimer() {
+ clearInterval(timerInterval);
+ running=false;
+ $('startBtn').textContent='▶ Resume';
+ $('startBtn').onclick=startTimer;
+ $('timerStatus').textContent='Session paused. Resume when ready.';
+}
+function resetTimer() {
+ clearInterval(timerInterval);
+ running=false;
+ remaining=minutes*60;
+ updateTimerDisplay();
+ $('startBtn').textContent='▶ Start session';
+ $('startBtn').onclick=startTimer;
+ $('timerStatus').textContent='Timer reset. Ready when you are.';
+}
+function finishTimer() {
+ clearInterval(timerInterval);
+ running=false;
+ dayData().seconds+=minutes*60;
+ save();
+ remaining=0;
+ updateTimerDisplay();
+ $('startBtn').textContent='▶ Start session';
+ $('startBtn').onclick=startTimer;
+ $('timerStatus').textContent='Session completed! You showed up. 🎉';
+ alert('Focus session complete! Well done.');
+}
+function formatTime(seconds) {
+ const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60);
+ return h ? h+'h '+m+'m' : m+'m';
+}
+function render() {
+ if(!data)return;
+ const todayTasks=data.tasks.filter(t=>t.created===today());
+ const doneToday=todayTasks.filter(t=>t.done).length;
+ const seconds=dayData().seconds;
+ const mins=Math.floor(seconds/60);
+ const percent=Math.min(100,Math.round(mins/data.goal*100));
+ $('welcomeName').textContent=data.name;
+ $('sideName').textContent=data.name;
+ $('sideClass').textContent=data.level;
+ $('sideAvatar').textContent=data.name.charAt(0).toUpperCase();
+ $('homeTime').textContent=formatTime(seconds);
+ $('homeTasks').textContent=doneToday;
+ $('homeGoal').textContent=data.goal+'m';
+ $('homeTotal').textContent=data.tasks.length;
+ $('goalPercent').textContent=percent+'%';
+ $('goalBar').style.width=percent+'%';
+ $('goalMinutes').textContent=mins+' / '+data.goal+' min';
+ $('totalFocus').textContent=formatTime(
+  Object.values(data.days).reduce((a,b)=>a+(b.seconds||0),0)
+ );
+ $('totalDone').textContent=data.tasks.filter(t=>t.done).length;
+ $('progressPercent').textContent=percent+'%';
+ $('progressBar').style.width=percent+'%';
+ $('progressText').textContent=mins+' of '+data.goal+' minutes completed today.';
+ $('taskCount').textContent=data.tasks.length+' TASKS';
+
+ const makeTask=t=>`
+  <div class="task ${t.done?'done':''}">
+   <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+   <div class="task-info"><strong>${escapeHTML(t.title)}</strong><small>${t.created===today()?'Added today':'Earlier task'}</small></div>
+   <button class="delete" onclick="deleteTask(${t.id})" aria-label="Delete task"><i data-lucide="trash-2"></i></button>
   </div>`;
-}
-window.toggleTask=id=>{
-  const t=data.tasks.find(t=>t.id===id);if(t)t.done=!t.done;save();
-};
-window.deleteTask=id=>{data.tasks=data.tasks.filter(t=>t.id!==id);save();};
-$("filter").onchange=render;
-$("search").oninput=render;
+ $('homeTaskList').innerHTML=todayTasks.length
+  ?todayTasks.slice(0,5).map(makeTask).join('')
+  :'<p class="muted">No tasks yet. Add your first task!</p>';
+ $('allTaskList').innerHTML=data.tasks.length
+  ?data.tasks.map(makeTask).join('')
+  :'<p class="muted" style="padding:20px 0">Your task list is empty. Add something to get started!</p>';
 
-function renderTasks(){
-  const filter=$("filter").value,query=$("search").value.toLowerCase();
-  const tasks=data.tasks.filter(t=>
-    (filter==="all"||(filter==="done"&&t.done)||(filter==="pending"&&!t.done))&&
-    (t.name+" "+t.subject).toLowerCase().includes(query)
-  );
-  $("taskList").innerHTML=tasks.map(taskHTML).join("")||'<p class="muted">No tasks here yet.</p>';
-  const todayTasks=data.tasks.filter(t=>t.due===today);
-  $("todayTasks").innerHTML=todayTasks.slice(0,5).map(taskHTML).join("")||
-    '<p class="muted">No tasks scheduled for today.</p>';
+ $('editName').value=data.name;
+ $('editClass').value=data.level;
+ $('editGoal').value=data.goal;
+ lucide.createIcons();
 }
-function renderStats(){
-  const total=data.tasks.length,done=data.tasks.filter(t=>t.done).length;
-  const rate=total?Math.round(done/total*100):0;
-  $("doneStat").textContent=done;$("leftStat").textContent=total-done;
-  $("focusStat").textContent=data.focusMinutes;
-  $("cardStat").textContent=data.cards.length;
-  $("progressText").textContent=rate+"%";
-  $("progressBar").style.width=rate+"%";
-  $("progressMessage").textContent=rate===100&&total?"All tasks completed!":"Keep going, one task at a time.";
-  $("totalStat").textContent=total;$("rateStat").textContent=rate+"%";
-  $("sessionsStat").textContent=data.sessions;
-  $("hoursStat").textContent=(data.focusMinutes/60).toFixed(1)+"h";
-  const subjects={};
-  data.tasks.forEach(t=>{
-    subjects[t.subject]||={total:0,done:0};
-    subjects[t.subject].total++;
-    if(t.done)subjects[t.subject].done++;
-  });
-  $("subjectStats").innerHTML=Object.entries(subjects).map(([s,v])=>
-    `<div class="task"><div class="task-name">${escapeHTML(s)}</div>
-    <span class="tag">${v.done}/${v.total}</span></div>`).join("")||
-    '<p class="muted">Add tasks to see subject statistics.</p>';
+function escapeHTML(s) {
+ return String(s).replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ })[c]);
 }
-function render(){renderTasks();renderStats();renderCards();}
-render();
 
-let duration=25*60,remaining=duration,interval=null;
-function showClock(){
-  $("clock").textContent=String(Math.floor(remaining/60)).padStart(2,"0")+":"+
-    String(remaining%60).padStart(2,"0");
+// Restore saved profile
+if(data) {
+ $('auth').classList.remove('hidden');
+ $('loginName').value=data.name;
+ showLogin();
 }
-function stopTimer(){clearInterval(interval);interval=null;}
-function resetTimer(){stopTimer();remaining=duration;showClock();$("timerStatus").textContent="Ready when you are.";}
-document.querySelectorAll("[data-min]").forEach(b=>b.onclick=()=>{
-  duration=Number(b.dataset.min)*60;resetTimer();
-});
-$("startTimer").onclick=()=>{
-  if(interval)return;
-  $("timerStatus").textContent="Focus in progress…";
-  interval=setInterval(()=>{
-    remaining--;showClock();
-    if(remaining<=0){
-      stopTimer();data.focusMinutes+=Math.round(duration/60);data.sessions++;
-      save();$("timerStatus").textContent="Session complete! Take a short break.";
-      remaining=0;showClock();
-    }
-  },1000);
-};
-$("pauseTimer").onclick=()=>{stopTimer();$("timerStatus").textContent="Paused.";};
-$("resetTimer").onclick=resetTimer;
-showClock();
-
-$("cardForm").onsubmit=e=>{
-  e.preventDefault();
-  data.cards.push({q:$("question").value.trim(),a:$("answer").value.trim()});
-  e.target.reset();cardIndex=data.cards.length-1;flipped=false;save();
-};
-let cardIndex=0,flipped=false;
-function renderCards(){
-  if(!data.cards.length){
-    $("flashcard").textContent="Create your first flashcard!";
-    $("cardPosition").textContent="0 cards";return;
-  }
-  cardIndex=(cardIndex+data.cards.length)%data.cards.length;
-  $("flashcard").textContent=flipped?data.cards[cardIndex].a:data.cards[cardIndex].q;
-  $("cardPosition").textContent=`Card ${cardIndex+1} of ${data.cards.length}`;
-}
-$("flipCard").onclick=()=>{flipped=!flipped;renderCards();};
-$("prevCard").onclick=()=>{cardIndex--;flipped=false;renderCards();};
-$("nextCard").onclick=()=>{cardIndex++;flipped=false;renderCards();};
-$("deleteCard").onclick=()=>{
-  if(!data.cards.length)return;
-  data.cards.splice(cardIndex,1);flipped=false;save();
-};
-
-$("exportBtn").onclick=()=>{
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download="nexus-backup.json";a.click();
-  URL.revokeObjectURL(url);
-};
+updateTimerDisplay();
+lucide.createIcons();
 </script>
 </body>
 </html>
-
