@@ -4,311 +4,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS — Your Space to Grow</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>NEXUS 3.0 — Student Universe</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root {
- --bg:#f5f5fa;
- --panel:#ffffff;
- --panel2:#f0eff7;
- --text:#19172b;
- --muted:#858398;
- --border:#e9e7f1;
- --accent:#7759f5;
- --accent2:#a28aff;
- --soft:#eee9ff;
- --green:#26b98b;
- --shadow:0 8px 30px rgba(30,20,80,.055);
+:root{
+ --bg:#f5f4fc;--panel:#fff;--panel2:#eeecf8;
+ --text:#211d35;--muted:#89859e;--border:#e9e6f1;
+ --accent:#805cf5;--accent2:#b39bff;--soft:#eee9ff;
+ --green:#26bd91;--red:#ed6680;--yellow:#f3b94e;
+ --shadow:0 8px 30px rgba(35,20,80,.06);
 }
-[data-theme="dark"] {
- --bg:#11111a;
- --panel:#1c1b29;
- --panel2:#252437;
- --text:#f4f2ff;
- --muted:#9996ae;
- --border:#302e42;
- --accent:#9a81ff;
- --accent2:#b7a5ff;
- --soft:#302849;
- --green:#48d5a8;
- --shadow:0 8px 30px rgba(0,0,0,.15);
+[data-theme=dark]{
+ --bg:#11111b;--panel:#1d1b2b;--panel2:#29263a;
+ --text:#f5f2ff;--muted:#a19bb6;--border:#353147;
+ --accent:#a28aff;--accent2:#c2adff;--soft:#302746;
+ --green:#49d8a7;--red:#ff7891;--yellow:#f5c66c;
+ --shadow:0 8px 30px rgba(0,0,0,.18);
 }
-* {box-sizing:border-box;margin:0;padding:0}
-body {
- background:var(--bg);
- color:var(--text);
- font-family:'DM Sans',sans-serif;
- transition:.25s;
- min-height:100vh;
-}
-button,input,select {font:inherit}
-button {cursor:pointer}
-h1,h2,h3,.brand {font-family:'Space Grotesk',sans-serif}
-button:focus-visible,input:focus-visible,select:focus-visible {
- outline:2px solid var(--accent);
- outline-offset:3px;
-}
-.hidden {display:none!important}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;transition:.25s}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{opacity:.5;cursor:not-allowed}
 
-/* LOGIN */
-.auth {
- min-height:100vh;display:flex;align-items:center;
- justify-content:center;padding:24px;
- background:
- radial-gradient(circle at 15% 20%,#a28aff30,transparent 35%),
- radial-gradient(circle at 85% 80%,#60d8bd25,transparent 35%),
- var(--bg);
+/* AUTH */
+.auth{
+ min-height:100vh;display:grid;place-items:center;padding:20px;
+ background:radial-gradient(circle at 10% 20%,#a28aff35,transparent 35%),
+ radial-gradient(circle at 90% 80%,#4bd6b52b,transparent 35%),var(--bg)
 }
-.auth-card {
- width:100%;max-width:430px;background:var(--panel);
- padding:35px;border:1px solid var(--border);
- border-radius:25px;box-shadow:var(--shadow);
-}
-.brand {font-size:27px;font-weight:800;letter-spacing:-1.5px}
-.brand span {color:var(--accent)}
-.logo {
- width:43px;height:43px;border-radius:14px;
- display:grid;place-items:center;
- background:var(--accent);color:white;font-size:21px;
- font-weight:800;
-}
-.auth-logo {display:flex;align-items:center;gap:12px;margin-bottom:30px}
-.auth h1 {font-size:30px;letter-spacing:-1.2px;margin-bottom:8px}
-.sub {color:var(--muted);font-size:14px;line-height:1.6}
-.field {margin-top:18px}
-.field label {display:block;font-size:12px;font-weight:700;margin-bottom:8px}
-.field input,.field select {
- width:100%;padding:13px 14px;border:1px solid var(--border);
- border-radius:12px;background:var(--bg);color:var(--text);
- outline:none;
-}
-.field input:focus,.field select:focus {border-color:var(--accent)}
-.primary {
- background:var(--accent);color:white;border:0;border-radius:12px;
- padding:13px 18px;font-weight:700;transition:.2s;
-}
-.primary:hover {filter:brightness(1.1);transform:translateY(-1px)}
-.full {width:100%;margin-top:22px}
-.switch {text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
-.link {color:var(--accent);font-weight:700;cursor:pointer}
+.auth-card{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--border);border-radius:27px;padding:35px;box-shadow:var(--shadow)}
+.logo{width:45px;height:45px;border-radius:15px;background:linear-gradient(135deg,#8c65ff,#5d45d8);display:grid;place-items:center;color:white;font-size:25px;font-weight:800}
+.brand{font:800 27px 'Space Grotesk';letter-spacing:-1.5px}
+.brand span{color:var(--accent)}
+.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.auth h1{font-size:31px;letter-spacing:-1.4px;margin-bottom:8px}
+.muted{color:var(--muted);font-size:13px}
+.field{margin-top:17px}
+.field label{display:block;font-size:11px;font-weight:800;letter-spacing:.6px;margin-bottom:8px}
+.field input,.field select{width:100%;padding:13px;border-radius:12px;background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.primary{background:var(--accent);color:white;border:0;border-radius:12px;padding:12px 17px;font-weight:800;transition:.2s}
+.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:11px;padding:11px 15px;font-weight:700}
+.full{width:100%;margin-top:22px}
+.switch{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+.link{color:var(--accent);font-weight:800;cursor:pointer}
 
-/* APP */
-.app {display:flex;min-height:100vh}
-.sidebar {
- width:245px;background:var(--panel);border-right:1px solid var(--border);
- padding:25px 17px;position:fixed;inset:0 auto 0 0;
- display:flex;flex-direction:column;z-index:5;
-}
-.sidebar .auth-logo {margin:0 0 40px 8px}
-.nav-label {
- font-size:10px;font-weight:800;letter-spacing:1.5px;
- color:var(--muted);padding:0 12px;margin:12px 0;
-}
-.nav {
- display:flex;align-items:center;gap:13px;padding:12px 13px;
- border-radius:12px;color:var(--muted);font-size:14px;
- font-weight:600;margin:3px 0;cursor:pointer;transition:.2s;
-}
-.nav:hover,.nav.active {background:var(--soft);color:var(--accent)}
-.nav i {width:18px;height:18px}
-.sidebar-bottom {margin-top:auto}
-.profile-mini {
- border-top:1px solid var(--border);padding:17px 5px 0;
- display:flex;align-items:center;gap:11px;
-}
-.avatar {
- width:38px;height:38px;border-radius:13px;
- background:linear-gradient(135deg,#8c70ff,#54cdb2);
- display:grid;place-items:center;color:white;font-weight:800;
-}
-.profile-mini strong {font-size:13px}
-.profile-mini small {display:block;color:var(--muted);font-size:11px;margin-top:3px}
-.main {margin-left:245px;width:calc(100% - 245px);padding:30px 4.5%}
-.topbar {
- display:flex;align-items:center;justify-content:space-between;
- margin-bottom:32px;gap:12px;
-}
-.topbar h2 {font-size:22px}
-.top-actions {display:flex;gap:10px;align-items:center}
-.icon-btn {
- width:40px;height:40px;border:1px solid var(--border);
- border-radius:12px;background:var(--panel);color:var(--text);
- display:grid;place-items:center;
-}
-.icon-btn:hover {border-color:var(--accent);color:var(--accent)}
-.section {display:none;animation:fade .3s}
-.section.active {display:block}
-@keyframes fade {from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-.welcome {margin-bottom:25px}
-.welcome h1 {font-size:clamp(25px,4vw,34px);letter-spacing:-1.5px}
-.welcome p {color:var(--muted);margin-top:7px;font-size:14px}
-.accent {color:var(--accent)}
-.grid {display:grid;gap:17px}
-.stats {grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}
-.card {
- background:var(--panel);border:1px solid var(--border);
- border-radius:18px;padding:20px;box-shadow:var(--shadow);
- min-width:0;
-}
-.stat-head {display:flex;justify-content:space-between;align-items:center}
-.stat-icon {
- width:37px;height:37px;border-radius:12px;
- display:grid;place-items:center;background:var(--soft);color:var(--accent);
-}
-.stat-number {font:700 27px 'Space Grotesk';margin-top:17px}
-.stat-label {font-size:12px;color:var(--muted);margin-top:4px}
-.content-grid {grid-template-columns:1.4fr 1fr;margin-bottom:18px}
-.card-title {display:flex;align-items:center;justify-content:space-between;margin-bottom:19px}
-.card-title h3 {font-size:16px}
-.muted {color:var(--muted);font-size:12px}
-.task {
- display:flex;align-items:center;gap:12px;padding:12px 0;
- border-bottom:1px solid var(--border);
-}
-.task:last-child {border:0}
-.task input {accent-color:var(--accent);width:17px;height:17px}
-.task-info {flex:1;min-width:0}
-.task-info strong {font-size:13px;display:block;overflow-wrap:anywhere}
-.task-info small {color:var(--muted);font-size:11px}
-.done strong {text-decoration:line-through;color:var(--muted)}
-.tag {
- font-size:10px;padding:5px 9px;border-radius:20px;
- background:var(--soft);color:var(--accent);font-weight:700;
-}
-.progress-line {height:8px;background:var(--panel2);border-radius:20px;overflow:hidden}
-.progress-fill {height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b19aff);border-radius:20px;transition:.4s}
-.goal-row {display:flex;justify-content:space-between;margin:12px 0 8px;font-size:12px}
-.quick {display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
-.secondary {
- border:1px solid var(--border);background:var(--panel2);
- color:var(--text);border-radius:11px;padding:10px 14px;
- font-size:12px;font-weight:700;
-}
-.secondary:hover {border-color:var(--accent);color:var(--accent)}
+/* LAYOUT */
+.app{display:flex;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:var(--panel);border-right:1px solid var(--border);padding:23px 16px;display:flex;flex-direction:column;z-index:10}
+.sidebar .brand-row{margin:0 0 30px 5px}
+.nav-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--muted);padding:12px}
+.nav{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;color:var(--muted);font-weight:700;font-size:13px;margin:2px 0;cursor:pointer;transition:.2s}
+.nav:hover,.nav.active{background:var(--soft);color:var(--accent)}
+.nav .emoji{font-size:18px;width:22px;text-align:center}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:15px}
+.profile-mini{display:flex;align-items:center;gap:10px}
+.avatar{width:39px;height:39px;border-radius:13px;background:linear-gradient(135deg,#936bff,#45c8a8);display:grid;place-items:center;color:white;font-weight:800;font-size:18px}
+.profile-mini strong{font-size:13px}
+.profile-mini small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.main{margin-left:245px;width:calc(100% - 245px);padding:27px 4%}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;gap:10px}
+.topbar h2{font-size:22px}
+.top-actions{display:flex;gap:9px;align-items:center}
+.icon-btn{width:40px;height:40px;background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:18px}
+.icon-btn:hover{border-color:var(--accent)}
+.section{display:none;animation:fade .25s}
+.section.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.welcome{margin-bottom:24px}
+.welcome h1{font-size:clamp(25px,4vw,35px);letter-spacing:-1.5px}
+.welcome p{color:var(--muted);font-size:13px;margin-top:7px}
+.accent{color:var(--accent)}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:17px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.stat-top{display:flex;justify-content:space-between;align-items:center}
+.stat-icon{width:38px;height:38px;display:grid;place-items:center;background:var(--soft);border-radius:12px;font-size:19px}
+.stat-number{font:700 27px 'Space Grotesk';margin-top:15px}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px}
+.content-grid{grid-template-columns:1.35fr 1fr;margin-bottom:17px}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:17px}
+.card-head h3{font-size:16px}
+.tag{font-size:10px;background:var(--soft);color:var(--accent);padding:6px 10px;border-radius:20px;font-weight:800}
+.progress-line{height:9px;background:var(--panel2);border-radius:30px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b6a0ff);border-radius:30px;transition:.4s}
+.goal-row{display:flex;justify-content:space-between;margin:10px 0 15px;font-size:12px}
+.task{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--border)}
+.task:last-child{border:0}
+.task input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent)}
+.task-info{flex:1;min-width:0}
+.task-info strong{font-size:13px;display:block;overflow-wrap:anywhere}
+.task-info small{font-size:11px;color:var(--muted)}
+.done strong{text-decoration:line-through;color:var(--muted)}
+.delete{border:0;background:none;color:var(--muted);padding:5px}
+.delete:hover{color:var(--red)}
 /* FOCUS */
-.focus-card {max-width:700px;margin:25px auto;text-align:center;padding:35px}
-.focus-card h1 {font-size:29px}
-.timer {
- width:220px;height:220px;border-radius:50%;margin:28px auto;
- display:grid;place-items:center;
- border:9px solid var(--soft);
- outline:3px solid var(--accent);
- outline-offset:-9px;
-}
-.timer span {font:700 44px 'Space Grotesk';letter-spacing:-2px}
-.presets {display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:20px 0}
-.preset {padding:9px 16px;border:1px solid var(--border);border-radius:30px;background:var(--panel);color:var(--text);font-size:12px}
-.preset.active {background:var(--soft);color:var(--accent);border-color:var(--accent)}
-.timer-buttons {display:flex;justify-content:center;gap:10px}
-.focus-note {color:var(--muted);font-size:12px;margin-top:20px}
+.focus-card{max-width:700px;margin:20px auto;text-align:center;padding:30px}
+.timer{width:220px;height:220px;border-radius:50%;border:9px solid var(--soft);outline:3px solid var(--accent);outline-offset:-9px;margin:25px auto;display:grid;place-items:center}
+.timer span{font:700 45px 'Space Grotesk'}
+.presets{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:20px 0}
+.preset{background:var(--panel);border:1px solid var(--border);border-radius:30px;padding:9px 15px;color:var(--text);font-size:12px}
+.preset.active{background:var(--soft);border-color:var(--accent);color:var(--accent)}
 /* TASKS */
-.task-form {display:flex;gap:10px;margin:20px 0}
-.task-form input {flex:1;min-width:0;padding:12px;border-radius:11px;border:1px solid var(--border);background:var(--panel);color:var(--text)}
-.task-list .task {padding:16px 5px}
-.delete {background:none;border:0;color:var(--muted);padding:5px}
-.delete:hover {color:#ef6175}
-/* PROGRESS */
-.progress-stats {grid-template-columns:repeat(2,1fr)}
+.task-form{display:flex;gap:9px;margin:20px 0}
+.task-form input{flex:1;min-width:0;padding:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:11px}
+.task-extra{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
+.task-extra select,.task-extra input{padding:9px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:12px}
+/* ANALYTICS */
+.analytics-grid{grid-template-columns:1fr 1fr;margin-top:17px}
+.chart-wrap{height:260px;position:relative}
+.chart-controls{display:flex;gap:6px;flex-wrap:wrap}
+.chart-btn{padding:7px 11px;border:1px solid var(--border);border-radius:9px;background:var(--panel2);color:var(--text);font-size:11px}
+.chart-btn.active{background:var(--soft);color:var(--accent);border-color:var(--accent)}
+/* SUBJECTS */
+.subject-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.subject-card{padding:17px}
+.subject-card h3{font-size:15px}
+.subject-card .subject-icon{font-size:25px;margin-bottom:12px}
+.subject-card input{width:100%;margin-top:12px;padding:9px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px}
+.subject-card button{margin-top:10px;width:100%}
+/* CALENDAR */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.calendar-day{text-align:center;padding:10px 2px;border-radius:10px;background:var(--panel2);font-size:12px;min-height:47px}
+.calendar-day small{display:block;font-size:9px;color:var(--muted);margin-top:5px}
+.calendar-day.today{outline:2px solid var(--accent)}
+.calendar-day.active-day{background:var(--soft);color:var(--accent)}
+/* ACHIEVEMENTS */
+.badge-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.achievement{text-align:center;padding:20px 9px}
+.achievement .big{font-size:35px}
+.achievement strong{display:block;font-size:12px;margin-top:10px}
+.achievement small{font-size:10px;color:var(--muted)}
+.achievement.locked{opacity:.38;filter:grayscale(1)}
 /* PROFILE */
-.profile-card {max-width:600px}
-.setting-row {padding:15px 0;border-bottom:1px solid var(--border)}
-.setting-row:last-child {border:0}
-.setting-row strong {font-size:14px}
-.setting-row p {color:var(--muted);font-size:12px;margin-top:4px}
-.setting-row input,.setting-row select {margin-top:10px;width:100%;max-width:400px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}
-.mobile-menu {display:none}
-
-@media(max-width:950px) {
- .stats {grid-template-columns:repeat(2,1fr)}
- .main {padding:25px 3%}
-}
-@media(max-width:650px) {
- .sidebar {width:100%;height:65px;inset:auto 0 0;flex-direction:row;justify-content:space-around;padding:5px 8px;border-top:1px solid var(--border);border-right:0}
- .sidebar .auth-logo,.sidebar .nav-label,.sidebar-bottom {display:none}
- .sidebar nav {display:flex;width:100%;justify-content:space-around}
- .nav {flex-direction:column;gap:4px;padding:7px 8px;margin:0;font-size:9px}
- .nav i {width:19px;height:19px}
- .main {margin:0 0 65px;width:100%;padding:20px 15px}
- .topbar {margin-bottom:23px}
- .topbar h2 {font-size:18px}
- .content-grid {grid-template-columns:1fr}
- .stats {gap:10px}
- .card {padding:15px}
- .stat-number {font-size:23px}
- .focus-card {padding:22px 12px}
- .timer {width:190px;height:190px}
- .timer span {font-size:37px}
+.setting-row{padding:16px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border:0}
+.setting-row strong{font-size:13px}
+.setting-row p{color:var(--muted);font-size:11px;margin-top:4px}
+.setting-row input,.setting-row select{display:block;margin-top:10px;width:100%;max-width:400px;padding:11px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}
+/* COMMUNITY */
+.coming{padding:45px 20px;text-align:center}
+.coming .big{font-size:55px}
+.coming h2{margin:15px 0 8px}
+/* RESPONSIVE */
+@media(max-width:950px){.stats{grid-template-columns:repeat(2,1fr)}.main{padding:23px 3%}}
+@media(max-width:650px){
+ .sidebar{inset:auto 0 0;width:100%;height:66px;flex-direction:row;padding:5px 3px;border:0;border-top:1px solid var(--border)}
+ .sidebar .brand-row,.sidebar .nav-label,.sidebar-bottom{display:none}
+ .sidebar nav{display:flex;width:100%;justify-content:space-around}
+ .nav{flex-direction:column;gap:3px;font-size:9px;padding:6px 5px;margin:0}
+ .nav .emoji{font-size:17px}
+ .main{margin:0 0 66px;width:100%;padding:19px 13px}
+ .content-grid,.analytics-grid{grid-template-columns:1fr}
+ .stats{gap:9px}
+ .card{padding:15px}
+ .stat-number{font-size:23px}
+ .subject-grid{grid-template-columns:1fr 1fr}
+ .badge-grid{grid-template-columns:repeat(2,1fr)}
+ .timer{width:190px;height:190px}
+ .timer span{font-size:38px}
+ .calendar-grid{gap:4px}
+ .calendar-day{font-size:10px;padding:8px 1px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SIGN IN -->
+<!-- SIGN UP / SIGN IN -->
 <div class="auth" id="auth">
  <div class="auth-card">
-  <div class="auth-logo">
-   <div class="logo">N</div>
-   <div class="brand">NEXUS<span>.</span></div>
-  </div>
+  <div class="brand-row"><div class="logo">N</div><div class="brand">NEXUS<span>.</span></div></div>
   <div id="signupBox">
-   <h1>Find your <span class="accent">focus.</span></h1>
-   <p class="sub">Your space. Your goals. Your next level. ✨</p>
-   <div class="field">
-    <label>YOUR NAME</label>
-    <input id="nameInput" placeholder="What should we call you?">
-   </div>
-   <div class="field">
-    <label>YOUR CLASS</label>
+   <h1>Your universe. 🌌</h1>
+   <p class="muted">Study smarter. Grow stronger. Build your future.</p>
+   <div class="field"><label>YOUR NAME</label><input id="nameInput" placeholder="Enter your name" maxlength="30"></div>
+   <div class="field"><label>YOUR CLASS</label>
     <select id="classInput">
-     <option value="Class 9">Class 9</option>
-     <option value="Class 10" selected>Class 10</option>
-     <option value="Class 11">Class 11</option>
-     <option value="Class 12">Class 12</option>
-     <option value="College">College</option>
-     <option value="Other">Other</option>
+     <option>Class 9</option><option selected>Class 10</option><option>Class 11</option><option>Class 12</option><option>College</option><option>Other</option>
     </select>
    </div>
-   <div class="field">
-    <label>DAILY STUDY GOAL (MINUTES)</label>
-    <input id="goalInput" type="number" min="10" max="1440" value="120">
-   </div>
-   <button class="primary full" onclick="createAccount()">Create my space →</button>
+   <div class="field"><label>DAILY STUDY GOAL (MINUTES)</label><input id="goalInput" type="number" value="120" min="10" max="1440"></div>
+   <button class="primary full" onclick="createAccount()">Create my universe 🚀</button>
    <p class="switch">Already have a profile? <span class="link" onclick="showLogin()">Sign in</span></p>
   </div>
   <div id="loginBox" class="hidden">
-   <h1>Welcome <span class="accent">back.</span></h1>
-   <p class="sub">Your next chapter starts here.</p>
-   <div class="field">
-    <label>YOUR NAME</label>
-    <input id="loginName" placeholder="Enter your saved name">
-   </div>
-   <button class="primary full" onclick="login()">Enter NEXUS →</button>
+   <h1>Welcome back! 👋</h1>
+   <p class="muted">Your next chapter is waiting.</p>
+   <div class="field"><label>YOUR NAME</label><input id="loginName" placeholder="Your saved name"></div>
+   <button class="primary full" onclick="login()">Enter NEXUS ✨</button>
    <p class="switch">New here? <span class="link" onclick="showSignup()">Create profile</span></p>
   </div>
-  <p class="muted" style="margin-top:25px;text-align:center">Your space is stored locally on this device.</p>
+  <p class="muted" style="text-align:center;margin-top:25px">Your data stays in this browser on this device.</p>
  </div>
 </div>
 
 <!-- MAIN APP -->
 <div class="app hidden" id="app">
  <aside class="sidebar">
-  <div class="auth-logo">
-   <div class="logo">N</div>
-   <div class="brand">NEXUS<span>.</span></div>
-  </div>
+  <div class="brand-row"><div class="logo">N</div><div class="brand">NEXUS<span>.</span></div></div>
   <nav>
-   <div class="nav-label">WORKSPACE</div>
-   <div class="nav active" onclick="navigate('home',this)"><i data-lucide="layout-dashboard"></i>Home</div>
-   <div class="nav" onclick="navigate('focus',this)"><i data-lucide="timer"></i>Focus room</div>
-   <div class="nav" onclick="navigate('tasks',this)"><i data-lucide="check-square"></i>My tasks</div>
-   <div class="nav" onclick="navigate('progress',this)"><i data-lucide="chart-no-axes-combined"></i>Progress</div>
-   <div class="nav-label">PERSONAL</div>
-   <div class="nav" onclick="navigate('profile',this)"><i data-lucide="user-round"></i>My profile</div>
+   <div class="nav-label">YOUR WORKSPACE</div>
+   <div class="nav active" onclick="navigate('home',this)"><span class="emoji">🏠</span> Home</div>
+   <div class="nav" onclick="navigate('focus',this)"><span class="emoji">⏳</span> Focus room</div>
+   <div class="nav" onclick="navigate('tasks',this)"><span class="emoji">✅</span> My tasks</div>
+   <div class="nav" onclick="navigate('subjects',this)"><span class="emoji">📚</span> Subjects</div>
+   <div class="nav" onclick="navigate('analytics',this)"><span class="emoji">📊</span> Analytics</div>
+   <div class="nav" onclick="navigate('calendar',this)"><span class="emoji">📅</span> Calendar</div>
+   <div class="nav-label">YOUR JOURNEY</div>
+   <div class="nav" onclick="navigate('achievements',this)"><span class="emoji">🏆</span> Achievements</div>
+   <div class="nav" onclick="navigate('community',this)"><span class="emoji">🌐</span> Community</div>
+   <div class="nav" onclick="navigate('profile',this)"><span class="emoji">👤</span> Profile</div>
   </nav>
   <div class="sidebar-bottom">
    <div class="profile-mini">
@@ -322,66 +233,64 @@ button:focus-visible,input:focus-visible,select:focus-visible {
   <header class="topbar">
    <h2 id="pageTitle">Dashboard</h2>
    <div class="top-actions">
-    <button class="icon-btn" onclick="toggleTheme()" title="Change theme"><i data-lucide="sun-moon"></i></button>
-    <button class="icon-btn" onclick="navigate('profile')" title="Profile"><i data-lucide="user-round"></i></button>
+    <button class="icon-btn" onclick="toggleTheme()" title="Change appearance">🌗</button>
+    <button class="icon-btn" onclick="navigate('profile')" title="Profile">👤</button>
    </div>
   </header>
 
-  <!-- HOME -->
+  <!-- DASHBOARD -->
   <section class="section active" id="home">
    <div class="welcome">
-    <h1>Hey, <span class="accent" id="welcomeName">Winter</span> ✨</h1>
-    <p>New day. New opportunities. Let's make today count.</p>
+    <h1>Hey, <span class="accent" id="welcomeName">Student</span> 👋</h1>
+    <p id="dateText">Today is your chance to grow. Let's make it count! ✨</p>
    </div>
+
    <div class="grid stats">
-    <div class="card">
-     <div class="stat-head"><span class="muted">Focus time today</span><span class="stat-icon"><i data-lucide="clock"></i></span></div>
-     <div class="stat-number" id="homeTime">0m</div>
-     <div class="stat-label">Time spent focusing</div>
-    </div>
-    <div class="card">
-     <div class="stat-head"><span class="muted">Tasks completed</span><span class="stat-icon"><i data-lucide="check"></i></span></div>
-     <div class="stat-number" id="homeTasks">0</div>
-     <div class="stat-label">Today's completed tasks</div>
-    </div>
-    <div class="card">
-     <div class="stat-head"><span class="muted">Daily goal</span><span class="stat-icon"><i data-lucide="target"></i></span></div>
-     <div class="stat-number" id="homeGoal">120m</div>
-     <div class="stat-label">Your target</div>
-    </div>
-    <div class="card">
-     <div class="stat-head"><span class="muted">Total tasks</span><span class="stat-icon"><i data-lucide="list-checks"></i></span></div>
-     <div class="stat-number" id="homeTotal">0</div>
-     <div class="stat-label">All your tasks</div>
-    </div>
+    <div class="card"><div class="stat-top"><span class="muted">⏱️ Focus today</span><span class="stat-icon">🔥</span></div><div class="stat-number" id="homeTime">0m</div><div class="stat-label">Your focused time</div></div>
+    <div class="card"><div class="stat-top"><span class="muted">✅ Tasks done</span><span class="stat-icon">🎯</span></div><div class="stat-number" id="homeTasks">0</div><div class="stat-label">Completed today</div></div>
+    <div class="card"><div class="stat-top"><span class="muted">⚡ Total XP</span><span class="stat-icon">💎</span></div><div class="stat-number" id="homeXP">0</div><div class="stat-label">Experience points</div></div>
+    <div class="card"><div class="stat-top"><span class="muted">🔥 Streak</span><span class="stat-icon">🏅</span></div><div class="stat-number" id="homeStreak">0 days</div><div class="stat-label">Active study days</div></div>
    </div>
+
    <div class="grid content-grid">
     <div class="card">
-     <div class="card-title"><h3>Today's tasks</h3><span class="muted" onclick="navigate('tasks')" style="cursor:pointer">View all →</span></div>
+     <div class="card-head"><h3>📋 Today's tasks</h3><span class="tag" onclick="navigate('tasks')" style="cursor:pointer">VIEW ALL →</span></div>
      <div id="homeTaskList"></div>
-     <button class="secondary" onclick="navigate('tasks')" style="margin-top:15px">+ Add a task</button>
+     <button class="secondary" onclick="navigate('tasks')" style="margin-top:14px">➕ Add a task</button>
     </div>
     <div class="card">
-     <div class="card-title"><h3>Daily progress</h3><span class="tag">TODAY</span></div>
+     <div class="card-head"><h3>🎯 Daily study goal</h3><span class="tag">TODAY</span></div>
      <div class="stat-number" id="goalPercent">0%</div>
-     <div class="muted" style="margin:5px 0 17px">Your focus goal completion</div>
-     <div class="progress-line"><div class="progress-fill" id="goalBar"></div></div>
-     <div class="goal-row"><span>Keep going!</span><span id="goalMinutes">0 / 120 min</span></div>
-     <div style="margin-top:28px">
-      <h3 style="font-size:14px">Your next move 🚀</h3>
-      <p class="muted" style="margin-top:8px">Small steps every day create big results. Start a focus session and make progress.</p>
-      <button class="primary" onclick="navigate('focus')" style="margin-top:16px">Start focusing →</button>
-     </div>
+     <div class="progress-line" style="margin-top:15px"><div class="progress-fill" id="goalBar"></div></div>
+     <div class="goal-row"><span class="muted">Progress</span><strong id="goalMinutes">0 / 120 min</strong></div>
+     <p class="muted" id="goalMessage">Every minute counts. Start now! 🚀</p>
+     <button class="primary" onclick="navigate('focus')" style="margin-top:18px">Start focusing ⚡</button>
+    </div>
+   </div>
+
+   <div class="grid content-grid">
+    <div class="card">
+     <div class="card-head"><h3>📈 This week's activity</h3><span class="tag">7 DAYS</span></div>
+     <div class="chart-wrap"><canvas id="homeChart"></canvas></div>
+    </div>
+    <div class="card">
+     <div class="card-head"><h3>💎 Your level</h3><span class="tag" id="levelTag">LEVEL 1</span></div>
+     <div style="font-size:45px;margin:10px 0">🌱</div>
+     <h2 id="levelName">Beginner</h2>
+     <p class="muted" style="margin:7px 0 15px">Keep learning and collecting XP!</p>
+     <div class="progress-line"><div class="progress-fill" id="xpBar"></div></div>
+     <div class="goal-row"><span class="muted">XP to next level</span><strong id="xpText">0 / 100</strong></div>
+     <button class="secondary" onclick="navigate('achievements')">See achievements 🏆</button>
     </div>
    </div>
   </section>
 
   <!-- FOCUS -->
   <section class="section" id="focus">
-   <div class="welcome"><h1>Enter your <span class="accent">focus zone.</span></h1><p>Disconnect from distractions. Connect with your goals.</p></div>
+   <div class="welcome"><h1>Enter your <span class="accent">focus zone.</span> 🎧</h1><p>One task. One mission. Full attention.</p></div>
    <div class="card focus-card">
     <h1>Deep work mode ✦</h1>
-    <p class="muted" style="margin-top:8px">Choose your session length</p>
+    <p class="muted" style="margin-top:8px">Choose your session duration</p>
     <div class="presets">
      <button class="preset" onclick="setPreset(25,this)">25 min</button>
      <button class="preset" onclick="setPreset(50,this)">50 min</button>
@@ -389,286 +298,519 @@ button:focus-visible,input:focus-visible,select:focus-visible {
      <button class="preset" onclick="setPreset(120,this)">120 min</button>
     </div>
     <div class="timer"><span id="timerDisplay">60:00</span></div>
-    <div class="timer-buttons">
+    <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
      <button class="primary" id="startBtn" onclick="startTimer()">▶ Start session</button>
      <button class="secondary" onclick="resetTimer()">↻ Reset</button>
     </div>
-    <p class="focus-note" id="timerStatus">Your focus journey begins when you do.</p>
+    <p class="muted" id="timerStatus" style="margin-top:18px">Ready to make progress? 🚀</p>
+    <p class="muted" style="margin-top:10px">Complete a session to earn XP.</p>
    </div>
   </section>
 
   <!-- TASKS -->
   <section class="section" id="tasks">
-   <div class="welcome"><h1>Make it <span class="accent">happen.</span></h1><p>Plan your work. Work your plan.</p></div>
+   <div class="welcome"><h1>Make it <span class="accent">happen.</span> ✅</h1><p>Your goals deserve action, not just plans.</p></div>
    <div class="card">
-    <div class="card-title"><h3>Your task manager</h3><span class="tag" id="taskCount">0 TASKS</span></div>
+    <div class="card-head"><h3>📝 Task manager</h3><span class="tag" id="taskCount">0 TASKS</span></div>
     <form class="task-form" onsubmit="addTask(event)">
-     <input id="taskInput" placeholder="What needs to get done?" maxlength="100" required>
-     <button class="primary" type="submit">Add +</button>
+     <input id="taskInput" placeholder="What do you need to do?" maxlength="100" required>
+     <button class="primary">➕ Add</button>
     </form>
-    <div class="task-list" id="allTaskList"></div>
+    <div class="task-extra">
+     <select id="taskSubject"><option>General</option><option>Maths</option><option>Science</option><option>English</option><option>Hindi</option><option>SST</option><option>Computer</option></select>
+     <select id="taskPriority"><option value="Normal">Normal priority</option><option value="High">🔴 High priority</option><option value="Low">🟢 Low priority</option></select>
+     <input id="taskDeadline" type="date">
+    </div>
+    <div id="allTaskList"></div>
    </div>
   </section>
 
-  <!-- PROGRESS -->
-  <section class="section" id="progress">
-   <div class="welcome"><h1>Your growth, <span class="accent">visualised.</span></h1><p>Track your effort. Celebrate your consistency.</p></div>
-   <div class="grid progress-stats">
-    <div class="card"><div class="muted">Total focus time</div><div class="stat-number" id="totalFocus">0m</div></div>
-    <div class="card"><div class="muted">Completed tasks</div><div class="stat-number" id="totalDone">0</div></div>
+  <!-- SUBJECTS -->
+  <section class="section" id="subjects">
+   <div class="welcome"><h1>Your <span class="accent">subjects.</span> 📚</h1><p>Organise your academic journey.</p></div>
+   <div class="grid subject-grid" id="subjectGrid"></div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section class="section" id="analytics">
+   <div class="welcome"><h1>Your growth, <span class="accent">visualised.</span> 📊</h1><p>Measure progress. Identify patterns. Keep improving.</p></div>
+   <div class="grid stats">
+    <div class="card"><div class="muted">⏱️ Total focus time</div><div class="stat-number" id="totalFocus">0m</div></div>
+    <div class="card"><div class="muted">✅ Tasks completed</div><div class="stat-number" id="totalDone">0</div></div>
+    <div class="card"><div class="muted">⚡ XP collected</div><div class="stat-number" id="totalXP">0</div></div>
+    <div class="card"><div class="muted">🔥 Current streak</div><div class="stat-number" id="totalStreak">0</div></div>
    </div>
-   <div class="card" style="margin-top:18px">
-    <div class="card-title"><h3>Daily goal progress</h3><span class="tag">TODAY</span></div>
-    <div class="stat-number" id="progressPercent">0%</div>
-    <div class="progress-line" style="margin-top:16px"><div class="progress-fill" id="progressBar"></div></div>
-    <p class="muted" style="margin-top:15px" id="progressText">Start your first session today.</p>
+   <div class="card">
+    <div class="card-head"><h3>📊 Study time graph</h3>
+     <div class="chart-controls">
+      <button class="chart-btn active" onclick="changeGraph('week',this)">Weekly</button>
+      <button class="chart-btn" onclick="changeGraph('month',this)">Monthly</button>
+     </div>
+    </div>
+    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+   </div>
+   <div class="grid analytics-grid">
+    <div class="card">
+     <div class="card-head"><h3>📚 Subject activity</h3></div>
+     <div class="chart-wrap"><canvas id="subjectChart"></canvas></div>
+    </div>
+    <div class="card">
+     <div class="card-head"><h3>🎯 Task completion</h3></div>
+     <div class="chart-wrap"><canvas id="taskChart"></canvas></div>
+    </div>
+   </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="section" id="calendar">
+   <div class="welcome"><h1>Your study <span class="accent">calendar.</span> 📅</h1><p>See the days you showed up.</p></div>
+   <div class="card">
+    <div class="card-head">
+     <button class="secondary" onclick="moveMonth(-1)">←</button>
+     <h3 id="monthTitle">Month</h3>
+     <button class="secondary" onclick="moveMonth(1)">→</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+    <p class="muted" style="margin-top:16px">🟣 Active study days are highlighted.</p>
+   </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section class="section" id="achievements">
+   <div class="welcome"><h1>Unlock your <span class="accent">potential.</span> 🏆</h1><p>Every achievement begins with an action.</p></div>
+   <div class="grid stats">
+    <div class="card"><div class="muted">💎 Your XP</div><div class="stat-number" id="achievementXP">0</div></div>
+    <div class="card"><div class="muted">🏅 Unlocked</div><div class="stat-number" id="unlockedCount">0</div></div>
+   </div>
+   <div class="grid badge-grid" id="badgeGrid"></div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section class="section" id="community">
+   <div class="welcome"><h1>Your <span class="accent">people.</span> 🌐</h1><p>Learn together. Build together. Grow together.</p></div>
+   <div class="card coming">
+    <div class="big">🌍</div>
+    <h2>The NEXUS community is coming!</h2>
+    <p class="muted" style="max-width:420px;margin:10px auto 20px">A space for students to connect, find study partners, form teams, share projects and compete in fair productivity challenges.</p>
+    <span class="tag">COMMUNITY PREVIEW</span>
+    <div class="grid content-grid" style="margin-top:25px;text-align:left">
+     <div class="card"><div style="font-size:30px">👥</div><h3 style="margin-top:9px">Study groups</h3><p class="muted" style="margin-top:5px">Collaborate with learners.</p></div>
+     <div class="card"><div style="font-size:30px">🥇</div><h3 style="margin-top:9px">Leaderboards</h3><p class="muted" style="margin-top:5px">Friendly weekly challenges.</p></div>
+    </div>
    </div>
   </section>
 
   <!-- PROFILE -->
   <section class="section" id="profile">
-   <div class="welcome"><h1>Your <span class="accent">space.</span></h1><p>Make NEXUS feel like yours.</p></div>
-   <div class="card profile-card">
-    <div class="card-title"><h3>Profile settings</h3><span class="tag">PERSONAL</span></div>
-    <div class="setting-row"><strong>Display name</strong><p>How should NEXUS call you?</p><input id="editName" maxlength="30"></div>
-    <div class="setting-row"><strong>Class / Education</strong><p>Your current level</p>
-     <select id="editClass">
-      <option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>College</option><option>Other</option>
-     </select>
-    </div>
-    <div class="setting-row"><strong>Daily focus goal</strong><p>Your target in minutes</p><input id="editGoal" type="number" min="10" max="1440"></div>
-    <button class="primary" style="margin-top:20px" onclick="saveProfile()">Save changes</button>
-    <button class="secondary" style="margin:20px 0 0 8px" onclick="logout()">Sign out</button>
+   <div class="welcome"><h1>Your <span class="accent">identity.</span> 👤</h1><p>Make your space yours.</p></div>
+   <div class="card">
+    <div class="card-head"><h3>⚙️ Profile settings</h3><span class="tag">PERSONAL</span></div>
+    <div class="setting-row"><strong>Display name</strong><p>Your name on NEXUS</p><input id="editName" maxlength="30"></div>
+    <div class="setting-row"><strong>Class</strong><p>Your current education level</p><select id="editClass"><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>College</option><option>Other</option></select></div>
+    <div class="setting-row"><strong>Daily study goal</strong><p>Your target in minutes</p><input id="editGoal" type="number" min="10" max="1440"></div>
+    <div class="setting-row"><strong>About me</strong><p>A little introduction</p><input id="editBio" maxlength="120" placeholder="Write something about yourself..."></div>
+    <button class="primary" onclick="saveProfile()" style="margin-top:20px">Save changes 💾</button>
+    <button class="secondary" onclick="logout()" style="margin:20px 0 0 8px">Sign out</button>
+    <button class="secondary" onclick="resetData()" style="margin:20px 0 0 8px">Reset all data</button>
    </div>
   </section>
+
  </main>
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const today = () => new Date().toLocaleDateString('en-CA');
-
-let data = JSON.parse(localStorage.getItem('nexusData') || 'null');
-let theme = localStorage.getItem('nexusTheme') || 'light';
-let minutes = 60, remaining = 3600, timerInterval = null, running = false;
-
-document.documentElement.dataset.theme = theme;
-
-function save() {
- localStorage.setItem('nexusData',JSON.stringify(data));
- render();
+const $=id=>document.getElementById(id);
+const today=()=>localDate(new Date());
+function localDate(d){
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+function shiftDate(date,n){
+ const d=new Date(date+'T12:00:00');
+ d.setDate(d.getDate()+n);
+ return localDate(d);
+}
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+let data=loadData();
+function loadData(){
+ try{return JSON.parse(localStorage.getItem('nexus3Data')||'null')}catch(e){return null}
+}
+let theme=localStorage.getItem('nexus3Theme')||'light';
+document.documentElement.dataset.theme=theme;
 
-function showLogin() {
- $('signupBox').classList.add('hidden');
- $('loginBox').classList.remove('hidden');
+let timerLength=60,remaining=3600,interval=null,running=false;
+let mainChart=null,homeChart=null,subjectChart=null,taskChart=null;
+let graphMode='week';
+let calendarDate=new Date();
+
+const subjects=[
+ {name:'Maths',emoji:'📐',key:'Maths'},
+ {name:'Science',emoji:'🔬',key:'Science'},
+ {name:'English',emoji:'📖',key:'English'},
+ {name:'Hindi',emoji:'📝',key:'Hindi'},
+ {name:'SST',emoji:'🌍',key:'SST'},
+ {name:'Computer',emoji:'💻',key:'Computer'}
+];
+
+const achievements=[
+ {name:'First Steps',emoji:'🌱',desc:'Complete your first focus session',test:()=>data.sessions>=1},
+ {name:'Focus Master',emoji:'🎧',desc:'Complete 10 focus sessions',test:()=>data.sessions>=10},
+ {name:'Task Slayer',emoji:'⚔️',desc:'Complete 10 tasks',test:()=>data.tasks.filter(t=>t.done).length>=10},
+ {name:'Early Bird',emoji:'🌅',desc:'Study before 8 AM',test:()=>Object.keys(data.days).some(d=>data.days[d].early)},
+ {name:'Consistency',emoji:'🔥',desc:'Reach a 3-day streak',test:()=>streak()>=3},
+ {name:'Dedicated',emoji:'💎',desc:'Earn 500 XP',test:()=>data.xp>=500},
+ {name:'Scholar',emoji:'🎓',desc:'Earn 1000 XP',test:()=>data.xp>=1000},
+ {name:'Deep Worker',emoji:'🧠',desc:'Study for 10 hours total',test:()=>totalSeconds()>=36000},
+ {name:'Legend',emoji:'👑',desc:'Reach 2000 XP',test:()=>data.xp>=2000}
+];
+
+function freshData(name,level,goal){
+ return {name,level,goal,bio:'',tasks:[],days:{},xp:0,sessions:0,subjectTime:{},created:today()};
 }
-function showSignup() {
- $('loginBox').classList.add('hidden');
- $('signupBox').classList.remove('hidden');
+function persist(){localStorage.setItem('nexus3Data',JSON.stringify(data));render();}
+function day(){
+ if(!data.days[today()])data.days[today()]={seconds:0,early:false};
+ return data.days[today()];
 }
-function createAccount() {
- const name = $('nameInput').value.trim();
- const goal = Number($('goalInput').value);
- if(!name) return alert('Please enter your name.');
- if(!Number.isFinite(goal) || goal<10 || goal>1440) return alert('Enter a goal between 10 and 1440 minutes.');
- data = {
-  name,level:$('classInput').value,goal,
-  tasks:[],days:{},created:new Date().toISOString()
- };
- save();
+function showLogin(){
+ $('signupBox').classList.add('hidden');$('loginBox').classList.remove('hidden');
+}
+function showSignup(){
+ $('loginBox').classList.add('hidden');$('signupBox').classList.remove('hidden');
+}
+function createAccount(){
+ const name=$('nameInput').value.trim(),goal=Number($('goalInput').value);
+ if(!name)return alert('Enter your name first!');
+ if(!Number.isFinite(goal)||goal<10||goal>1440)return alert('Choose a goal between 10 and 1440 minutes.');
+ data=freshData(name,$('classInput').value,goal);
+ persist();enterApp();
+}
+function login(){
+ const name=$('loginName').value.trim();
+ if(!data||name.toLowerCase()!==data.name.toLowerCase())return alert('Profile not found on this device. Create a new profile first.');
  enterApp();
 }
-function login() {
- const name = $('loginName').value.trim();
- if(!data || name.toLowerCase()!==data.name.toLowerCase())
-  return alert('Profile not found on this device. Create a profile first.');
- enterApp();
+function enterApp(){
+ $('auth').classList.add('hidden');$('app').classList.remove('hidden');
+ $('dateText').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' — Make today count! ✨';
+ render();drawCharts();
 }
-function enterApp() {
- $('auth').classList.add('hidden');
- $('app').classList.remove('hidden');
- render();
- lucide.createIcons();
+function logout(){
+ if(running&&!confirm('Stop the current session and sign out?'))return;
+ clearInterval(interval);running=false;
+ $('app').classList.add('hidden');$('auth').classList.remove('hidden');showLogin();
 }
-function logout() {
- if(running && !confirm('Sign out and stop the current timer?')) return;
- clearInterval(timerInterval);
- running=false;
- $('app').classList.add('hidden');
- $('auth').classList.remove('hidden');
- showLogin();
+function resetData(){
+ if(!confirm('This will permanently erase this browser profile and its local data. Continue?'))return;
+ clearInterval(interval);running=false;localStorage.removeItem('nexus3Data');data=null;location.reload();
 }
-function dayData() {
- const key=today();
- if(!data.days[key]) data.days[key]={seconds:0};
- return data.days[key];
+function toggleTheme(){
+ theme=theme==='light'?'dark':'light';
+ document.documentElement.dataset.theme=theme;
+ localStorage.setItem('nexus3Theme',theme);
+ drawCharts();
 }
-function navigate(page,element) {
+function navigate(page,el){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  $(page).classList.add('active');
  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
- if(element) element.classList.add('active');
- else {
-  document.querySelectorAll('.nav').forEach(n=>{
-   if(n.getAttribute('onclick')?.includes("'"+page+"'")) n.classList.add('active');
-  });
- }
- $('pageTitle').textContent=({
-  home:'Dashboard',focus:'Focus room',tasks:'My tasks',
-  progress:'Your progress',profile:'My profile'
- })[page];
+ if(el)el.classList.add('active');
+ else document.querySelectorAll('.nav').forEach(n=>{if(n.getAttribute('onclick')?.includes("'"+page+"'"))n.classList.add('active')});
+ const titles={home:'Dashboard 🏠',focus:'Focus room ⏳',tasks:'My tasks ✅',subjects:'Subjects 📚',analytics:'Analytics 📊',calendar:'Calendar 📅',achievements:'Achievements 🏆',community:'Community 🌐',profile:'My profile 👤'};
+ $('pageTitle').textContent=titles[page];
  render();
- lucide.createIcons();
+ if(page==='analytics'||page==='home')drawCharts();
+ if(page==='calendar')drawCalendar();
 }
-function toggleTheme() {
- theme=theme==='light'?'dark':'light';
- document.documentElement.dataset.theme=theme;
- localStorage.setItem('nexusTheme',theme);
- lucide.createIcons();
-}
-function saveProfile() {
- const name=$('editName').value.trim(),goal=Number($('editGoal').value);
- if(!name || !Number.isFinite(goal)||goal<10||goal>1440) return alert('Check your name and study goal.');
- data.name=name;
- data.level=$('editClass').value;
- data.goal=goal;
- save();
- alert('Profile updated!');
-}
-function addTask(e) {
+function addTask(e){
  e.preventDefault();
  const title=$('taskInput').value.trim();
  if(!title)return;
- data.tasks.push({id:Date.now(),title,done:false,created:today()});
+ data.tasks.push({
+  id:Date.now(),title,done:false,created:today(),
+  subject:$('taskSubject').value,
+  priority:$('taskPriority').value,
+  deadline:$('taskDeadline').value
+ });
  $('taskInput').value='';
- save();
+ persist();
 }
-function toggleTask(id) {
- const task=data.tasks.find(t=>t.id===id);
- if(task) task.done=!task.done;
- save();
+function toggleTask(id){
+ const t=data.tasks.find(x=>x.id===id);
+ if(!t)return;
+ t.done=!t.done;
+ if(t.done)t.completed=today();else delete t.completed;
+ data.xp=Math.max(0,data.xp+(t.done?10:-10));
+ persist();
 }
-function deleteTask(id) {
- data.tasks=data.tasks.filter(t=>t.id!==id);
- save();
+function deleteTask(id){
+ if(!confirm('Delete this task?'))return;
+ data.tasks=data.tasks.filter(t=>t.id!==id);persist();
 }
-function setPreset(n,button) {
- if(running) return;
- minutes=n;
- remaining=n*60;
- document.querySelectorAll('.preset').forEach(b=>b.classList.remove('active'));
- button.classList.add('active');
- updateTimerDisplay();
+function taskHTML(t){
+ const overdue=t.deadline&&!t.done&&t.deadline<today();
+ return `<div class="task ${t.done?'done':''}">
+ <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+ <div class="task-info"><strong>${escapeHTML(t.title)}</strong>
+ <small>${escapeHTML(t.subject||'General')} · ${escapeHTML(t.priority||'Normal')} ${t.deadline?'· Due '+escapeHTML(t.deadline):''} ${overdue?'· ⚠️ Overdue':''}</small></div>
+ <button class="delete" onclick="deleteTask(${t.id})" title="Delete">🗑️</button></div>`;
 }
-function updateTimerDisplay() {
- const m=Math.floor(remaining/60),s=remaining%60;
- $('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-}
-function startTimer() {
- if(running)return;
- if(remaining<=0) remaining=minutes*60;
- running=true;
- $('startBtn').textContent='Ⅱ Pause';
- $('startBtn').onclick=pauseTimer;
- $('timerStatus').textContent='You are in the zone. Stay focused!';
- timerInterval=setInterval(()=>{
-  remaining--;
-  updateTimerDisplay();
-  if(remaining<=0) finishTimer();
- },1000);
-}
-function pauseTimer() {
- clearInterval(timerInterval);
- running=false;
- $('startBtn').textContent='▶ Resume';
- $('startBtn').onclick=startTimer;
- $('timerStatus').textContent='Session paused. Resume when ready.';
-}
-function resetTimer() {
- clearInterval(timerInterval);
- running=false;
- remaining=minutes*60;
- updateTimerDisplay();
- $('startBtn').textContent='▶ Start session';
- $('startBtn').onclick=startTimer;
- $('timerStatus').textContent='Timer reset. Ready when you are.';
-}
-function finishTimer() {
- clearInterval(timerInterval);
- running=false;
- dayData().seconds+=minutes*60;
- save();
- remaining=0;
- updateTimerDisplay();
- $('startBtn').textContent='▶ Start session';
- $('startBtn').onclick=startTimer;
- $('timerStatus').textContent='Session completed! You showed up. 🎉';
- alert('Focus session complete! Well done.');
-}
-function formatTime(seconds) {
+function formatTime(seconds){
  const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60);
- return h ? h+'h '+m+'m' : m+'m';
+ return h?h+'h '+m+'m':m+'m';
 }
-function render() {
+function totalSeconds(){
+ return Object.values(data.days).reduce((a,b)=>a+(b.seconds||0),0);
+}
+function streak(){
+ let count=0,d=today();
+ while(data.days[d]&&(data.days[d].seconds||0)>0){
+  count++;d=shiftDate(d,-1);
+ }
+ return count;
+}
+function levelInfo(){
+ const level=Math.floor(data.xp/100)+1;
+ const names=['Beginner','Explorer','Achiever','Focused','Scholar','Expert','Master','Legend','Icon'];
+ return {level,name:names[Math.min(level-1,names.length-1)],current:data.xp%100};
+}
+function render(){
  if(!data)return;
+ const seconds=day().seconds,mins=Math.floor(seconds/60);
  const todayTasks=data.tasks.filter(t=>t.created===today());
  const doneToday=todayTasks.filter(t=>t.done).length;
- const seconds=dayData().seconds;
- const mins=Math.floor(seconds/60);
  const percent=Math.min(100,Math.round(mins/data.goal*100));
+ const info=levelInfo();
+
  $('welcomeName').textContent=data.name;
  $('sideName').textContent=data.name;
  $('sideClass').textContent=data.level;
  $('sideAvatar').textContent=data.name.charAt(0).toUpperCase();
  $('homeTime').textContent=formatTime(seconds);
  $('homeTasks').textContent=doneToday;
- $('homeGoal').textContent=data.goal+'m';
- $('homeTotal').textContent=data.tasks.length;
+ $('homeXP').textContent=data.xp;
+ $('homeStreak').textContent=streak()+' days';
  $('goalPercent').textContent=percent+'%';
  $('goalBar').style.width=percent+'%';
  $('goalMinutes').textContent=mins+' / '+data.goal+' min';
- $('totalFocus').textContent=formatTime(
-  Object.values(data.days).reduce((a,b)=>a+(b.seconds||0),0)
- );
+ $('goalMessage').textContent=percent>=100?'Goal achieved! Amazing work! 🏆':'Every minute counts. Keep going! 🚀';
+ $('levelTag').textContent='LEVEL '+info.level;
+ $('levelName').textContent=info.name;
+ $('xpBar').style.width=info.current+'%';
+ $('xpText').textContent=info.current+' / 100 XP';
+ $('totalFocus').textContent=formatTime(totalSeconds());
  $('totalDone').textContent=data.tasks.filter(t=>t.done).length;
- $('progressPercent').textContent=percent+'%';
- $('progressBar').style.width=percent+'%';
- $('progressText').textContent=mins+' of '+data.goal+' minutes completed today.';
+ $('totalXP').textContent=data.xp;
+ $('totalStreak').textContent=streak();
+ $('achievementXP').textContent=data.xp;
+ $('unlockedCount').textContent=achievements.filter(a=>a.test()).length;
  $('taskCount').textContent=data.tasks.length+' TASKS';
 
- const makeTask=t=>`
-  <div class="task ${t.done?'done':''}">
-   <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
-   <div class="task-info"><strong>${escapeHTML(t.title)}</strong><small>${t.created===today()?'Added today':'Earlier task'}</small></div>
-   <button class="delete" onclick="deleteTask(${t.id})" aria-label="Delete task"><i data-lucide="trash-2"></i></button>
-  </div>`;
  $('homeTaskList').innerHTML=todayTasks.length
-  ?todayTasks.slice(0,5).map(makeTask).join('')
-  :'<p class="muted">No tasks yet. Add your first task!</p>';
+  ?todayTasks.slice(0,5).map(taskHTML).join('')
+  :'<p class="muted">No tasks yet. Add your first mission! 🚀</p>';
  $('allTaskList').innerHTML=data.tasks.length
-  ?data.tasks.map(makeTask).join('')
-  :'<p class="muted" style="padding:20px 0">Your task list is empty. Add something to get started!</p>';
+  ?data.tasks.map(taskHTML).join('')
+  :'<p class="muted" style="padding:20px 0">Your list is empty. Add your first task! ✨</p>';
 
  $('editName').value=data.name;
  $('editClass').value=data.level;
  $('editGoal').value=data.goal;
- lucide.createIcons();
+ $('editBio').value=data.bio||'';
+
+ $('badgeGrid').innerHTML=achievements.map(a=>{
+  const unlocked=a.test();
+  return `<div class="card achievement ${unlocked?'':'locked'}">
+   <div class="big">${a.emoji}</div><strong>${a.name}</strong><small>${a.desc}</small>
+   <div style="margin-top:10px" class="tag">${unlocked?'UNLOCKED 🔓':'LOCKED 🔒'}</div>
+  </div>`;
+ }).join('');
+
+ drawSubjects();
+ if($('calendar').classList.contains('active'))drawCalendar();
 }
-function escapeHTML(s) {
- return String(s).replace(/[&<>"']/g,c=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
- })[c]);
+function saveProfile(){
+ const name=$('editName').value.trim(),goal=Number($('editGoal').value);
+ if(!name||!Number.isFinite(goal)||goal<10||goal>1440)return alert('Check your name and goal.');
+ data.name=name;data.level=$('editClass').value;data.goal=goal;data.bio=$('editBio').value.trim();
+ persist();alert('Profile saved! 💜');
 }
 
-// Restore saved profile
-if(data) {
- $('auth').classList.remove('hidden');
- $('loginName').value=data.name;
- showLogin();
+/* FOCUS TIMER */
+function setPreset(n,button){
+ if(running)return;
+ timerLength=n;remaining=n*60;
+ document.querySelectorAll('.preset').forEach(b=>b.classList.remove('active'));
+ button.classList.add('active');updateTimer();
 }
-updateTimerDisplay();
-lucide.createIcons();
+function updateTimer(){
+ $('timerDisplay').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');
+}
+function startTimer(){
+ if(running)return;
+ if(remaining<=0)remaining=timerLength*60;
+ running=true;$('startBtn').textContent='Ⅱ Pause';
+ $('startBtn').onclick=pauseTimer;
+ $('timerStatus').textContent='You are in the zone. Stay focused! 🎧';
+ interval=setInterval(()=>{
+  remaining--;updateTimer();
+  if(remaining<=0)finishTimer();
+ },1000);
+}
+function pauseTimer(){
+ clearInterval(interval);running=false;
+ $('startBtn').textContent='▶ Resume';$('startBtn').onclick=startTimer;
+ $('timerStatus').textContent='Paused. Resume when ready.';
+}
+function resetTimer(){
+ clearInterval(interval);running=false;remaining=timerLength*60;
+ updateTimer();$('startBtn').textContent='▶ Start session';
+ $('startBtn').onclick=startTimer;$('timerStatus').textContent='Fresh start! 🚀';
+}
+function finishTimer(){
+ clearInterval(interval);running=false;
+ const elapsed=timerLength*60;
+ day().seconds+=elapsed;
+ const hour=new Date().getHours();
+ if(hour<8)day().early=true;
+ data.sessions++;
+ data.xp+=Math.max(10,Math.floor(elapsed/60));
+ $('startBtn').textContent='▶ Start session';
+ $('startBtn').onclick=startTimer;
+ remaining=0;updateTimer();
+ $('timerStatus').textContent='Session complete! You earned XP! 🎉';
+ persist();
+ alert('Session completed! 🎉 You earned '+Math.max(10,Math.floor(elapsed/60))+' XP.');
+}
+
+/* SUBJECTS */
+function drawSubjects(){
+ $('subjectGrid').innerHTML=subjects.map(s=>{
+  const seconds=data.subjectTime[s.key]||0;
+  return `<div class="card subject-card">
+   <div class="subject-icon">${s.emoji}</div>
+   <h3>${s.name}</h3>
+   <p class="muted" style="margin-top:5px">Tracked study time: ${formatTime(seconds)}</p>
+   <input type="number" id="subject-${s.key}" min="0" max="1440" placeholder="Add study minutes">
+   <button class="secondary" onclick="addSubjectTime('${s.key}')">+ Add time</button>
+  </div>`;
+ }).join('');
+}
+function addSubjectTime(key){
+ const input=$('subject-'+key),n=Number(input.value);
+ if(!Number.isFinite(n)||n<=0||n>1440)return alert('Enter minutes between 1 and 1440.');
+ data.subjectTime[key]=(data.subjectTime[key]||0)+n*60;
+ data.days[today()]=data.days[today()]||{seconds:0};
+ data.days[today()].seconds+=n*60;
+ data.xp+=Math.floor(n);
+ input.value='';
+ persist();drawCharts();
+}
+
+/* ANALYTICS */
+function weekDates(){
+ const d=new Date();
+ const weekday=(d.getDay()+6)%7;
+ d.setDate(d.getDate()-weekday);
+ return Array.from({length:7},(_,i)=>{
+  const x=new Date(d);x.setDate(d.getDate()+i);return localDate(x);
+ });
+}
+function graphData(mode){
+ if(mode==='week'){
+  const dates=weekDates();
+  return {labels:dates.map(d=>new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'})),values:dates.map(d=>Math.round((data.days[d]?.seconds||0)/60))};
+ }
+ const labels=[],values=[];
+ const year=new Date().getFullYear(),month=new Date().getMonth();
+ const count=new Date(year,month+1,0).getDate();
+ for(let i=1;i<=count;i++){
+  const d=localDate(new Date(year,month,i));
+  labels.push(String(i));values.push(Math.round((data.days[d]?.seconds||0)/60));
+ }
+ return {labels,values};
+}
+function chartColors(){
+ const style=getComputedStyle(document.documentElement);
+ return {accent:style.getPropertyValue('--accent').trim(),muted:style.getPropertyValue('--muted').trim(),grid:style.getPropertyValue('--border').trim(),text:style.getPropertyValue('--text').trim()};
+}
+function makeBar(canvas,labels,values,label){
+ const c=chartColors();
+ return new Chart($(canvas),{
+  type:'bar',
+  data:{labels,datasets:[{label,data:values,backgroundColor:c.accent+'bb',hoverBackgroundColor:c.accent,borderRadius:7,borderSkipped:false,maxBarThickness:35}]},
+  options:{responsive:true,maintainAspectRatio:false,
+   plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.raw+' minutes'}}},
+   scales:{
+    x:{grid:{display:false},ticks:{color:c.muted,maxTicksLimit:12}},
+    y:{beginAtZero:true,grid:{color:c.grid},ticks:{color:c.muted,precision:0}}
+   }
+  }
+ });
+}
+function drawCharts(){
+ if(!data||typeof Chart==='undefined')return;
+ const g=graphData(graphMode);
+ if(mainChart)mainChart.destroy();
+ if(homeChart)homeChart.destroy();
+ if(subjectChart)subjectChart.destroy();
+ if(taskChart)taskChart.destroy();
+
+ if($('mainChart'))mainChart=makeBar('mainChart',g.labels,g.values,'Study minutes');
+ const w=graphData('week');
+ if($('homeChart'))homeChart=makeBar('homeChart',w.labels,w.values,'Study minutes');
+
+ const c=chartColors();
+ if($('subjectChart')){
+  subjectChart=new Chart($('subjectChart'),{
+   type:'doughnut',
+   data:{labels:subjects.map(s=>s.name),datasets:[{data:subjects.map(s=>Math.round((data.subjectTime[s.key]||0)/60)),backgroundColor:['#8d70ff','#55c9a5','#ffad75','#68a6f0','#ed7da6','#e9c45d'],borderWidth:0}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:c.text,padding:12}}}}
+  });
+ }
+ if($('taskChart')){
+  const completed=data.tasks.filter(t=>t.done).length;
+  const pending=data.tasks.length-completed;
+  taskChart=new Chart($('taskChart'),{
+   type:'doughnut',
+   data:{labels:['Completed','Pending'],datasets:[{data:[completed,pending],backgroundColor:['#42c99c','#9c87f8'],borderWidth:0}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:c.text,padding:15}}}}
+  });
+ }
+}
+function changeGraph(mode,button){
+ graphMode=mode;
+ document.querySelectorAll('.chart-btn').forEach(b=>b.classList.remove('active'));
+ button.classList.add('active');drawCharts();
+}
+
+/* CALENDAR */
+function moveMonth(n){
+ calendarDate.setMonth(calendarDate.getMonth()+n);drawCalendar();
+}
+function drawCalendar(){
+ const year=calendarDate.getFullYear(),month=calendarDate.getMonth();
+ $('monthTitle').textContent=calendarDate.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+ const first=new Date(year,month,1).getDay();
+ const count=new Date(year,month+1,0).getDate();
+ let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="calendar-day" style="background:transparent;font-weight:800">${d}</div>`).join('');
+ for(let i=0;i<first;i++)html+='<div></div>';
+ for(let i=1;i<=count;i++){
+  const key=localDate(new Date(year,month,i));
+  const active=(data.days[key]?.seconds||0)>0;
+  const isToday=key===today();
+  html+=`<div class="calendar-day ${active?'active-day':''} ${isToday?'today':''}">
+   ${i}<small>${active?'🔥 '+formatTime(data.days[key].seconds):' '}</small>
+  </div>`;
+ }
+ $('calendarGrid').innerHTML=html;
+}
+
+/* INIT */
+if(data){$('loginName').value=data.name;showLogin();}
+else showSignup();
+updateTimer();
 </script>
 </body>
 </html>
